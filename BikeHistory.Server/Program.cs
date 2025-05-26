@@ -6,11 +6,19 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // 순환 참조 문제 해결을 위한 설정
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+        // 속성 이름의 대소문자 유지
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+    });
 
 // Configure DbContext with SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
