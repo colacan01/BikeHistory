@@ -1,0 +1,193 @@
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { first } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+
+@Component({
+  selector: 'app-register',
+  template: `
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header bg-primary text-white">
+              <h4 class="mb-0">Register</h4>
+            </div>
+            <div class="card-body">
+              <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                <div class="alert alert-danger" *ngIf="error">
+                  {{error}}
+                </div>
+                
+                <div class="form-group mb-3">
+                  <label for="firstName">First Name</label>
+                  <input 
+                    type="text" 
+                    formControlName="firstName" 
+                    class="form-control" 
+                    [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }" />
+                  <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
+                    <div *ngIf="f['firstName'].errors['required']">First Name is required</div>
+                  </div>
+                </div>
+                
+                <div class="form-group mb-3">
+                  <label for="lastName">Last Name</label>
+                  <input 
+                    type="text" 
+                    formControlName="lastName" 
+                    class="form-control" 
+                    [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }" />
+                  <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
+                    <div *ngIf="f['lastName'].errors['required']">Last Name is required</div>
+                  </div>
+                </div>
+                
+                <div class="form-group mb-3">
+                  <label for="email">Email</label>
+                  <input 
+                    type="email" 
+                    formControlName="email" 
+                    class="form-control" 
+                    [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" />
+                  <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                    <div *ngIf="f['email'].errors['required']">Email is required</div>
+                    <div *ngIf="f['email'].errors['email']">Enter a valid email address</div>
+                  </div>
+                </div>
+                
+                <div class="form-group mb-3">
+                  <label for="password">Password</label>
+                  <input 
+                    type="password" 
+                    formControlName="password" 
+                    class="form-control" 
+                    [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" />
+                  <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+                    <div *ngIf="f['password'].errors['required']">Password is required</div>
+                    <div *ngIf="f['password'].errors['minlength']">Password must be at least 8 characters</div>
+                  </div>
+                  <small class="form-text text-muted">
+                    Password must be at least 8 characters long and contain:
+                    <ul class="mb-0 ps-3 mt-1">
+                      <li>At least one uppercase letter</li>
+                      <li>At least one lowercase letter</li>
+                      <li>At least one number</li>
+                    </ul>
+                  </small>
+                </div>
+                
+                <div class="form-group mb-3">
+                  <label for="confirmPassword">Confirm Password</label>
+                  <input 
+                    type="password" 
+                    formControlName="confirmPassword" 
+                    class="form-control" 
+                    [ngClass]="{ 'is-invalid': submitted && f['confirmPassword'].errors }" />
+                  <div *ngIf="submitted && f['confirmPassword'].errors" class="invalid-feedback">
+                    <div *ngIf="f['confirmPassword'].errors['required']">Confirm Password is required</div>
+                    <div *ngIf="f['confirmPassword'].errors['mustMatch']">Passwords must match</div>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <button [disabled]="loading" class="btn btn-primary">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                    Register
+                  </button>
+                  <a routerLink="/login" class="btn btn-link">Cancel</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  styles: []
+})
+export class RegisterComponent implements OnInit {
+  registerForm!: FormGroup;
+  loading = false;
+  submitted = false;
+  error = '';
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private authService: AuthService
+  ) { 
+    // Redirect to home if already logged in
+    if (this.authService.isLoggedIn) {
+      this.router.navigate(['/']);
+    }
+  }
+
+  ngOnInit(): void {
+    this.registerForm = this.formBuilder.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [
+        Validators.required, 
+        Validators.minLength(8),
+        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/)
+      ]],
+      confirmPassword: ['', Validators.required]
+    }, {
+      validator: this.mustMatch('password', 'confirmPassword')
+    });
+  }
+
+  // Custom validator to check if password and confirm password match
+  mustMatch(controlName: string, matchingControlName: string) {
+    return (formGroup: FormGroup) => {
+      const control = formGroup.controls[controlName];
+      const matchingControl = formGroup.controls[matchingControlName];
+
+      if (matchingControl.errors && !matchingControl.errors['mustMatch']) {
+        // Return if another validator has already found an error
+        return;
+      }
+
+      // Set error if validation fails
+      if (control.value !== matchingControl.value) {
+        matchingControl.setErrors({ mustMatch: true });
+      } else {
+        matchingControl.setErrors(null);
+      }
+    };
+  }
+
+  // Convenience getter for easy access to form fields
+  get f() { return this.registerForm.controls; }
+
+  onSubmit(): void {
+    this.submitted = true;
+
+    // Stop here if form is invalid
+    if (this.registerForm.invalid) {
+      return;
+    }
+
+    this.loading = true;
+    this.authService.register({
+      firstName: this.f['firstName'].value,
+      lastName: this.f['lastName'].value,
+      email: this.f['email'].value,
+      password: this.f['password'].value,
+      confirmPassword: this.f['confirmPassword'].value
+    })
+      .pipe(first())
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/login'], { queryParams: { registered: true } });
+        },
+        error: error => {
+          this.error = error.error?.message || 'Registration failed. Please try again.';
+          this.loading = false;
+        }
+      });
+  }
+}
