@@ -16,8 +16,10 @@ builder.Services.AddControllers()
     {
         // 순환 참조 문제 해결을 위한 설정
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         // 속성 이름의 대소문자 유지
         options.JsonSerializerOptions.PropertyNamingPolicy = null;
+        options.JsonSerializerOptions.WriteIndented = true;
     });
 
 // Configure DbContext with SQL Server
