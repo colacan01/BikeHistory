@@ -15,9 +15,10 @@
       <ul class="navbar-nav">
         <ng-container *ngIf="currentUser; else loggedOut">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
-              data-bs-toggle="dropdown" aria-expanded="false">
-              {{ currentUser.firstName }} {{ currentUser.lastName }}
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+               data-bs-toggle="dropdown" aria-expanded="false">
+              <!--{{ currentUser.firstName }} {{ currentUser.lastName }}-->
+              {{ fullName }}
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="javascript:void(0)" (click)="logout()">Logout</a></li>

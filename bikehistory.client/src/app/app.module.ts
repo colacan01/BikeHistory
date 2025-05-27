@@ -11,6 +11,8 @@ import { BikeDetailComponent } from './components/bikes/bike-detail.component';
 import { BikeListComponent } from './components/bikes/bike-list.component';
 import { BikeRegisterComponent } from './components/bikes/bike-register.component';
 import { BikeTransferComponent } from './components/bikes/bike-transfer.component';
+import { BrandManagementComponent } from './components/admin/brand-management.component'; // 추가
+import { ManufacturerManagementComponent } from './components/admin/manufacturer-management.component'; // 추가
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { AuthService } from './services/auth.service';
 import { BikeService } from './services/bike.service';
@@ -24,7 +26,9 @@ import { CatalogService } from './services/catalog.service';
     BikeListComponent,
     BikeDetailComponent,
     BikeRegisterComponent,
-    BikeTransferComponent
+    BikeTransferComponent,
+    BrandManagementComponent, // 추가
+    ManufacturerManagementComponent // 추가
   ],
   imports: [
     BrowserModule,

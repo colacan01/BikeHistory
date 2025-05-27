@@ -26,5 +26,10 @@ export class AppComponent implements OnInit {
   logout() {
     this.authService.logout();
   }
+
+  // app.component.ts에 다음 getter 추가
+  get fullName(): string {
+    return this.currentUser ? `${this.currentUser.firstName} ${this.currentUser.lastName}` : '';
+  }
 }
 
