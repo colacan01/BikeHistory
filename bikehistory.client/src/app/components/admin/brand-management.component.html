@@ -73,7 +73,7 @@
             </tr>
             <tr *ngFor="let brand of brands">
               <td>{{ brand.name }}</td>
-              <td>{{ brand.manufacturerName || 'None' }}</td>
+              <td>{{ brand.manufacturer?.name || 'None' }}</td>
               <td>{{ brand.description || '-' }}</td>
               <td>
                 <button class="btn btn-sm btn-outline-primary me-2" (click)="editBrand(brand)">

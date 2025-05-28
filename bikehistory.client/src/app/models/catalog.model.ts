@@ -11,7 +11,7 @@ export interface Brand {
   name: string;
   description?: string;
   manufacturerId?: number;
-  manufacturerName?: Manufacturer;
+  manufacturer?: Manufacturer;
 }
 
 export interface BikeType {

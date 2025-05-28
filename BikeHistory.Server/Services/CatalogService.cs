@@ -37,6 +37,18 @@ namespace BikeHistory.Server.Services
 
         public async Task<Manufacturer> UpdateManufacturerAsync(Manufacturer manufacturer)
         {
+
+            // 엔티티가 이미 컨텍스트에서 추적 중인지 확인
+            var local = _context.Set<Manufacturer>()
+                              .Local
+                              .FirstOrDefault(m => m.Id == manufacturer.Id);
+
+            // 기존 추적 중인 엔티티가 있으면 분리
+            if (local != null)
+            {
+                _context.Entry(local).State = EntityState.Detached;
+            }
+
             _context.Entry(manufacturer).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return manufacturer;
@@ -84,6 +96,17 @@ namespace BikeHistory.Server.Services
 
         public async Task<Brand> UpdateBrandAsync(Brand brand)
         {
+            // 엔티티가 이미 컨텍스트에서 추적 중인지 확인
+            var local = _context.Set<Brand>()
+                              .Local
+                              .FirstOrDefault(b => b.Id == brand.Id);
+
+            // 기존 추적 중인 엔티티가 있으면 분리
+            if (local != null)
+            {
+                _context.Entry(local).State = EntityState.Detached;
+            }
+
             _context.Entry(brand).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return brand;
@@ -120,6 +143,17 @@ namespace BikeHistory.Server.Services
 
         public async Task<BikeType> UpdateBikeTypeAsync(BikeType bikeType)
         {
+            // 엔티티가 이미 컨텍스트에서 추적 중인지 확인
+            var local = _context.Set<BikeType>()
+                              .Local
+                              .FirstOrDefault(bt => bt.Id == bikeType.Id);
+
+            // 기존 추적 중인 엔티티가 있으면 분리
+            if (local != null)
+            {
+                _context.Entry(local).State = EntityState.Detached;
+            }
+
             _context.Entry(bikeType).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return bikeType;
