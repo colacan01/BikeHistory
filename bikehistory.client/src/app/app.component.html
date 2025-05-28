@@ -17,7 +17,6 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                data-bs-toggle="dropdown" aria-expanded="false">
-              <!--{{ currentUser.firstName }} {{ currentUser.lastName }}-->
               {{ fullName }}
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
@@ -40,12 +39,14 @@
 
 <!-- Main Content -->
 <main>
-  <router-outlet></router-outlet>
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
 </main>
 
 <!-- Footer -->
-<footer class="footer mt-5 py-3 bg-light">
+<footer class="footer py-3 bg-light">
   <div class="container text-center">
-    <span class="text-muted">© {{ 2023 }} Bike History. All rights reserved.</span>
+    <span class="text-muted">© {{ 2025 }} Bike History. All rights reserved.</span>
   </div>
 </footer>
