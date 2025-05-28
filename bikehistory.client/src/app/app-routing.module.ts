@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/auth/login.component';
 import { RegisterComponent } from './components/auth/register.component';
+import { ProfileComponent } from './components/auth/profile.component'; // 추가
 import { BikeDetailComponent } from './components/bikes/bike-detail.component';
 import { BikeListComponent } from './components/bikes/bike-list.component';
 import { BikeRegisterComponent } from './components/bikes/bike-register.component';
@@ -18,6 +19,7 @@ const routes: Routes = [
   // 인증 관련 경로
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] }, // 추가
 
   // 자전거 관련 경로 (인증 필요)
   {

@@ -1,0 +1,123 @@
+<div class="container mt-4">
+  <h2>내 프로필</h2>
+  
+  <!-- 로딩 표시 -->
+  <div class="alert alert-info" *ngIf="loading && !profile">
+    프로필 정보를 불러오는 중입니다...
+  </div>
+  
+  <!-- 오류 메시지 -->
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+  </div>
+  
+  <div *ngIf="profile">
+    <!-- 기본 정보 카드 -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h4>기본 정보</h4>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+          <div class="alert alert-success" *ngIf="success">{{ success }}</div>
+          
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="email" class="form-label">이메일</label>
+              <input type="email" class="form-control" id="email" [value]="profile.email" disabled>
+              <div class="form-text">이메일은 변경할 수 없습니다.</div>
+            </div>
+          </div>
+          
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="firstName" class="form-label">이름 *</label>
+              <input type="text" class="form-control" id="firstName" formControlName="firstName"
+                [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }">
+              <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
+                <div *ngIf="f['firstName'].errors['required']">이름은 필수 항목입니다.</div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <label for="lastName" class="form-label">성 *</label>
+              <input type="text" class="form-control" id="lastName" formControlName="lastName"
+                [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }">
+              <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
+                <div *ngIf="f['lastName'].errors['required']">성은 필수 항목입니다.</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="phoneNumber" class="form-label">전화번호</label>
+            <input type="tel" class="form-control" id="phoneNumber" formControlName="phoneNumber">
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label">역할</label>
+            <div>
+              <span *ngFor="let role of profile.roles" class="badge bg-primary me-1">{{ role }}</span>
+              <span *ngIf="!profile.roles || profile.roles.length === 0">일반 사용자</span>
+            </div>
+          </div>
+          
+          <button type="submit" class="btn btn-primary" [disabled]="loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+            정보 업데이트
+          </button>
+        </form>
+      </div>
+    </div>
+    
+    <!-- 비밀번호 변경 카드 -->
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h4>비밀번호 변경</h4>
+        <button type="button" class="btn btn-sm" [ngClass]="showPasswordChange ? 'btn-danger' : 'btn-outline-primary'" (click)="togglePasswordChange()">
+          {{ showPasswordChange ? '취소' : '비밀번호 변경' }}
+        </button>
+      </div>
+      <div class="card-body" *ngIf="showPasswordChange">
+        <form [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit()">
+          <div class="alert alert-success" *ngIf="passwordSuccess">{{ passwordSuccess }}</div>
+          <div class="alert alert-danger" *ngIf="passwordError">{{ passwordError }}</div>
+          
+          <div class="mb-3">
+            <label for="currentPassword" class="form-label">현재 비밀번호 *</label>
+            <input type="password" class="form-control" id="currentPassword" formControlName="currentPassword"
+              [ngClass]="{ 'is-invalid': passwordSubmitted && p['currentPassword'].errors }">
+            <div *ngIf="passwordSubmitted && p['currentPassword'].errors" class="invalid-feedback">
+              <div *ngIf="p['currentPassword'].errors['required']">현재 비밀번호를 입력해주세요.</div>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="newPassword" class="form-label">새 비밀번호 *</label>
+            <input type="password" class="form-control" id="newPassword" formControlName="newPassword"
+              [ngClass]="{ 'is-invalid': passwordSubmitted && p['newPassword'].errors }">
+            <div *ngIf="passwordSubmitted && p['newPassword'].errors" class="invalid-feedback">
+              <div *ngIf="p['newPassword'].errors['required']">새 비밀번호를 입력해주세요.</div>
+              <div *ngIf="p['newPassword'].errors['minlength']">비밀번호는 최소 6자 이상이어야 합니다.</div>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="confirmNewPassword" class="form-label">새 비밀번호 확인 *</label>
+            <input type="password" class="form-control" id="confirmNewPassword" formControlName="confirmNewPassword"
+              [ngClass]="{ 'is-invalid': passwordSubmitted && p['confirmNewPassword'].errors }">
+            <div *ngIf="passwordSubmitted && p['confirmNewPassword'].errors" class="invalid-feedback">
+              <div *ngIf="p['confirmNewPassword'].errors['required']">비밀번호 확인을 입력해주세요.</div>
+              <div *ngIf="p['confirmNewPassword'].errors['mustMatch']">비밀번호가 일치하지 않습니다.</div>
+            </div>
+          </div>
+          
+          <button type="submit" class="btn btn-primary" [disabled]="passwordLoading">
+            <span *ngIf="passwordLoading" class="spinner-border spinner-border-sm me-1"></span>
+            비밀번호 변경
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

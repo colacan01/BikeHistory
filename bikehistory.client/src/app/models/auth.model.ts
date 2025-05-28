@@ -26,3 +26,21 @@ export interface AuthResponse {
   firstName: string;
   lastName: string;
 }
+
+export interface ProfileResponse {
+  userId: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  //phoneNumber?: string;
+  roles: string[];
+}
+
+export interface UpdateProfileRequest {
+  firstName: string;
+  lastName: string;
+  //phoneNumber?: string;
+  currentPassword?: string;
+  newPassword?: string;
+  confirmNewPassword?: string;
+}

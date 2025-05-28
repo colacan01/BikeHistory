@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/auth/login.component';
 import { RegisterComponent } from './components/auth/register.component';
+import { ProfileComponent } from './components/auth/profile.component';
 import { BikeDetailComponent } from './components/bikes/bike-detail.component';
 import { BikeListComponent } from './components/bikes/bike-list.component';
 import { BikeRegisterComponent } from './components/bikes/bike-register.component';
@@ -24,12 +25,13 @@ import { CatalogService } from './services/catalog.service';
     AppComponent,
     LoginComponent,
     RegisterComponent,
+    ProfileComponent, 
     BikeListComponent,
     BikeDetailComponent,
     BikeRegisterComponent,
     BikeTransferComponent,
-    BrandManagementComponent, // 추가
-    ManufacturerManagementComponent, // 추가
+    BrandManagementComponent, 
+    ManufacturerManagementComponent,
     BikeTypeManagementComponent,
   ],
   imports: [

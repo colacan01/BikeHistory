@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { AuthResponse, LoginRequest, RegisterRequest, User } from '../models/auth.model';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
+import { ProfileResponse, UpdateProfileRequest } from '../models/auth.model';
 
 @Injectable({
   providedIn: 'root'
@@ -116,5 +117,36 @@ export class AuthService {
     
     // Redirect to login page
     this.router.navigate(['/login']);
+  }
+
+  // 사용자 프로파일 조회
+  getProfile(): Observable<ProfileResponse> {
+    return this.http.get<ProfileResponse>('/api/auth/profile');
+  }
+
+  // 사용자 프로파일 업데이트
+  updateProfile(profileData: UpdateProfileRequest): Observable<AuthResponse> {
+    return this.http.put<AuthResponse>('/api/auth/profile', profileData)
+      .pipe(
+        tap(response => {
+          // 토큰이 업데이트된 경우 저장
+          if (response.token) {
+            localStorage.setItem(this.tokenKey, response.token);
+
+            // 사용자 객체 업데이트
+            const user: User = {
+              id: response.userId,
+              email: response.email,
+              firstName: response.firstName,
+              lastName: response.lastName,
+              //phoneNumber: response.phoneNumber,
+              token: response.token
+            };
+
+            // 현재 사용자 주체 업데이트
+            this.currentUserSubject.next(user);
+          }
+        })
+      );
   }
 }
