@@ -31,7 +31,7 @@
             <p *ngIf="bike.manufactureYear"><strong>Year:</strong> {{bike.manufactureYear}}</p>
             <p *ngIf="bike.color"><strong>Color:</strong> {{bike.color}}</p>
             <p><strong>Registered Date:</strong> {{bike.registeredDate | date}}</p>
-            <p><strong>Current Owner:</strong> {{bike.currentOwnerName || 'You'}}</p>
+            <p><strong>Current Owner:</strong> {{bike.currentOwner?.firstName || 'You'}}</p>
           </div>
         </div>
       </div>
@@ -55,8 +55,8 @@
               <ul class="list-group" *ngIf="ownershipHistory.length > 0">
                 <li class="list-group-item" *ngFor="let record of ownershipHistory">
                   <div><strong>Date:</strong> {{record.transferDate | date}}</div>
-                  <div><strong>From:</strong> {{record.previousOwnerName}}</div>
-                  <div><strong>To:</strong> {{record.newOwnerName}}</div>
+                  <div><strong>From:</strong> {{record.previousOwnerName?.firstName}}</div>
+                  <div><strong>To:</strong> {{record.newOwnerName?.firstName}}</div>
                   <div *ngIf="record.notes"><strong>Notes:</strong> {{record.notes}}</div>
                 </li>
               </ul>

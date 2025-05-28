@@ -1,20 +1,27 @@
 using BikeHistory.Server.Data;
 using BikeHistory.Server.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
+
 namespace BikeHistory.Server.Services
 {
     public class BikeService
     {
         private readonly ApplicationDbContext _context;
+        // Update the field type for _userManager to the correct type
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public BikeService(ApplicationDbContext context)
+        // Update the constructor to accept UserManager<ApplicationUser> as a dependency
+        public BikeService(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // Get all bike frames
@@ -103,11 +110,17 @@ namespace BikeHistory.Server.Services
             {
                 throw new ArgumentException("New owner ID cannot be null or empty", nameof(newOwnerId));
             }
-            
+
+            var newOwner = await _userManager.FindByEmailAsync(newOwnerId);
+            if (newOwner == null)
+            {
+                throw new InvalidOperationException($"사용자 ID '{newOwnerId}'를 찾을 수 없습니다.");
+            }
+
             var bikeFrame = await _context.BikeFrames
                 .Include(b => b.CurrentOwner)
                 .FirstOrDefaultAsync(b => b.Id == bikeFrameId);
-
+            
             if (bikeFrame == null)
             {
                 throw new InvalidOperationException("Bike frame not found.");
@@ -120,13 +133,13 @@ namespace BikeHistory.Server.Services
             {
                 BikeFrameId = bikeFrameId,
                 PreviousOwnerId = previousOwnerId,
-                NewOwnerId = newOwnerId,
+                NewOwnerId = newOwner.Id,
                 TransferDate = DateTime.UtcNow,
                 Notes = notes
             };
 
             // Update bike frame with new owner
-            bikeFrame.CurrentOwnerId = newOwnerId;
+            bikeFrame.CurrentOwnerId = newOwner.Id;
 
             _context.OwnershipRecords.Add(ownershipRecord);
             _context.Entry(bikeFrame).State = EntityState.Modified;

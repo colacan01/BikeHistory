@@ -16,6 +16,7 @@
 //}
 
 import { Manufacturer, Brand, BikeType } from "./catalog.model";
+import { User } from "./auth.model";
 
 export interface BikeFrame {
   id: number;
@@ -27,7 +28,7 @@ export interface BikeFrame {
   manufactureYear?: number;
   color?: string;
   currentOwnerId: string;
-  currentOwnerName?: string;
+  currentOwner?: User;
   registeredDate: Date;
 }
 
@@ -59,9 +60,9 @@ export interface OwnershipRecord {
   id: number;
   bikeFrameId: number;
   previousOwnerId: string;
-  previousOwnerName?: string;
+  previousOwnerName?: User;
   newOwnerId: string;
-  newOwnerName?: string;
+  newOwnerName?: User;
   transferDate: Date;
   notes?: string;
 }
