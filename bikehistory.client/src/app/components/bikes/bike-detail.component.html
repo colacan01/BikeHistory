@@ -9,7 +9,7 @@
 
   <div *ngIf="bike && !loading">
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2>{{bike.brandName || 'Unknown Brand'}} {{bike.model || 'Bike'}} Details</h2>
+      <h2>{{bike.brand?.name || 'Unknown Brand'}} {{bike.model || 'Bike'}} Details</h2>
       <div>
         <a [routerLink]="['/bikes', bike.id, 'transfer']" class="btn btn-primary me-2">Transfer Ownership</a>
         <a [routerLink]="['/bikes', bike.id, 'edit']" class="btn btn-outline-secondary">Edit</a>
@@ -24,9 +24,9 @@
           </div>
           <div class="card-body">
             <p><strong>Frame Number:</strong> {{bike.frameNumber}}</p>
-            <p><strong>Type:</strong> {{bike.bikeTypeName || 'Unknown Type'}}</p>
-            <p><strong>Manufacturer:</strong> {{bike.manufacturerName || 'Unknown Manufacturer'}}</p>
-            <p><strong>Brand:</strong> {{bike.brandName || 'Unknown Brand'}}</p>
+            <p><strong>Type:</strong> {{bike.bikeType?.name || 'Unknown Type'}}</p>
+            <p><strong>Manufacturer:</strong> {{bike.manufacturer?.name || 'Unknown Manufacturer'}}</p>
+            <p><strong>Brand:</strong> {{bike.brand?.name || 'Unknown Brand'}}</p>
             <p *ngIf="bike.model"><strong>Model:</strong> {{bike.model}}</p>
             <p *ngIf="bike.manufactureYear"><strong>Year:</strong> {{bike.manufactureYear}}</p>
             <p *ngIf="bike.color"><strong>Color:</strong> {{bike.color}}</p>

@@ -20,12 +20,12 @@
     <div class="col-md-4 mb-4" *ngFor="let bike of bikes">
       <div class="card h-100">
         <div class="card-header">
-          <h5 class="card-title mb-0">{{bike.brandName || 'Unknown Brand'}} {{bike.model || ''}}</h5>
+          <h5 class="card-title mb-0">{{bike.brand?.name || 'Unknown Brand'}} {{bike.model || ''}}</h5>
         </div>
         <div class="card-body">
           <p><strong>Frame Number:</strong> {{bike.frameNumber}}</p>
-          <p><strong>Type:</strong> {{bike.bikeTypeName || 'Unknown Type'}}</p>
-          <p><strong>Manufacturer:</strong> {{bike.manufacturerName || 'Unknown Manufacturer'}}</p>
+          <p><strong>Type:</strong> {{bike.bikeType?.name || 'Unknown Type'}}</p>
+          <p><strong>Manufacturer:</strong> {{bike.manufacturer?.name || 'Unknown Manufacturer'}}</p>
           <p *ngIf="bike.color"><strong>Color:</strong> {{bike.color}}</p>
           <p *ngIf="bike.manufactureYear"><strong>Year:</strong> {{bike.manufactureYear}}</p>
           <p><strong>Registered:</strong> {{bike.registeredDate | date}}</p>

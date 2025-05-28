@@ -16,8 +16,8 @@
       </div>
       <div class="card-body">
         <p><strong>Frame Number:</strong> {{bike.frameNumber}}</p>
-        <p><strong>Type:</strong> {{bike.bikeTypeName || 'Unknown Type'}}</p>
-        <p><strong>Brand:</strong> {{bike.brandName || 'Unknown Brand'}}</p>
+        <p><strong>Type:</strong> {{bike.bikeType?.name || 'Unknown Type'}}</p>
+        <p><strong>Brand:</strong> {{bike.brand?.name || 'Unknown Brand'}}</p>
         <p *ngIf="bike.model"><strong>Model:</strong> {{bike.model}}</p>
         <p *ngIf="bike.manufactureYear != null"><strong>Year:</strong> {{bike.manufactureYear}}</p>
       </div>
