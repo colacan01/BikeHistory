@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36121.58 d17.14
+VisualStudioVersion = 17.14.36121.58
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "bikehistory.client", "bikehistory.client\bikehistory.client.esproj", "{9E825C07-FA82-595D-3E93-E435FEEA8ABC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeHistory.Server", "BikeHistory.Server\BikeHistory.Server.csproj", "{34E2C5CA-B941-4F6D-A128-61E9420FD0E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeHistory.Mobile", "BikeHistory.Mobile\BikeHistory.Mobile.csproj", "{CE0EA69C-7A07-4F71-B800-40ABE181FCF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +25,12 @@ Global
 		{34E2C5CA-B941-4F6D-A128-61E9420FD0E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34E2C5CA-B941-4F6D-A128-61E9420FD0E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34E2C5CA-B941-4F6D-A128-61E9420FD0E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE0EA69C-7A07-4F71-B800-40ABE181FCF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE0EA69C-7A07-4F71-B800-40ABE181FCF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE0EA69C-7A07-4F71-B800-40ABE181FCF0}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{CE0EA69C-7A07-4F71-B800-40ABE181FCF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE0EA69C-7A07-4F71-B800-40ABE181FCF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE0EA69C-7A07-4F71-B800-40ABE181FCF0}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -68,12 +68,11 @@ builder.Services.AddScoped<CatalogService>();
 // Configure CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngularApp",
+    options.AddPolicy("AllowAll",
         builder => builder
-            .WithOrigins("https://localhost:51236", "http://localhost:4200")
+            .AllowAnyOrigin()
             .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials());
+            .AllowAnyHeader());
 });
 
 var app = builder.Build();
@@ -106,7 +105,8 @@ using (var scope = app.Services.CreateScope())
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-app.UseCors("AllowAngularApp");
+// 미들웨어에 CORS 추가
+app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 
