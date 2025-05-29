@@ -2,7 +2,6 @@ using BikeHistory.Mobile.Models;
 using BikeHistory.Mobile.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using IntelliJ.Lang.Annotations;
 using System.Diagnostics;
 
 namespace BikeHistory.Mobile.ViewModels

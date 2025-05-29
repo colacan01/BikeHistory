@@ -13,9 +13,11 @@ namespace BikeHistory.Mobile
             Routing.RegisterRoute("login", typeof(LoginPage));
             Routing.RegisterRoute("register", typeof(RegisterPage));
             Routing.RegisterRoute("profile", typeof(ProfilePage));
+            Routing.RegisterRoute("bikes/list", typeof(BikeListPage));
             Routing.RegisterRoute("bikes/register", typeof(BikeRegisterPage));
             Routing.RegisterRoute("bikes/detail", typeof(BikeDetailPage));
             Routing.RegisterRoute("bikes/transfer", typeof(BikeTransferPage));
+            //Routing.RegisterRoute("bikes/history", typeof(BikeHistoryPage));
         }
     }
 }

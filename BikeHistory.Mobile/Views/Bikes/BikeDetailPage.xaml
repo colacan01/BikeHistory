@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BikeHistory.Mobile.Views.Bikes.BikeDetailPage"
+             xmlns:viewmodel="clr-namespace:BikeHistory.Mobile.ViewModels"
+             xmlns:model="clr-namespace:BikeHistory.Mobile.Models"
+             x:DataType="viewmodel:BikeDetailViewModel"
+             Title="자전거 상세정보">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="소유권 이전" 
+                     Command="{Binding TransferOwnershipCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,*,Auto" 
+          Padding="20">
+        
+        <Grid.Resources>
+            <Style TargetType="Label" x:Key="FieldLabel">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="Gray" />
+                <Setter Property="Margin" Value="0,15,0,0" />
+            </Style>
+            
+            <Style TargetType="Label" x:Key="FieldValue">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Margin" Value="0,5,0,0" />
+            </Style>
+        </Grid.Resources>
+
+        <ActivityIndicator Grid.Row="0"
+                         IsRunning="{Binding IsBusy}"
+                         IsVisible="{Binding IsBusy}"
+                         VerticalOptions="Center"
+                         HorizontalOptions="Center" />
+        
+        <Label Grid.Row="0"
+             Text="{Binding ErrorMessage}"
+             TextColor="Red"
+             IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+             VerticalOptions="Center"
+             HorizontalOptions="Center" />
+        
+        <ScrollView Grid.Row="1"
+                   IsVisible="{Binding Bike, Converter={StaticResource ObjectToBoolConverter}}">
+            <VerticalStackLayout>
+                <!-- 자전거 기본 정보 섹션 -->
+                <Frame BorderColor="LightGray"
+                      Margin="0,10,0,20"
+                      Padding="15">
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+                         ColumnDefinitions="*,*">
+                        <Image Grid.Row="0"
+                             Grid.Column="1"
+                             Source="bike.png"
+                             HeightRequest="80"
+                             WidthRequest="80"
+                             HorizontalOptions="End"
+                             VerticalOptions="Start" />
+                        
+                        <VerticalStackLayout Grid.Row="0"
+                                          Grid.Column="0">
+                            <Label Text="프레임 번호" 
+                                 Style="{StaticResource FieldLabel}" />
+                            <Label Text="{Binding Bike.FrameNumber}" 
+                                 Style="{StaticResource FieldValue}" />
+                        </VerticalStackLayout>
+                        
+                        <VerticalStackLayout Grid.Row="1"
+                                          Grid.Column="0">
+                            <Label Text="브랜드" 
+                                 Style="{StaticResource FieldLabel}" />
+                            <Label Text="{Binding Bike.Brand.Name}" 
+                                 Style="{StaticResource FieldValue}" />
+                        </VerticalStackLayout>
+                        
+                        <VerticalStackLayout Grid.Row="1"
+                                          Grid.Column="1">
+                            <Label Text="모델" 
+                                 Style="{StaticResource FieldLabel}" />
+                            <Label Text="{Binding Bike.Model}" 
+                                 Style="{StaticResource FieldValue}" />
+                        </VerticalStackLayout>
+                        
+                        <VerticalStackLayout Grid.Row="2"
+                                          Grid.Column="0">
+                            <Label Text="제조사" 
+                                 Style="{StaticResource FieldLabel}" />
+                            <Label Text="{Binding Bike.Manufacturer.Name}" 
+                                 Style="{StaticResource FieldValue}" />
+                        </VerticalStackLayout>
+                        
+                        <VerticalStackLayout Grid.Row="2"
+                                          Grid.Column="1">
+                            <Label Text="자전거 타입" 
+                                 Style="{StaticResource FieldLabel}" />
+                            <Label Text="{Binding Bike.BikeType.Name}" 
+                                 Style="{StaticResource FieldValue}" />
+                        </VerticalStackLayout>
+                        
+                        <VerticalStackLayout Grid.Row="3"
+                                          Grid.Column="0">
+                            <Label Text="제조연도" 
+                                 Style="{StaticResource FieldLabel}" />
+                            <Label Text="{Binding Bike.ManufactureYear}" 
+                                 Style="{StaticResource FieldValue}" />
+                        </VerticalStackLayout>
+                        
+                        <VerticalStackLayout Grid.Row="3"
+                                          Grid.Column="1">
+                            <Label Text="색상" 
+                                 Style="{StaticResource FieldLabel}" />
+                            <Label Text="{Binding Bike.Color}" 
+                                 Style="{StaticResource FieldValue}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Frame>
+                
+                <!-- 현재 소유자 정보 섹션 -->
+                <Label Text="현재 소유자" 
+                     FontSize="18"
+                     FontAttributes="Bold"
+                     Margin="0,10,0,10" />
+                
+                <Frame BorderColor="LightGray"
+                      Margin="0,0,0,20"
+                      Padding="15">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label>
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding Bike.CurrentOwner.FirstName}" />
+                                        <Span Text=" " />
+                                        <Span Text="{Binding Bike.CurrentOwner.LastName}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            
+                            <Label Text="{Binding Bike.CurrentOwner.Email}"
+                                 TextColor="Gray"
+                                 FontSize="14" />
+                            
+                            <Label Text="{Binding Bike.RegisteredDate, StringFormat='{0:yyyy년 MM월 dd일부터 소유}'}"
+                                 FontSize="12"
+                                 TextColor="Gray"
+                                 Margin="0,5,0,0" />
+                        </VerticalStackLayout>
+                        
+                        <Image Grid.Column="1"
+                             Source="user.png"
+                             HeightRequest="40"
+                             WidthRequest="40"
+                             VerticalOptions="Center" />
+                    </Grid>
+                </Frame>
+                
+                <!-- 소유권 이력 섹션 -->
+                <Label Text="소유권 이력" 
+                     FontSize="18"
+                     FontAttributes="Bold"
+                     Margin="0,10,0,10" />
+                
+                <ActivityIndicator IsRunning="{Binding IsHistoryBusy}"
+                                IsVisible="{Binding IsHistoryBusy}"
+                                Margin="0,10" />
+                
+                <CollectionView ItemsSource="{Binding OwnershipHistory}"
+                              HeightRequest="300"
+                              SelectionMode="None">
+                    <CollectionView.EmptyView>
+                        <Label Text="소유권 이력이 없습니다"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             TextColor="Gray" />
+                    </CollectionView.EmptyView>
+                    
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:OwnershipRecord">
+                            <Frame Margin="0,5"
+                                 Padding="10"
+                                 BorderColor="LightGray">
+                                <Grid RowDefinitions="Auto,Auto,Auto" 
+                                    ColumnDefinitions="*,Auto">
+                                    <Label Grid.Row="0" 
+                                         Grid.Column="0"
+                                         Text="{Binding TransferDate, StringFormat='{0:yyyy년 MM월 dd일}'}"
+                                         FontAttributes="Bold" />
+                                    
+                                    <VerticalStackLayout Grid.Row="1" 
+                                                       Grid.Column="0"
+                                                       Margin="0,5,0,0">
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="이전 소유자: " />
+                                                    <Span Text="{Binding PreviousOwnerName.FirstName}" />
+                                                    <Span Text=" " />
+                                                    <Span Text="{Binding PreviousOwnerName.LastName}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                        
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="새 소유자: " />
+                                                    <Span Text="{Binding NewOwnerName.FirstName}" />
+                                                    <Span Text=" " />
+                                                    <Span Text="{Binding NewOwnerName.LastName}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                    
+                                    <Label Grid.Row="2" 
+                                         Grid.Column="0"
+                                         Text="{Binding Notes}"
+                                         TextColor="Gray"
+                                         FontSize="12"
+                                         Margin="0,5,0,0"
+                                         IsVisible="{Binding Notes, Converter={StaticResource StringToBoolConverter}}" />
+                                    
+                                    <Image Grid.Row="0" 
+                                         Grid.RowSpan="3"
+                                         Grid.Column="1"
+                                         Source="transfer.png"
+                                         HeightRequest="30"
+                                         WidthRequest="30"
+                                         VerticalOptions="Center" />
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+        
+        <Button Grid.Row="2"
+              Text="뒤로"
+              Command="{Binding GoBackCommand}"
+              Margin="0,20,0,0" />
+    </Grid>
+</ContentPage>

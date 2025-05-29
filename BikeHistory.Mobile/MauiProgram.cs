@@ -1,6 +1,7 @@
 ﻿using BikeHistory.Mobile.Services;
 using BikeHistory.Mobile.ViewModels;
-using BikeHistory.Mobile.Views;
+using BikeHistory.Mobile.Views.Auth;
+using BikeHistory.Mobile.Views.Bikes;
 
 namespace BikeHistory.Mobile
 {
@@ -29,6 +30,7 @@ namespace BikeHistory.Mobile
             builder.Services.AddTransient<BikeDetailViewModel>();
             builder.Services.AddTransient<BikeRegisterViewModel>();
             builder.Services.AddTransient<ProfileViewModel>();
+            builder.Services.AddTransient<BikeTransferViewModel>(); // 추가
 
             // 페이지 등록
             builder.Services.AddTransient<LoginPage>();
@@ -37,6 +39,7 @@ namespace BikeHistory.Mobile
             builder.Services.AddTransient<BikeDetailPage>();
             builder.Services.AddTransient<BikeRegisterPage>();
             builder.Services.AddTransient<ProfilePage>();
+            builder.Services.AddTransient<BikeTransferPage>(); // 추가
 
             return builder.Build();
         }

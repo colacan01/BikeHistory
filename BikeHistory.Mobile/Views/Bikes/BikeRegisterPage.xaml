@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BikeHistory.Mobile.Views.Bikes.BikeRegisterPage"
+             xmlns:viewmodel="clr-namespace:BikeHistory.Mobile.ViewModels"
+             xmlns:model="clr-namespace:BikeHistory.Mobile.Models"
+             x:DataType="viewmodel:BikeRegisterViewModel"
+             Title="자전거 등록">
+
+    <Grid RowDefinitions="Auto,*,Auto" 
+          Padding="20">
+        
+        <ActivityIndicator Grid.Row="0"
+                         IsRunning="{Binding IsLoading}"
+                         IsVisible="{Binding IsLoading}"
+                         VerticalOptions="Center"
+                         HorizontalOptions="Center" />
+        
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="15">
+                <Label Text="새 자전거 등록"
+                     FontSize="24"
+                     FontAttributes="Bold"
+                     HorizontalOptions="Center"
+                     Margin="0,10,0,20" />
+                
+                <!-- 프레임 번호 -->
+                <Label Text="프레임 번호 *" 
+                     FontAttributes="Bold" />
+                <Entry Text="{Binding FrameNumber}"
+                     Placeholder="프레임 번호를 입력하세요" />
+                
+                <!-- 제조사 선택 -->
+                <Label Text="제조사 *" 
+                     FontAttributes="Bold" />
+                <Picker ItemsSource="{Binding Manufacturers}"
+                      SelectedItem="{Binding SelectedManufacturer}"
+                      Title="제조사 선택"
+                      ItemDisplayBinding="{Binding Name}" />
+                
+                <!-- 브랜드 선택 -->
+                <Label Text="브랜드 *" 
+                     FontAttributes="Bold" />
+                <Picker ItemsSource="{Binding Brands}"
+                      SelectedItem="{Binding SelectedBrand}"
+                      Title="브랜드 선택"
+                      ItemDisplayBinding="{Binding Name}" />
+                
+                <!-- 자전거 타입 선택 -->
+                <Label Text="자전거 타입 *" 
+                     FontAttributes="Bold" />
+                <Picker ItemsSource="{Binding BikeTypes}"
+                      SelectedItem="{Binding SelectedBikeType}"
+                      Title="자전거 타입 선택"
+                      ItemDisplayBinding="{Binding Name}" />
+                
+                <!-- 모델명 -->
+                <Label Text="모델명" 
+                     FontAttributes="Bold" />
+                <Entry Text="{Binding Model}"
+                     Placeholder="모델명을 입력하세요" />
+                
+                <!-- 제조연도 -->
+                <Label Text="제조연도" 
+                     FontAttributes="Bold" />
+                <Entry Text="{Binding ManufactureYear}"
+                     Placeholder="제조연도를 입력하세요"
+                     Keyboard="Numeric" />
+                
+                <!-- 색상 -->
+                <Label Text="색상" 
+                     FontAttributes="Bold" />
+                <Entry Text="{Binding Color}"
+                     Placeholder="색상을 입력하세요" />
+                
+                <!-- 오류/성공 메시지 -->
+                <Label Text="{Binding ErrorMessage}"
+                     TextColor="Red"
+                     IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+                     HorizontalOptions="Center"
+                     Margin="0,10,0,0" />
+                
+                <Label Text="{Binding SuccessMessage}"
+                     TextColor="Green"
+                     IsVisible="{Binding SuccessMessage, Converter={StaticResource StringToBoolConverter}}"
+                     HorizontalOptions="Center"
+                     Margin="0,10,0,0" />
+                
+                <!-- 등록 버튼 -->
+                <Button Text="자전거 등록"
+                      Command="{Binding RegisterBikeCommand}"
+                      IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                      Margin="0,20,0,0" />
+                
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                IsVisible="{Binding IsBusy}"
+                                HorizontalOptions="Center"
+                                Margin="0,10,0,0" />
+            </VerticalStackLayout>
+        </ScrollView>
+        
+        <Button Grid.Row="2"
+              Text="취소"
+              Command="{Binding GoBackCommand}"
+              BackgroundColor="LightGray"
+              TextColor="Black"
+              Margin="0,10,0,0" />
+    </Grid>
+</ContentPage>

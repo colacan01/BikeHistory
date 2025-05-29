@@ -4,12 +4,22 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:BikeHistory.Mobile"
-    Shell.FlyoutBehavior="Disabled"
-    Title="BikeHistory.Mobile">
+    xmlns:auth="clr-namespace:BikeHistory.Mobile.Views.Auth"
+    xmlns:bikes="clr-namespace:BikeHistory.Mobile.Views.Bikes"
+    Shell.FlyoutBehavior="Disabled">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+        <ShellContent
+            Title="자전거"
+            Icon="bike.png"
+            ContentTemplate="{DataTemplate bikes:BikeListPage}"
+            Route="bikes" />
+        
+        <ShellContent
+            Title="프로필"
+            Icon="profile.png"
+            ContentTemplate="{DataTemplate auth:ProfilePage}"
+            Route="profile" />
+    </TabBar>
 
 </Shell>
