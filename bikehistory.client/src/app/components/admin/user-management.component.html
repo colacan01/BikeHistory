@@ -1,5 +1,5 @@
 <div class="container mt-4">
-  <h2>Users</h2>
+  <h2>Users Management</h2>
 
   <!-- 사용자 편집 폼 (관리자 전용) -->
   <div class="card mb-4" *ngIf="isEditing">
@@ -14,7 +14,7 @@
 
         <div class="row mb-3">
           <div class="col-md-6">
-            <label for="firstName" class="form-label">이름 *</label>
+            <label for="firstName" class="form-label">First Name *</label>
             <input type="text" class="form-control" id="firstName" formControlName="firstName"
                    [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }">
             <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
@@ -23,7 +23,7 @@
           </div>
 
           <div class="col-md-6">
-            <label for="lastName" class="form-label">성 *</label>
+            <label for="lastName" class="form-label">Last Name *</label>
             <input type="text" class="form-control" id="lastName" formControlName="lastName"
                    [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }">
             <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
@@ -33,7 +33,7 @@
         </div>
 
         <div class="mb-3">
-          <label for="email" class="form-label">이메일 *</label>
+          <label for="email" class="form-label">E-Mail *</label>
           <input type="email" class="form-control" id="email" formControlName="email"
                  [ngClass]="{ 'is-invalid': submitted && f['email'].errors }">
           <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
@@ -43,7 +43,7 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label">역할</label>
+          <label class="form-label">Role</label>
           <div class="form-check" *ngFor="let role of availableRoles">
             <input class="form-check-input" type="checkbox" [id]="'role_' + role"
                    [value]="role" [checked]="hasRole(role)" (change)="updateRole(role, $event)">
@@ -135,12 +135,12 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th>이름</th>
-              <th>이메일</th>
-              <th>역할</th>
-              <th>자전거 수</th>
-              <th>상태</th>
-              <th>작업</th>
+              <th>Name</th>
+              <th>E-Mail</th>
+              <th>Role</th>
+              <th>Bocycle Counts</th>
+              <th>Status</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
