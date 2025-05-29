@@ -10,7 +10,8 @@ import { BikeTransferComponent } from './components/bikes/bike-transfer.componen
 import { AuthGuard } from './guards/auth.guard';
 import { ManufacturerManagementComponent } from './components/admin/manufacturer-management.component';
 import { BrandManagementComponent } from './components/admin/brand-management.component';
-import { BikeTypeManagementComponent } from './components/admin/bike-type-management.component'; // 추가
+import { BikeTypeManagementComponent } from './components/admin/bike-type-management.component';
+import { UserManagementComponent } from './components/admin/user-management.component'; // 추가
 
 const routes: Routes = [
   // 메인 페이지는 자전거 목록 페이지로 리다이렉트
@@ -59,6 +60,12 @@ const routes: Routes = [
   {
     path: 'admin/biketypes', // 추가
     component: BikeTypeManagementComponent, // 추가
+    canActivate: [AuthGuard], // 추가
+    data: { roles: ['Admin'] } // 추가
+  },
+  {
+    path: 'admin/users', // 추가
+    component: UserManagementComponent, // 추가
     canActivate: [AuthGuard], // 추가
     data: { roles: ['Admin'] } // 추가
   },

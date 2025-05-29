@@ -1,0 +1,178 @@
+<div class="container mt-4">
+  <h2>Users</h2>
+
+  <!-- 사용자 편집 폼 (관리자 전용) -->
+  <div class="card mb-4" *ngIf="isEditing">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4>Update Info</h4>
+      <button type="button" class="btn btn-sm btn-secondary" (click)="resetForm()">취소</button>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+        <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+        <div class="alert alert-success" *ngIf="success">{{ success }}</div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="firstName" class="form-label">이름 *</label>
+            <input type="text" class="form-control" id="firstName" formControlName="firstName"
+                   [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }">
+            <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
+              <div *ngIf="f['firstName'].errors['required']">이름은 필수 항목입니다.</div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="lastName" class="form-label">성 *</label>
+            <input type="text" class="form-control" id="lastName" formControlName="lastName"
+                   [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }">
+            <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
+              <div *ngIf="f['lastName'].errors['required']">성은 필수 항목입니다.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">이메일 *</label>
+          <input type="email" class="form-control" id="email" formControlName="email"
+                 [ngClass]="{ 'is-invalid': submitted && f['email'].errors }">
+          <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+            <div *ngIf="f['email'].errors['required']">이메일은 필수 항목입니다.</div>
+            <div *ngIf="f['email'].errors['email']">유효한 이메일 주소를 입력해주세요.</div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">역할</label>
+          <div class="form-check" *ngFor="let role of availableRoles">
+            <input class="form-check-input" type="checkbox" [id]="'role_' + role"
+                   [value]="role" [checked]="hasRole(role)" (change)="updateRole(role, $event)">
+            <label class="form-check-label" [for]="'role_' + role">
+              {{ role }}
+            </label>
+          </div>
+        </div>
+
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="lockoutEnabled" formControlName="lockoutEnabled">
+          <label class="form-check-label" for="lockoutEnabled">계정 잠금 활성화</label>
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <div>
+            <button type="submit" class="btn btn-primary me-2" [disabled]="loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+              정보 업데이트
+            </button>
+            <button type="button" class="btn btn-outline-secondary" (click)="togglePasswordReset()">
+              {{ showPasswordReset ? '비밀번호 재설정 취소' : '비밀번호 재설정' }}
+            </button>
+          </div>
+          <button type="button" class="btn btn-danger" (click)="deleteUser(currentUserId!)">
+            사용자 삭제
+          </button>
+        </div>
+      </form>
+
+      <!-- 비밀번호 재설정 폼 -->
+      <div *ngIf="showPasswordReset" class="mt-4">
+        <hr>
+        <h5>비밀번호 재설정</h5>
+        <form [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit()">
+          <div class="alert alert-danger" *ngIf="passwordError">{{ passwordError }}</div>
+          <div class="alert alert-success" *ngIf="passwordSuccess">{{ passwordSuccess }}</div>
+
+          <div class="mb-3">
+            <label for="newPassword" class="form-label">새 비밀번호 *</label>
+            <input type="password" class="form-control" id="newPassword" formControlName="newPassword"
+                   [ngClass]="{ 'is-invalid': passwordSubmitted && p['newPassword'].errors }">
+            <div *ngIf="passwordSubmitted && p['newPassword'].errors" class="invalid-feedback">
+              <div *ngIf="p['newPassword'].errors['required']">새 비밀번호를 입력해주세요.</div>
+              <div *ngIf="p['newPassword'].errors['minlength']">비밀번호는 최소 6자 이상이어야 합니다.</div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-warning" [disabled]="passwordLoading">
+            <span *ngIf="passwordLoading" class="spinner-border spinner-border-sm me-1"></span>
+            비밀번호 재설정
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 사용자 목록 -->
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4>Users</h4>
+
+      <!-- 검색 기능 추가 -->
+      <div class="input-group" style="max-width: 300px;">
+        <input type="text"
+               class="form-control"
+               placeholder="이름 또는 이메일로 검색..."
+               [value]="searchTerm"
+               (input)="onSearchChange($event)">
+        <button class="btn btn-outline-secondary"
+                type="button"
+                *ngIf="searchTerm"
+                (click)="clearSearch()">
+          <i class="bi bi-x"></i>
+          지우기
+        </button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="alert alert-info" *ngIf="loadingList">사용자 목록을 불러오는 중입니다...</div>
+      <div class="alert alert-danger" *ngIf="listError">{{ listError }}</div>
+
+      <div class="table-responsive" *ngIf="!loadingList && !listError">
+        <!-- 검색 결과 수 표시 -->
+        <div class="mb-3" *ngIf="searchTerm">
+          <span class="text-muted">검색 결과: {{ filteredUsers.length }}명의 사용자</span>
+        </div>
+
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>이름</th>
+              <th>이메일</th>
+              <th>역할</th>
+              <th>자전거 수</th>
+              <th>상태</th>
+              <th>작업</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="filteredUsers.length === 0">
+              <td colspan="6" class="text-center">
+                {{ searchTerm ? '검색 결과가 없습니다' : '등록된 사용자가 없습니다' }}
+              </td>
+            </tr>
+            <tr *ngFor="let user of filteredUsers">
+              <td>{{ user.firstName }} {{ user.lastName }}</td>
+              <td>{{ user.email }}</td>
+              <td>
+                <span *ngFor="let role of user.roles" class="badge me-1" [ngClass]="getRoleBadgeClass(role)">
+                  {{ role }}
+                </span>
+                <span *ngIf="!user.roles || user.roles.length === 0" class="badge bg-secondary">역할 없음</span>
+              </td>
+              <td>{{ user.bikeCount }}</td>
+              <td>
+                <span class="badge" [ngClass]="user.lockoutEnabled ? 'bg-danger' : 'bg-success'">
+                  {{ user.lockoutEnabled ? '잠김' : '활성화' }}
+                </span>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary" (click)="editUser(user)">
+                  편집
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

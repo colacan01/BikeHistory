@@ -15,12 +15,13 @@
         <li class="nav-item dropdown" *ngIf="authService.isAdmin">
           <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button"
              data-bs-toggle="dropdown" aria-expanded="false">
-            Admin
+            Administration
           </a>
           <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-            <li><a class="dropdown-item" routerLink="/admin/brands" routerLinkActive="active">브랜드 관리</a></li>
-            <li><a class="dropdown-item" routerLink="/admin/manufacturers" routerLinkActive="active">제조사 관리</a></li>
-            <li><a class="dropdown-item" routerLink="/admin/biketypes" routerLinkActive="active">자전거 타입 관리</a></li>
+            <li><a class="dropdown-item" routerLink="/admin/users" routerLinkActive="active">Users</a></li>
+            <li><a class="dropdown-item" routerLink="/admin/brands" routerLinkActive="active">Brands</a></li>
+            <li><a class="dropdown-item" routerLink="/admin/manufacturers" routerLinkActive="active">Manufacturers</a></li>
+            <li><a class="dropdown-item" routerLink="/admin/biketypes" routerLinkActive="active">Bike Types</a></li>
           </ul>
         </li>
       </ul>

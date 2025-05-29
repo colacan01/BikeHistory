@@ -149,4 +149,24 @@ export class AuthService {
         })
       );
   }
+
+  // 사용자 목록 조회 (관리자 전용)
+  getUsers(): Observable<any[]> {
+    return this.http.get<any[]>('/api/auth/users');
+  }
+
+  // 특정 사용자 조회 (관리자 전용)
+  getUserById(userId: string): Observable<any> {
+    return this.http.get<any>(`/api/auth/users/${userId}`);
+  }
+
+  // 사용자 정보 업데이트 (관리자 전용)
+  updateUser(userId: string, userData: any): Observable<any> {
+    return this.http.put<any>(`/api/auth/users/${userId}`, userData);
+  }
+
+  // 사용자 삭제 (관리자 전용)
+  deleteUser(userId: string): Observable<any> {
+    return this.http.delete<any>(`/api/auth/users/${userId}`);
+  }
 }
