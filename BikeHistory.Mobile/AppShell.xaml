@@ -8,6 +8,11 @@
     xmlns:bikes="clr-namespace:BikeHistory.Mobile.Views.Bikes"
     Shell.FlyoutBehavior="Disabled">
 
+    <ShellContent
+    Title="로그인"
+    ContentTemplate="{DataTemplate auth:LoginPage}"
+    Route="login" />
+    
     <TabBar>
         <ShellContent
             Title="자전거"

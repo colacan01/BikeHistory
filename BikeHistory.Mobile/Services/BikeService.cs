@@ -29,7 +29,7 @@ namespace BikeHistory.Mobile.Services
 
         public async Task<List<BikeFrame>> GetBikes()
         {
-            var response = await _httpClient.GetAsync($"{_baseUrl}/bikes");
+            var response = await _httpClient.GetAsync($"{_baseUrl}/BikeFrames");
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync<List<BikeFrame>>();
@@ -37,7 +37,7 @@ namespace BikeHistory.Mobile.Services
 
         public async Task<BikeFrame> GetBikeById(int id)
         {
-            var response = await _httpClient.GetAsync($"{_baseUrl}/bikes/{id}");
+            var response = await _httpClient.GetAsync($"{_baseUrl}/BikeFrames/{id}");
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync<BikeFrame>();
@@ -45,7 +45,7 @@ namespace BikeHistory.Mobile.Services
 
         public async Task<BikeFrame> RegisterBike(BikeFrameRegisterRequest request)
         {
-            var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/bikes", request);
+            var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/BikeFrames", request);
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync<BikeFrame>();
@@ -53,7 +53,7 @@ namespace BikeHistory.Mobile.Services
 
         public async Task<BikeFrame> UpdateBike(int id, BikeFrameRegisterRequest request)
         {
-            var response = await _httpClient.PutAsJsonAsync($"{_baseUrl}/bikes/{id}", request);
+            var response = await _httpClient.PutAsJsonAsync($"{_baseUrl}/BikeFrames/{id}", request);
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync<BikeFrame>();
@@ -61,13 +61,13 @@ namespace BikeHistory.Mobile.Services
 
         public async Task<bool> TransferBike(int id, OwnershipTransferRequest request)
         {
-            var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/bikes/{id}/transfer", request);
+            var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/BikeFrames/{id}/transfer", request);
             return response.IsSuccessStatusCode;
         }
 
         public async Task<List<OwnershipRecord>> GetBikeHistory(int id)
         {
-            var response = await _httpClient.GetAsync($"{_baseUrl}/bikes/{id}/history");
+            var response = await _httpClient.GetAsync($"{_baseUrl}/BikeFrames/{id}/history");
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync<List<OwnershipRecord>>();

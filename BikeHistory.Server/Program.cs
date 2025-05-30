@@ -86,6 +86,7 @@ else
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
+    app.UseHttpsRedirection();  // 프로덕션 환경에서만 HTTPS 리디렉션 적용
 }
 
 // Initialize database and seed data
