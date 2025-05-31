@@ -114,7 +114,7 @@ namespace BikeHistory.Mobile.ViewModels
             if (Bike == null || !IsOwner)
                 return;
 
-            await Shell.Current.GoToAsync($"bikes/transfer?id={BikeId}");
+            await Shell.Current.GoToAsync($"///bikes/transfer?id={BikeId}");
         }
 
         [RelayCommand]

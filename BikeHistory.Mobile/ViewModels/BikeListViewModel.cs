@@ -65,7 +65,15 @@ namespace BikeHistory.Mobile.ViewModels
         [RelayCommand]
         private async Task AddNewBike()
         {
-            await Shell.Current.GoToAsync("bikes/register");
+            try
+            {
+                await Shell.Current.GoToAsync("///bikes/register");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"네비게이션 오류: {ex.Message}");
+                ErrorMessage = "자전거 등록 페이지로 이동할 수 없습니다.";
+            }
         }
 
         [RelayCommand]
@@ -74,7 +82,15 @@ namespace BikeHistory.Mobile.ViewModels
             if (bike == null)
                 return;
 
-            await Shell.Current.GoToAsync($"bikes/detail?id={bike.Id}");
+            try
+            {
+                await Shell.Current.GoToAsync($"///bikes/detail?id={bike.Id}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"네비게이션 오류: {ex.Message}");
+                ErrorMessage = "자전거 상세 페이지로 이동할 수 없습니다.";
+            }
         }
 
         [RelayCommand]

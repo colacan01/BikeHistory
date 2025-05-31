@@ -7,7 +7,11 @@
         //    ? "https://10.0.2.2:5128/api" // Android 에뮬레이터 접근용
         //    : "https://localhost:5128/api"; // 일반 로컬 접근용
 
-        public static string BaseApiUrl = "http://10.0.2.2:5128/api";
+        public static string BaseApiUrl = DeviceInfo.Platform == DevicePlatform.Android
+            ? "http://10.0.2.2:5128/api" // Android 에뮬레이터 접근용
+            : "http://localhost:5128/api"; // 일반 로컬 접근용
+
+        //public static string BaseApiUrl = "http://10.0.2.2:5128/api";
         // 토큰 저장 키
         public static string AuthTokenKey = "auth_token";
     }
