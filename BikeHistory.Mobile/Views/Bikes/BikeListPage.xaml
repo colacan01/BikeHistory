@@ -72,16 +72,21 @@
                                 <Grid ColumnDefinitions="*, Auto">
                                     <VerticalStackLayout Grid.Column="0"
                                                        Spacing="5">
-                                        <Label Text="{Binding FrameNumber}"
-                                             FontSize="18"
-                                             FontAttributes="Bold" />
-                                        
+                                        <Label FontSize="18" FontAttributes="Bold">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding Manufacturer.Name}" />
+                                                    <Span Text=" " />
+                                                    <Span Text="{Binding Model}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
                                         <Label>
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span Text="{Binding Brand.Name}" />
+                                                    <Span Text="{Binding FrameNumber}" />
                                                     <Span Text=" " />
-                                                    <Span Text="{Binding Model}" />
+                                                    <Span Text="{Binding Brand.Name}" />
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
@@ -89,8 +94,6 @@
                                         <Label>
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span Text="{Binding Manufacturer.Name}" />
-                                                    <Span Text=" / " />
                                                     <Span Text="{Binding BikeType.Name}" />
                                                 </FormattedString>
                                             </Label.FormattedText>
