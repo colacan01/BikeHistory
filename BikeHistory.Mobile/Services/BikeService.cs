@@ -12,23 +12,26 @@ namespace BikeHistory.Mobile.Services
     {
         private readonly HttpClient _httpClient;
         private readonly string _baseUrl;
+        private readonly AuthService _authService; // 추가: AuthService 의존성
 
-        public BikeService()
+        public BikeService(AuthService authService) // 생성자 의존성 주입
         {
             _httpClient = new HttpClient();
             _baseUrl = Constants.BaseApiUrl;
+            _authService = authService;
 
-            // 토큰 확인 및 설정
-            var token = SecureStorage.GetAsync(Constants.AuthTokenKey).Result;
-            if (!string.IsNullOrEmpty(token))
-            {
-                _httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            }
+            // 초기 토큰 설정
+            UpdateAuthToken(_authService.CurrentUser?.Token);
+
+            // AuthService의 상태 변경 이벤트 구독
+            _authService.AuthenticationStateChanged += OnAuthenticationStateChanged;
         }
 
         public async Task<List<BikeFrame>> GetBikes()
         {
+            // 요청 직전에 토큰 확인 및 업데이트 (추가)
+            UpdateAuthToken(_authService.CurrentUser?.Token);
+
             var response = await _httpClient.GetAsync($"{_baseUrl}/BikeFrames");
             response.EnsureSuccessStatusCode();
 
@@ -37,6 +40,9 @@ namespace BikeHistory.Mobile.Services
 
         public async Task<BikeFrame> GetBikeById(int id)
         {
+            // 요청 직전에 토큰 확인 및 업데이트 (추가)
+            UpdateAuthToken(_authService.CurrentUser?.Token);
+
             var response = await _httpClient.GetAsync($"{_baseUrl}/BikeFrames/{id}");
             response.EnsureSuccessStatusCode();
 
@@ -45,6 +51,9 @@ namespace BikeHistory.Mobile.Services
 
         public async Task<BikeFrame> RegisterBike(BikeFrameRegisterRequest request)
         {
+            // 요청 직전에 토큰 확인 및 업데이트 (추가)
+            UpdateAuthToken(_authService.CurrentUser?.Token);
+
             var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/BikeFrames", request);
             response.EnsureSuccessStatusCode();
 
@@ -72,6 +81,15 @@ namespace BikeHistory.Mobile.Services
 
             return await response.Content.ReadFromJsonAsync<List<OwnershipRecord>>();
         }
+
+
+        private void OnAuthenticationStateChanged()
+        {
+            System.Diagnostics.Debug.WriteLine("BikeService: 인증 상태 변경 감지됨");
+            // 인증 상태 변경 시 토큰 업데이트
+            UpdateAuthToken(_authService.CurrentUser?.Token);
+        }
+
 
         // 토큰이 변경될 때 호출되는 메서드
         public void UpdateAuthToken(string token)
