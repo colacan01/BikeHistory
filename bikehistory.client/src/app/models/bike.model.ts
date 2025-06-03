@@ -1,20 +1,3 @@
-//export interface BikeFrame {
-//  id: number;
-//  frameNumber: string;
-//  manufacturerId: number;
-//  manufacturerName?: string;
-//  brandId: number;
-//  brandName?: string;
-//  bikeTypeId: number;
-//  bikeTypeName?: string;
-//  model?: string;
-//  manufactureYear?: number;
-//  color?: string;
-//  currentOwnerId: string;
-//  currentOwnerName?: string;
-//  registeredDate: Date;
-//}
-
 import { Manufacturer, Brand, BikeType } from "./catalog.model";
 import { User } from "./auth.model";
 
