@@ -82,6 +82,44 @@ export class AuthService {
     }
   }
 
+  /**
+ * 20250605 추가 
+ * 현재 로그인한 사용자의 모든 역할을 배열로 반환합니다.
+ * @returns 사용자의 역할 목록
+ */
+  getUserRoles(): string[] {
+    if (!this.currentUser) return [];
+
+    try {
+      // 토큰이 존재하는 경우 토큰에서 역할 정보 확인
+      if (this.currentUser.token) {
+        const decodedToken: any = jwtDecode(this.currentUser.token);
+
+        // JWT 구조에 따른 역할 클레임 확인
+        // 역할에 대한 일반적인 클레임 이름: 'role', 'roles', 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+        const roleClaim = decodedToken.role ||
+          decodedToken.roles ||
+          decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+
+        // 역할 정보가 없는 경우 빈 배열 반환
+        if (!roleClaim) return [];
+
+        // 역할이 배열 형태인 경우 그대로 반환
+        if (Array.isArray(roleClaim)) {
+          return roleClaim;
+        }
+        // 역할이 문자열인 경우 배열로 변환하여 반환
+        else if (typeof roleClaim === 'string') {
+          return [roleClaim];
+        }
+      }
+      return [];
+    } catch (error) {
+      console.error('사용자 역할 확인 중 오류 발생:', error);
+      return [];
+    }
+  }
+
   login(loginRequest: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>('/api/auth/login', loginRequest)
       .pipe(
