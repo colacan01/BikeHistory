@@ -12,10 +12,6 @@ import { ManufacturerManagementComponent } from './components/admin/manufacturer
 import { BrandManagementComponent } from './components/admin/brand-management.component';
 import { BikeTypeManagementComponent } from './components/admin/bike-type-management.component';
 import { UserManagementComponent } from './components/admin/user-management.component'; // 추가
-import { BikeServiceListComponent } from './components/bike-service-list/bike-service-list.component';
-import { BikeServiceDetailComponent } from './components/bike-service-detail/bike-service-detail.component';
-import { BikeServiceFormComponent } from './components/bike-service-form/bike-service-form.component';
-import { RoleGuard } from './guards/role.guard';
 
 const routes: Routes = [
   // 메인 페이지는 자전거 목록 페이지로 리다이렉트
@@ -72,31 +68,6 @@ const routes: Routes = [
     component: UserManagementComponent, // 추가
     canActivate: [AuthGuard], // 추가
     data: { roles: ['Admin'] } // 추가
-  },
-
-  {
-    path: 'service-records',
-    component: BikeServiceListComponent,
-    canActivate: [RoleGuard],
-    data: { roles: ['Admin', 'Store'] }
-  },
-  {
-    path: 'service-records/new',
-    component: BikeServiceFormComponent,
-    canActivate: [RoleGuard],
-    data: { roles: ['Admin', 'Store'] }
-  },
-  {
-    path: 'service-records/edit/:id',
-    component: BikeServiceFormComponent,
-    canActivate: [RoleGuard],
-    data: { roles: ['Admin', 'Store'] }
-  },
-  {
-    path: 'service-records/:id',
-    component: BikeServiceDetailComponent,
-    canActivate: [RoleGuard],
-    data: { roles: ['Admin', 'Store'] }
   },
 
   // 존재하지 않는 경로는 자전거 목록으로 리다이렉트

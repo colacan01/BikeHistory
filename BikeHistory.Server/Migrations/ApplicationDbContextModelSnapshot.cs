@@ -42,12 +42,10 @@ namespace BikeHistory.Server.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "firstName");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "lastName");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -93,56 +91,44 @@ namespace BikeHistory.Server.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasAnnotation("Relational:JsonPropertyName", "newOwnerName");
                 });
 
             modelBuilder.Entity("BikeHistory.Server.Models.BikeFrame", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("BikeTypeId")
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "bikeTypeId");
+                        .HasColumnType("int");
 
                     b.Property<int>("BrandId")
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "brandId");
+                        .HasColumnType("int");
 
                     b.Property<string>("Color")
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "color");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CurrentOwnerId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
-                        .HasAnnotation("Relational:JsonPropertyName", "currentOwnerId");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FrameNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
-                        .HasAnnotation("Relational:JsonPropertyName", "frameNumber");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("ManufactureYear")
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "manufactureYear");
+                        .HasColumnType("int");
 
                     b.Property<int>("ManufacturerId")
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "manufacturerId");
+                        .HasColumnType("int");
 
                     b.Property<string>("Model")
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "model");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("RegisteredDate")
-                        .HasColumnType("datetime2")
-                        .HasAnnotation("Relational:JsonPropertyName", "registeredDate");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -158,197 +144,103 @@ namespace BikeHistory.Server.Migrations
                     b.HasIndex("ManufacturerId");
 
                     b.ToTable("BikeFrames");
-
-                    b.HasAnnotation("Relational:JsonPropertyName", "bikeFrame");
-                });
-
-            modelBuilder.Entity("BikeHistory.Server.Models.BikeServiceRecord", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BikeFrameId")
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "bikeFrameId");
-
-                    b.Property<decimal?>("Cost")
-                        .HasColumnType("decimal(18, 2)")
-                        .HasAnnotation("Relational:JsonPropertyName", "cost");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2")
-                        .HasAnnotation("Relational:JsonPropertyName", "createdDate");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2")
-                        .HasAnnotation("Relational:JsonPropertyName", "modifiedDate");
-
-                    b.Property<DateTime?>("NextServiceDate")
-                        .HasColumnType("datetime2")
-                        .HasAnnotation("Relational:JsonPropertyName", "nextServiceDate");
-
-                    b.Property<string>("PartDetails")
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "partDetails");
-
-                    b.Property<DateTime>("ServiceDate")
-                        .HasColumnType("datetime2")
-                        .HasAnnotation("Relational:JsonPropertyName", "serviceDate");
-
-                    b.Property<string>("ServiceDetails")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "serviceDetails");
-
-                    b.Property<string>("ServiceShopId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
-                        .HasAnnotation("Relational:JsonPropertyName", "serviceShopId");
-
-                    b.Property<int>("ServiceStatus")
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "serviceStatus");
-
-                    b.Property<int>("ServiceType")
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "serviceType");
-
-                    b.Property<string>("WarrantyInfo")
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "warrantyInfo");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BikeFrameId");
-
-                    b.HasIndex("ServiceShopId");
-
-                    b.ToTable("BikeServiceRecords");
                 });
 
             modelBuilder.Entity("BikeHistory.Server.Models.BikeType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "description");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "name");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("BikeTypes");
-
-                    b.HasAnnotation("Relational:JsonPropertyName", "bikeType");
                 });
 
             modelBuilder.Entity("BikeHistory.Server.Models.Brand", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "description");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ManufacturerId")
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "manufacturerId");
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "name");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ManufacturerId");
 
                     b.ToTable("Brands");
-
-                    b.HasAnnotation("Relational:JsonPropertyName", "brands");
                 });
 
             modelBuilder.Entity("BikeHistory.Server.Models.Manufacturer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CountryOfOrigin")
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "countryOfOrigin");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "description");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "name");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Website")
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "website");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Manufacturers");
-
-                    b.HasAnnotation("Relational:JsonPropertyName", "manufacturer");
                 });
 
             modelBuilder.Entity("BikeHistory.Server.Models.OwnershipRecord", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "id");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("BikeFrameId")
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "bikeFrameId");
+                        .HasColumnType("int");
 
                     b.Property<string>("NewOwnerId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
-                        .HasAnnotation("Relational:JsonPropertyName", "newOwnerId");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "notes");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PreviousOwnerId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
-                        .HasAnnotation("Relational:JsonPropertyName", "previousOwnerId");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("TransferDate")
-                        .HasColumnType("datetime2")
-                        .HasAnnotation("Relational:JsonPropertyName", "transferDate");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -359,8 +251,6 @@ namespace BikeHistory.Server.Migrations
                     b.HasIndex("PreviousOwnerId");
 
                     b.ToTable("OwnershipRecords");
-
-                    b.HasAnnotation("Relational:JsonPropertyName", "ownershipHistory");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -529,25 +419,6 @@ namespace BikeHistory.Server.Migrations
                     b.Navigation("CurrentOwner");
 
                     b.Navigation("Manufacturer");
-                });
-
-            modelBuilder.Entity("BikeHistory.Server.Models.BikeServiceRecord", b =>
-                {
-                    b.HasOne("BikeHistory.Server.Models.BikeFrame", "BikeFrame")
-                        .WithMany()
-                        .HasForeignKey("BikeFrameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BikeHistory.Server.Models.ApplicationUser", "ServiceShop")
-                        .WithMany()
-                        .HasForeignKey("ServiceShopId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BikeFrame");
-
-                    b.Navigation("ServiceShop");
                 });
 
             modelBuilder.Entity("BikeHistory.Server.Models.Brand", b =>
