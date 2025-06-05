@@ -16,7 +16,6 @@ namespace BikeHistory.Server.Data
         public DbSet<Brand> Brands { get; set; }
         public DbSet<BikeType> BikeTypes { get; set; }
         public DbSet<OwnershipRecord> OwnershipRecords { get; set; }
-        public DbSet<BikeServiceRecord> BikeServiceRecords { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
