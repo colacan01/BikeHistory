@@ -1,4 +1,4 @@
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -26,32 +26,39 @@ import { AuthService } from './services/auth.service';
 import { BikeService } from './services/bike.service';
 import { CatalogService } from './services/catalog.service';
 
-@NgModule({ declarations: [
-        AppComponent,
-        LoginComponent,
-        RegisterComponent,
-        ProfileComponent,
-        BikeListComponent,
-        BikeDetailComponent,
-        BikeRegisterComponent,
-        BikeTransferComponent,
-        BrandManagementComponent,
-        ManufacturerManagementComponent,
-        BikeTypeManagementComponent,
-        UserManagementComponent,
-        BikeServiceListComponent,
-        BikeServiceDetailComponent,
-        BikeServiceFormComponent,
-    ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
-        FormsModule,
-        ReactiveFormsModule,
-        AppRoutingModule], providers: [
-        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-        AuthService,
-        BikeService,
-        CatalogService,
-        provideHttpClient(withInterceptorsFromDi())
-    ] })
+@NgModule({
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    RegisterComponent,
+    ProfileComponent, 
+    BikeListComponent,
+    BikeDetailComponent,
+    BikeRegisterComponent,
+    BikeTransferComponent,
+    BrandManagementComponent, 
+    ManufacturerManagementComponent,
+    BikeTypeManagementComponent,
+    UserManagementComponent,
+
+    BikeServiceListComponent,
+    BikeServiceDetailComponent,
+    BikeServiceFormComponent,
+  ],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    AppRoutingModule
+  ],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    AuthService,
+    BikeService,
+    CatalogService
+  ],
+  bootstrap: [AppComponent]
+})
 export class AppModule { }
 
