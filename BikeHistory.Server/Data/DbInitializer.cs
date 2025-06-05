@@ -27,7 +27,18 @@ namespace BikeHistory.Server.Data
                 await context.Database.MigrateAsync();
 
                 // Create roles
-                string[] roleNames = { "Admin", "User" };
+                //string[] roleNames = { "Admin", "User" };
+                //foreach (var roleName in roleNames)
+                //{
+                //    if (!await roleManager.RoleExistsAsync(roleName))
+                //    {
+                //        await roleManager.CreateAsync(new IdentityRole(roleName));
+                //        logger.LogInformation($"Created role: {roleName}");
+                //    }
+                //}
+
+                // Create roles
+                string[] roleNames = { "Admin", "Store", "Leader", "User" };
                 foreach (var roleName in roleNames)
                 {
                     if (!await roleManager.RoleExistsAsync(roleName))
