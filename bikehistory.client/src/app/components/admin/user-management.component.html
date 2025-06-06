@@ -158,7 +158,9 @@
                 </span>
                 <span *ngIf="!user.roles || user.roles.length === 0" class="badge bg-secondary">역할 없음</span>
               </td>
-              <td>{{ user.bikeCount }}</td>
+              <td>                
+                <a [routerLink]="['/bikes']" [queryParams]="{ownerId: user.userId}">{{ user.bikeCount }}</a>
+              </td>
               <td>
                 <span class="badge" [ngClass]="user.lockoutEnabled ? 'bg-danger' : 'bg-success'">
                   {{ user.lockoutEnabled ? '잠김' : '활성화' }}

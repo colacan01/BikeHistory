@@ -23,24 +23,59 @@ namespace BikeHistory.Server.Controllers
         }
 
         // GET: api/BikeFrames
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<BikeFrame>>> GetBikeFrames()
+        //{
+        //    // Check if user is admin, if not, only return their bikes
+        //    if (User.IsInRole("Admin"))
+        //    {
+        //        var allBikes = await _bikeService.GetAllBikeFramesAsync();
+        //        return Ok(allBikes);
+        //    }
+        //    else
+        //    {
+        //        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //        if (userId != null)
+        //        {
+        //            var userBikes = await _bikeService.GetBikeFramesByOwnerIdAsync(userId);
+        //            return Ok(userBikes);
+        //        }
+        //        return Unauthorized();
+        //    }
+        //}
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BikeFrame>>> GetBikeFrames()
+        public async Task<ActionResult<IEnumerable<BikeFrame>>> GetBikeFrames([FromQuery] string? ownerId = null)
         {
-            // Check if user is admin, if not, only return their bikes
-            if (User.IsInRole("Admin"))
+            // Admin 사용자 확인
+            bool isAdmin = User.IsInRole("Admin");
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
             {
-                var allBikes = await _bikeService.GetAllBikeFramesAsync();
-                return Ok(allBikes);
+                return Unauthorized();
+            }
+
+            // 조회 로직
+            if (isAdmin)
+            {
+                // Admin이고 특정 OwnerId가 제공된 경우
+                if (!string.IsNullOrEmpty(ownerId))
+                {
+                    var ownerBikes = await _bikeService.GetBikeFramesByOwnerIdAsync(ownerId);
+                    return Ok(ownerBikes);
+                }
+                // Admin이고 OwnerId가 없는 경우 - 모든 자전거 반환
+                else
+                {
+                    var allBikes = await _bikeService.GetAllBikeFramesAsync();
+                    return Ok(allBikes);
+                }
             }
             else
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (userId != null)
-                {
-                    var userBikes = await _bikeService.GetBikeFramesByOwnerIdAsync(userId);
-                    return Ok(userBikes);
-                }
-                return Unauthorized();
+                // 일반 사용자는 자신의 자전거만 볼 수 있음 (OwnerId 파라미터 무시)
+                var userBikes = await _bikeService.GetBikeFramesByOwnerIdAsync(userId);
+                return Ok(userBikes);
             }
         }
 
