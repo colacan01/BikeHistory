@@ -3,6 +3,7 @@ using BikeHistory.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
@@ -185,7 +186,9 @@ namespace BikeHistory.Server.Controllers
         public async Task<IActionResult> GetUsers()
         {
             // 모든 사용자 조회
-            var users = _userManager.Users.ToList();
+            var users = _userManager.Users
+                                .Include(a => a.OwnedBikes)
+                                .ToList();
             var userDtos = new List<UserDto>();
 
             foreach (var user in users)
@@ -200,7 +203,7 @@ namespace BikeHistory.Server.Controllers
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Roles = roles.ToList(),
-                    BikeCount = user.OwnedBikes.Count
+                    BikeCount = user.OwnedBikes.Count()
                 });
             }
 

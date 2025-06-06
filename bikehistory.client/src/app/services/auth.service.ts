@@ -55,31 +55,48 @@ export class AuthService {
   public get authToken(): string | null {
     return this.currentUser?.token || null;
   }
-  
+
   public get isAdmin(): boolean {
-    if (!this.currentUser) return false;
-    
+    return this.hasRole('Admin');
+  }
+
+  /**
+ * 현재 사용자의 역할 목록을 가져옵니다
+ * @returns 사용자의 역할 배열, 로그인되지 않은 경우 빈 배열 반환
+ */
+  public getUserRoles(): string[] {
+    if (!this.currentUser || !this.currentUser.token) return [];
+
     try {
-      // If token exists, check for admin role in token
-      if (this.currentUser.token) {
-        const decodedToken: any = jwtDecode(this.currentUser.token);
-        // Check role claim based on JWT structure
-        // Common claim names for roles: 'role', 'roles', 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
-        const roleClaim = decodedToken.role || 
-                         decodedToken.roles || 
-                         decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-                         
-        if (Array.isArray(roleClaim)) {
-          return roleClaim.includes('Admin');
-        } else if (typeof roleClaim === 'string') {
-          return roleClaim === 'Admin';
-        }
+      const decodedToken: any = jwtDecode(this.currentUser.token);
+      // 일반적인 JWT 역할 클레임 이름 검사
+      const roleClaim = decodedToken.role ||
+        decodedToken.roles ||
+        decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+
+      // 역할이 배열인 경우
+      if (Array.isArray(roleClaim)) {
+        return roleClaim;
       }
-      return false;
+      // 역할이 단일 문자열인 경우
+      else if (typeof roleClaim === 'string') {
+        return [roleClaim];
+      }
+
+      return [];
     } catch (error) {
-      console.error('Error checking admin status:', error);
-      return false;
+      console.error('Error getting user roles:', error);
+      return [];
     }
+  }
+
+  /**
+   * 사용자가 특정 역할을 가지고 있는지 확인합니다
+   * @param role 확인할 역할
+   * @returns 사용자가 해당 역할을 가지고 있으면 true, 그렇지 않으면 false
+   */
+  public hasRole(role: string): boolean {
+    return this.getUserRoles().includes(role);
   }
 
   login(loginRequest: LoginRequest): Observable<AuthResponse> {

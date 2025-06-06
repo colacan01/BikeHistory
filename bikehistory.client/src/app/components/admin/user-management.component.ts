@@ -13,7 +13,7 @@ export class UserManagementComponent implements OnInit {
   users: any[] = [];
   filteredUsers: any[] = []; // 필터링된 사용자 목록을 저장할 배열
   searchTerm: string = ''; // 검색어를 저장할 변수
-  availableRoles: string[] = ['User', 'Admin'];
+  availableRoles: string[] = ['User', 'Leader', 'Store', 'Admin'];
   isEditing = false;
   currentUserId?: string;
   submitted = false;
@@ -226,7 +226,17 @@ export class UserManagementComponent implements OnInit {
   }
 
   getRoleBadgeClass(role: string): string {
-    return role === 'Admin' ? 'bg-danger' : 'bg-primary';
+    switch (role) {
+      case 'Admin':
+        return 'bg-danger';
+      case 'Store':
+        return 'bg-warning';
+      case 'Leader':
+        return 'bg-info';
+      case 'User':
+      default:
+        return 'bg-primary';
+    }
   }
 
   // 역할 체크박스가 선택되었는지 확인하는 메서드
