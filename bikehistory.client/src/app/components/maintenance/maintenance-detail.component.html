@@ -1,0 +1,104 @@
+<div class="container">
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div *ngIf="loading" class="d-flex justify-content-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">로딩 중...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && maintenance">
+    <h2>유지보수 상세 정보</h2>
+    
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">기본 정보</h5>
+        <div>
+          <button *ngIf="isAdmin || isStore" class="btn btn-primary me-2" (click)="editMaintenance()">수정</button>
+          <button *ngIf="isAdmin || isStore" class="btn btn-danger me-2" (click)="deleteMaintenance()">삭제</button>
+          <button class="btn btn-secondary" (click)="goBack()">목록</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="col-md-3 fw-bold">유지보수 일자:</div>
+          <div class="col-md-9">{{ maintenance.maintenanceDate | date:'yyyy-MM-dd' }}</div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-3 fw-bold">유지보수 유형:</div>
+          <div class="col-md-9">{{ getMaintenanceTypeName(maintenance.maintenanceType) }}</div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-3 fw-bold">자전거:</div>
+          <div class="col-md-9">
+            {{ maintenance.bikeFrame.frameNumber }} ({{ maintenance.bikeFrame.model }})
+            <a [routerLink]="['/bikes', maintenance.bikeFrameId]" class="ms-2">상세보기</a>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-3 fw-bold">정비소:</div>
+          <div class="col-md-9">{{ maintenance.store.firstName }} {{ maintenance.store.lastName }}</div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-3 fw-bold">소유자:</div>
+          <div class="col-md-9">{{ maintenance.owner.firstName }} {{ maintenance.owner.lastName }}</div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-3 fw-bold">총 금액:</div>
+          <div class="col-md-9">{{ maintenance.totalAmount | currency:'KRW':'symbol':'1.0-0' }}</div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-3 fw-bold">결제 방법:</div>
+          <div class="col-md-9">{{ getPaymentMethodName(maintenance.paymentMethod) }}</div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-3 fw-bold">비고:</div>
+          <div class="col-md-9">{{ maintenance.notes || '없음' }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">유지보수 상세 항목</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>번호</th>
+                <th>부품명</th>
+                <th>규격</th>
+                <th>공임비</th>
+                <th>부품가격</th>
+                <th>소계</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let detail of maintenance.maintenanceDetails">
+                <td>{{ detail.seq }}</td>
+                <td>{{ detail.partName || '-' }}</td>
+                <td>{{ detail.partSpecification || '-' }}</td>
+                <td>{{ detail.laborCost | currency:'KRW':'symbol':'1.0-0' }}</td>
+                <td>{{ detail.partPrice | currency:'KRW':'symbol':'1.0-0' }}</td>
+                <td>{{ (detail.laborCost + detail.partPrice) | currency:'KRW':'symbol':'1.0-0' }}</td>
+              </tr>
+              <tr *ngIf="maintenance.maintenanceDetails.length === 0">
+                <td colspan="6" class="text-center">상세 항목이 없습니다.</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="table-dark">
+                <td colspan="3" class="text-end fw-bold">총 합계:</td>
+                <td>{{ maintenance.maintenanceDetails | sum:'laborCost' | currency:'KRW':'symbol':'1.0-0' }}</td>
+                <td>{{ maintenance.maintenanceDetails | sum:'partPrice' | currency:'KRW':'symbol':'1.0-0' }}</td>
+                <td>{{ maintenance.totalAmount | currency:'KRW':'symbol':'1.0-0' }}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

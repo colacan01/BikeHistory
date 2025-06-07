@@ -16,6 +16,11 @@ import { BrandManagementComponent } from './components/admin/brand-management.co
 import { ManufacturerManagementComponent } from './components/admin/manufacturer-management.component';
 import { BikeTypeManagementComponent } from './components/admin/bike-type-management.component';
 import { UserManagementComponent } from './components/admin/user-management.component'; // 추가
+import { MaintenanceListComponent } from './components/maintenance/maintenance-list.component';
+import { MaintenanceDetailComponent } from './components/maintenance/maintenance-detail.component';
+import { MaintenanceFormComponent } from './components/maintenance/maintenance-form.component';
+import { SumPipe } from './pipes/sum.pipe';
+
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { AuthService } from './services/auth.service';
 import { BikeService } from './services/bike.service';
@@ -34,7 +39,11 @@ import { CatalogService } from './services/catalog.service';
     BrandManagementComponent, 
     ManufacturerManagementComponent,
     BikeTypeManagementComponent,
-    UserManagementComponent // 추가
+    UserManagementComponent, // 추가
+    MaintenanceListComponent,
+    MaintenanceDetailComponent,
+    MaintenanceFormComponent,
+    SumPipe
   ],
   imports: [
     BrowserModule,

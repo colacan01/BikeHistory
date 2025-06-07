@@ -1,0 +1,215 @@
+<div class="container">
+  <h2>{{ isEditMode ? '유지보수 정보 수정' : '새 유지보수 기록 등록' }}</h2>
+
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div *ngIf="loading" class="d-flex justify-content-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">로딩 중...</span>
+    </div>
+  </div>
+
+  <form [formGroup]="maintenanceForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="mb-0">기본 정보</h5>
+      </div>
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="maintenanceDate" class="form-label">유지보수 일자</label>
+            <input 
+              type="date" 
+              class="form-control" 
+              id="maintenanceDate" 
+              formControlName="maintenanceDate"
+              [class.is-invalid]="maintenanceForm.get('maintenanceDate')?.invalid && maintenanceForm.get('maintenanceDate')?.touched"
+            >
+            <div class="invalid-feedback">유지보수 일자를 선택해주세요.</div>
+          </div>
+          <div class="col-md-6">
+            <label for="maintenanceType" class="form-label">유지보수 유형</label>
+            <select 
+              class="form-select" 
+              id="maintenanceType" 
+              formControlName="maintenanceType"
+              [class.is-invalid]="maintenanceForm.get('maintenanceType')?.invalid && maintenanceForm.get('maintenanceType')?.touched"
+            >
+              <option *ngFor="let type of maintenanceTypes" [value]="type">{{ getMaintenanceTypeName(type) }}</option>
+            </select>
+            <div class="invalid-feedback">유지보수 유형을 선택해주세요.</div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="bikeFrameId" class="form-label">자전거</label>
+            <select 
+              class="form-select" 
+              id="bikeFrameId" 
+              formControlName="bikeFrameId"
+              [class.is-invalid]="maintenanceForm.get('bikeFrameId')?.invalid && maintenanceForm.get('bikeFrameId')?.touched"
+              [disabled]="isEditMode || bikeFrameId !== undefined"
+            >
+              <option [ngValue]="null" disabled>자전거 선택</option>
+              <option *ngFor="let bike of bikes" [value]="bike.id">
+                {{ bike.frameNumber }} - {{ bike.model || '모델명 없음' }} ({{ bike.color || '색상 없음' }})
+              </option>
+            </select>
+            <div class="invalid-feedback">자전거를 선택해주세요.</div>
+          </div>
+          <div class="col-md-6">
+            <label for="ownerId" class="form-label">소유자</label>
+            <select 
+              class="form-select" 
+              id="ownerId" 
+              formControlName="ownerId"
+              [class.is-invalid]="maintenanceForm.get('ownerId')?.invalid && maintenanceForm.get('ownerId')?.touched"
+              [disabled]="isEditMode"
+            >
+              <option [ngValue]="''" disabled>소유자 선택</option>
+              <option *ngFor="let owner of owners" [value]="owner.userId">
+                {{ owner.firstName }} {{ owner.lastName }} ({{ owner.email }})
+              </option>
+            </select>
+            <div class="invalid-feedback">소유자를 선택해주세요.</div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="storeId" class="form-label">정비소</label>
+            <select 
+              class="form-select" 
+              id="storeId" 
+              formControlName="storeId"
+              [class.is-invalid]="maintenanceForm.get('storeId')?.invalid && maintenanceForm.get('storeId')?.touched"
+              [disabled]="isEditMode"
+            >
+              <option [ngValue]="''" disabled>정비소 선택</option>
+              <option *ngFor="let store of stores" [value]="store.userId">
+                {{ store.firstName }} {{ store.lastName }} ({{ store.email }})
+              </option>
+            </select>
+            <div class="invalid-feedback">정비소를 선택해주세요.</div>
+          </div>
+          <div class="col-md-6">
+            <label for="paymentMethod" class="form-label">결제 방법</label>
+            <select 
+              class="form-select" 
+              id="paymentMethod" 
+              formControlName="paymentMethod"
+              [class.is-invalid]="maintenanceForm.get('paymentMethod')?.invalid && maintenanceForm.get('paymentMethod')?.touched"
+            >
+              <option *ngFor="let method of paymentMethods" [value]="method">{{ getPaymentMethodName(method) }}</option>
+            </select>
+            <div class="invalid-feedback">결제 방법을 선택해주세요.</div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="notes" class="form-label">비고</label>
+          <textarea 
+            class="form-control" 
+            id="notes" 
+            rows="3" 
+            formControlName="notes"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">상세 항목</h5>
+        <button type="button" class="btn btn-sm btn-primary" (click)="addDetail()">항목 추가</button>
+      </div>
+      <div class="card-body">
+        <div formArrayName="details">
+          <div *ngFor="let detailForm of details.controls; let i = index" [formGroupName]="i" class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <span>항목 #{{ i+1 }}</span>
+              <button 
+                type="button" 
+                class="btn btn-sm btn-danger" 
+                *ngIf="details.length > 1" 
+                (click)="removeDetail(i)"
+              >
+                삭제
+              </button>
+            </div>
+            <div class="card-body">
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label [for]="'partName' + i" class="form-label">부품명</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    [id]="'partName' + i" 
+                    formControlName="partName"
+                  >
+                </div>
+                <div class="col-md-6">
+                  <label [for]="'partSpecification' + i" class="form-label">규격</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    [id]="'partSpecification' + i" 
+                    formControlName="partSpecification"
+                  >
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <label [for]="'laborCost' + i" class="form-label">공임비</label>
+                  <input 
+                    type="number" 
+                    class="form-control" 
+                    [id]="'laborCost' + i" 
+                    formControlName="laborCost"
+                    min="0"
+                    [class.is-invalid]="detailForm.get('laborCost')?.invalid && detailForm.get('laborCost')?.touched"
+                  >
+                  <div class="invalid-feedback">유효한 공임비를 입력해주세요.</div>
+                </div>
+                <div class="col-md-6">
+                  <label [for]="'partPrice' + i" class="form-label">부품 가격</label>
+                  <input 
+                    type="number" 
+                    class="form-control" 
+                    [id]="'partPrice' + i" 
+                    formControlName="partPrice"
+                    min="0"
+                    [class.is-invalid]="detailForm.get('partPrice')?.invalid && detailForm.get('partPrice')?.touched"
+                  >
+                  <div class="invalid-feedback">유효한 부품 가격을 입력해주세요.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-md-8 text-end fw-bold">총 공임비:</div>
+          <div class="col-md-4">{{ calculateTotal('laborCost') | currency:'KRW':'symbol':'1.0-0' }}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-8 text-end fw-bold">총 부품비:</div>
+          <div class="col-md-4">{{ calculateTotal('partPrice') | currency:'KRW':'symbol':'1.0-0' }}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-8 text-end fw-bold">총 금액:</div>
+          <div class="col-md-4 fs-5 fw-bold">{{ calculateTotal('total') | currency:'KRW':'symbol':'1.0-0' }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-center mt-4 mb-5">
+      <button type="button" class="btn btn-secondary me-2" (click)="cancel()" [disabled]="submitting">취소</button>
+      <button type="submit" class="btn btn-primary" [disabled]="submitting">
+        <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+        {{ isEditMode ? '수정' : '저장' }}
+      </button>
+    </div>
+  </form>
+</div>

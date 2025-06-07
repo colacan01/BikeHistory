@@ -48,6 +48,14 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  /**
+ * 현재 로그인된 사용자의 ID를 반환합니다
+ * @returns 사용자 ID, 로그인되지 않은 경우 null 반환
+ */
+  public getCurrentUserId(): string | null {
+    return this.currentUser?.id || null;
+  }
+
   public get isLoggedIn(): boolean {
     return !!this.currentUser;
   }

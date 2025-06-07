@@ -1,0 +1,53 @@
+<div class="container">
+  <h2>
+    유지보수 기록
+    <span *ngIf="bikeFrameId">: 자전거 #{{ bikeFrameId }}</span>
+  </h2>
+
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-primary" (click)="createNew()">새 유지보수 기록 추가</button>
+  </div>
+
+  <div *ngIf="loading" class="d-flex justify-content-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">로딩 중...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && maintenances.length === 0" class="alert alert-info">
+    유지보수 기록이 없습니다.
+  </div>
+
+  <div *ngIf="!loading && maintenances.length > 0" class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>날짜</th>
+          <th>유형</th>
+          <th>자전거</th>
+          <th>정비소</th>
+          <th>소유자</th>
+          <th>금액</th>
+          <th>결제방법</th>
+          <th>액션</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let maintenance of maintenances" style="cursor: pointer;" (click)="viewDetail(maintenance.id)">
+          <td>{{ maintenance.maintenanceDate | date:'yyyy-MM-dd' }}</td>
+          <td>{{ getMaintenanceTypeName(maintenance.maintenanceType) }}</td>
+          <td>{{ maintenance.bikeFrame?.frameNumber }} {{ maintenance.bikeFrame?.model }}</td>
+          <td>{{ maintenance.store?.firstName }} {{ maintenance.store?.lastName }}</td>
+          <td>{{ maintenance.owner?.firstName }} {{ maintenance.owner?.lastName }}</td>
+          <td>{{ maintenance.totalAmount | currency:'KRW':'symbol':'1.0-0' }}</td>
+          <td>{{ getPaymentMethodName(maintenance.paymentMethod) }}</td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary me-1" (click)="viewDetail(maintenance.id); $event.stopPropagation();">보기</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
