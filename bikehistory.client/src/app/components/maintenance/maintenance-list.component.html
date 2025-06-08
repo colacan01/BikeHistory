@@ -38,9 +38,9 @@
         <tr *ngFor="let maintenance of maintenances" style="cursor: pointer;" (click)="viewDetail(maintenance.id)">
           <td>{{ maintenance.maintenanceDate | date:'yyyy-MM-dd' }}</td>
           <td>{{ getMaintenanceTypeName(maintenance.maintenanceType) }}</td>
-          <td>{{ maintenance.bikeFrame?.frameNumber }} {{ maintenance.bikeFrame?.model }}</td>
-          <td>{{ maintenance.store?.firstName }} {{ maintenance.store?.lastName }}</td>
-          <td>{{ maintenance.owner?.firstName }} {{ maintenance.owner?.lastName }}</td>
+          <td>{{ maintenance.bikeFrame.frameNumber }} {{ maintenance.bikeFrame.model }}</td>
+          <td>{{ maintenance.store.firstName }} {{ maintenance.store.lastName }}</td>
+          <td>{{ maintenance.owner.firstName }} {{ maintenance.owner.lastName }}</td>
           <td>{{ maintenance.totalAmount | currency:'KRW':'symbol':'1.0-0' }}</td>
           <td>{{ getPaymentMethodName(maintenance.paymentMethod) }}</td>
           <td>

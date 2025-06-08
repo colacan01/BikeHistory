@@ -26,7 +26,7 @@
         </li>
 
         <!-- Maintenanc 메뉴 추가 -->
-        <li class="nav-item dropdown" *ngIf="authService.hasRole('Admin') || authService.hasRole('Store')">
+        <li class="nav-item dropdown" *ngIf="authService.isAdmin || authService.isStore">
           <a class="nav-link dropdown-toggle" href="#" id="maintenancDropdown" role="button"
              data-bs-toggle="dropdown" aria-expanded="false">
             Store

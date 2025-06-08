@@ -48,12 +48,6 @@ namespace BikeHistory.Server.Data
                 .HasForeignKey(o => o.BikeFrameId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<Maintenance>()
-                .HasMany(m => m.MaintenanceDetails)
-                .WithOne(md => md.Maintenance)
-                .HasForeignKey(md => md.MaintenanceId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             // Configure indexes
             builder.Entity<BikeFrame>()
                 .HasIndex(b => b.FrameNumber)
@@ -63,6 +57,40 @@ namespace BikeHistory.Server.Data
             builder.Entity<MaintenanceDetail>()
                 .HasKey(md => new { md.MaintenanceId, md.Seq });
 
+            // MaintenanceDetail의 decimal 속성에 정밀도와 스케일 지정
+            builder.Entity<MaintenanceDetail>()
+                .Property(md => md.LaborCost)
+                .HasPrecision(18, 2); // 총 18자리, 소수점 이하 2자리
+
+            builder.Entity<MaintenanceDetail>()
+                .Property(md => md.PartPrice)
+                .HasPrecision(18, 2); // 총 18자리, 소수점 이하 2자리
+
+            // Maintenance 외래 키 제약 조건 수정 - 순환 참조 방지
+            builder.Entity<Maintenance>()
+                .HasOne(m => m.Store)
+                .WithMany()
+                .HasForeignKey(m => m.StoreId)
+                .OnDelete(DeleteBehavior.Restrict); // CASCADE 대신 RESTRICT 사용
+
+            builder.Entity<Maintenance>()
+                .HasOne(m => m.Owner)
+                .WithMany()
+                .HasForeignKey(m => m.OwnerId)
+                .OnDelete(DeleteBehavior.Restrict); // CASCADE 대신 RESTRICT 사용
+
+            // BikeFrame은 CASCADE 유지 가능
+            builder.Entity<Maintenance>()
+                .HasOne(m => m.BikeFrame)
+                .WithMany()
+                .HasForeignKey(m => m.BikeFrameId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Maintenance>()
+                .HasMany(m => m.MaintenanceDetails)
+                .WithOne(md => md.Maintenance)
+                .HasForeignKey(md => md.MaintenanceId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

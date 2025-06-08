@@ -39,6 +39,16 @@ export class MaintenanceFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // 현재 날짜를 YYYY-MM-DD 형식으로 설정
+    this.maintenanceForm.get('maintenanceDate')?.setValue(this.formatDateForInput(new Date()));
+
+    // 현재 로그인한 사용자를 정비소로 설정
+    const currentUserId = this.authService.getCurrentUserId();
+    if (currentUserId) {
+      this.maintenanceForm.get('storeId')?.setValue(currentUserId);
+      this.maintenanceForm.get('storeId')?.disable(); // 정비소 필드를 비활성화
+    }
+
     // URL에서 파라미터 가져오기
     this.route.params.subscribe(params => {
       if (params['id']) {
@@ -62,7 +72,15 @@ export class MaintenanceFormComponent implements OnInit {
     this.loadBikes();
     this.loadUsers();
   }
-  
+
+  // YYYY-MM-DD 형식으로 날짜를 포맷팅하는 메서드
+  formatDateForInput(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   createForm(): FormGroup {
     return this.fb.group({
       maintenanceDate: [new Date(), Validators.required],
@@ -104,8 +122,11 @@ export class MaintenanceFormComponent implements OnInit {
     this.maintenanceService.getMaintenanceById(id).subscribe({
       next: (maintenance) => {
         // 유지보수 정보로 폼 초기화
+        const maintenanceDate = new Date(maintenance.maintenanceDate);
+
+        // 유지보수 정보로 폼 초기화
         this.maintenanceForm.patchValue({
-          maintenanceDate: new Date(maintenance.maintenanceDate),
+          maintenanceDate: this.formatDateForInput(maintenanceDate), // 날짜 포맷팅
           maintenanceType: maintenance.maintenanceType,
           bikeFrameId: maintenance.bikeFrameId,
           storeId: maintenance.storeId,
@@ -182,7 +203,10 @@ export class MaintenanceFormComponent implements OnInit {
     }
     
     this.submitting = true;
-    
+
+    // 비활성화된 필드 값 가져오기
+    const storeId = this.maintenanceForm.get('storeId')?.value || this.authService.getCurrentUserId();
+
     if (this.isEditMode) {
       const updateDto: MaintenanceUpdateDto = {
         id: this.maintenanceId,
@@ -209,7 +233,7 @@ export class MaintenanceFormComponent implements OnInit {
         maintenanceDate: this.maintenanceForm.value.maintenanceDate,
         maintenanceType: this.maintenanceForm.value.maintenanceType,
         bikeFrameId: this.maintenanceForm.value.bikeFrameId,
-        storeId: this.maintenanceForm.value.storeId,
+        storeId: storeId, // 비활성화된 필드이므로 직접 값을 설정
         ownerId: this.maintenanceForm.value.ownerId,
         paymentMethod: this.maintenanceForm.value.paymentMethod,
         notes: this.maintenanceForm.value.notes,

@@ -63,35 +63,17 @@ export class AuthService {
   public get authToken(): string | null {
     return this.currentUser?.token || null;
   }
-  
-  //public get isAdmin(): boolean {
-  //  if (!this.currentUser) return false;
-
-  //  try {
-  //    // If token exists, check for admin role in token
-  //    if (this.currentUser.token) {
-  //      const decodedToken: any = jwtDecode(this.currentUser.token);
-  //      // Check role claim based on JWT structure
-  //      // Common claim names for roles: 'role', 'roles', 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
-  //      const roleClaim = decodedToken.role ||
-  //                       decodedToken.roles ||
-  //                       decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-
-  //      if (Array.isArray(roleClaim)) {
-  //        return roleClaim.includes('Admin');
-  //      } else if (typeof roleClaim === 'string') {
-  //        return roleClaim === 'Admin';
-  //      }
-  //    }
-  //    return false;
-  //  } catch (error) {
-  //    console.error('Error checking admin status:', error);
-  //    return false;
-  //  }
-  //}
 
   public get isAdmin(): boolean {
     return this.hasRole('Admin');
+  }
+
+  public get isStore(): boolean {
+    return this.hasRole('Store');
+  }
+
+  public get isLeader(): boolean {
+    return this.hasRole('Leader');
   }
 
   /**
