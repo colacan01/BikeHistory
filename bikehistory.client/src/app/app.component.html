@@ -27,13 +27,13 @@
 
         <!-- Maintenanc 메뉴 추가 -->
         <li class="nav-item dropdown" *ngIf="authService.isAdmin || authService.isStore">
-          <a class="nav-link dropdown-toggle" href="#" id="maintenancDropdown" role="button"
+          <a class="nav-link dropdown-toggle" href="#" id="maintenanceDropdown" role="button"
              data-bs-toggle="dropdown" aria-expanded="false">
             Store
           </a>
           <ul class="dropdown-menu" aria-labelledby="maintenanceDropdown">
-            <li><a class="dropdown-item" routerLink="/maintenances" routerLinkActive="active">Maintenances</a></li>
-            <li><a class="dropdown-item" routerLink="maintenances/new" routerLinkActive="active">Add Maintenance</a></li>
+            <li><a class="dropdown-item" routerLink="/maintenances" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Maintenances</a></li>
+            <li><a class="dropdown-item" routerLink="/maintenances/new" routerLinkActive="active">Add Maintenance</a></li>
           </ul>
         </li>
 
