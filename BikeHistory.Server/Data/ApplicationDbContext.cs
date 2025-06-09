@@ -16,6 +16,9 @@ namespace BikeHistory.Server.Data
         public DbSet<Brand> Brands { get; set; }
         public DbSet<BikeType> BikeTypes { get; set; }
         public DbSet<OwnershipRecord> OwnershipRecords { get; set; }
+        public DbSet<Maintenance> Maintenances { get; set; }
+        public DbSet<MaintenanceDetail> MaintenanceDetails { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -46,10 +49,21 @@ namespace BikeHistory.Server.Data
                 .HasForeignKey(o => o.BikeFrameId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity<Maintenance>()
+                .HasMany(m => m.MaintenanceDetails)
+                .WithOne(md => md.Maintenance)
+                .HasForeignKey(md => md.MaintenanceId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             // Configure indexes
             builder.Entity<BikeFrame>()
                 .HasIndex(b => b.FrameNumber)
                 .IsUnique();
+
+            // Configure Complex Key for MaintenanceDetail
+            builder.Entity<MaintenanceDetail>()
+                .HasKey(md => new { md.MaintenanceId, md.Seq });
+
         }
     }
 }
