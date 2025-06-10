@@ -12,24 +12,39 @@ namespace BikeHistory.Mobile.ViewModels
         private readonly BikeService _bikeService;
         private readonly AuthService _authService;
 
-        [ObservableProperty]
-        private ObservableCollection<BikeFrame> bikes;
+        private ObservableCollection<BikeFrame> _bikes = new ObservableCollection<BikeFrame>();
+        public ObservableCollection<BikeFrame> Bikes
+        {
+            get => _bikes;
+            set => SetProperty(ref _bikes, value);
+        }
 
-        [ObservableProperty]
-        private bool isBusy;
+        private bool _isBusy;
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set => SetProperty(ref _isBusy, value);
+        }
 
-        [ObservableProperty]
-        private string? errorMessage;
+        private string? _errorMessage;
+        public string? ErrorMessage
+        {
+            get => _errorMessage;
+            set => SetProperty(ref _errorMessage, value);
+        }
 
-        [ObservableProperty]
-        private bool isRefreshing;
+        private bool _isRefreshing;
+        public bool IsRefreshing
+        {
+            get => _isRefreshing;
+            set => SetProperty(ref _isRefreshing, value);
+        }
 
         public BikeListViewModel(BikeService bikeService, AuthService authService)
         {
             _bikeService = bikeService;
             _authService = authService;
-            //Bikes = new ObservableCollection<BikeFrame>();
-            Bikes = [];
+            _bikes = new ObservableCollection<BikeFrame>(); // Fixed ambiguity by directly assigning to the private field
         }
 
         [RelayCommand]
@@ -44,7 +59,7 @@ namespace BikeHistory.Mobile.ViewModels
                 ErrorMessage = string.Empty;
 
                 var bikeList = await _bikeService.GetBikes();
-                
+
                 Bikes.Clear();
                 foreach (var bike in bikeList)
                 {

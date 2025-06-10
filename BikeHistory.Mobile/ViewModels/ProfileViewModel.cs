@@ -10,41 +10,89 @@ namespace BikeHistory.Mobile.ViewModels
     {
         private readonly AuthService _authService;
 
-        [ObservableProperty]
-        private string email;
+        private string? email;
+        public string? Email
+        {
+            get => email;
+            set => SetProperty(ref email, value);
+        }
 
-        [ObservableProperty]
-        private string firstName;
+        private string? firstName;
+        public string? FirstName
+        {
+            get => firstName;
+            set => SetProperty(ref firstName, value);
+        }
 
-        [ObservableProperty]
-        private string lastName;
+        private string? lastName;
+        public string? LastName
+        {
+            get => lastName;
+            set => SetProperty(ref lastName, value);
+        }
 
-        [ObservableProperty]
-        private List<string> roles;
+        private List<string>? roles;
+        public List<string>? Roles
+        {
+            get => roles;
+            set => SetProperty(ref roles, value);
+        }
 
-        [ObservableProperty]
-        private string currentPassword;
+        private string? currentPassword;
+        public string? CurrentPassword
+        {
+            get => currentPassword;
+            set => SetProperty(ref currentPassword, value);
+        }
 
-        [ObservableProperty]
-        private string newPassword;
+        private string? newPassword;
+        public string? NewPassword
+        {
+            get => newPassword;
+            set => SetProperty(ref newPassword, value);
+        }
 
-        [ObservableProperty]
-        private string confirmNewPassword;
+        private string? confirmNewPassword;
+        public string? ConfirmNewPassword
+        {
+            get => confirmNewPassword;
+            set => SetProperty(ref confirmNewPassword, value);
+        }
 
-        [ObservableProperty]
         private bool isBusy;
+        public bool IsBusy
+        {
+            get => isBusy;
+            set => SetProperty(ref isBusy, value);
+        }
 
-        [ObservableProperty]
         private bool isLoading;
+        public bool IsLoading
+        {
+            get => isLoading;
+            set => SetProperty(ref isLoading, value);
+        }
 
-        [ObservableProperty]
-        private string errorMessage;
+        private string? errorMessage;
+        public string? ErrorMessage
+        {
+            get => errorMessage;
+            set => SetProperty(ref errorMessage, value);
+        }
 
-        [ObservableProperty]
-        private string successMessage;
+        private string? successMessage;
+        public string? SuccessMessage
+        {
+            get => successMessage;
+            set => SetProperty(ref successMessage, value);
+        }
 
-        [ObservableProperty]
         private bool isPasswordChangeVisible;
+        public bool IsPasswordChangeVisible
+        {
+            get => isPasswordChangeVisible;
+            set => SetProperty(ref isPasswordChangeVisible, value);
+        }
 
         public ProfileViewModel(AuthService authService)
         {
