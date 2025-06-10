@@ -10,18 +10,34 @@ namespace BikeHistory.Mobile.ViewModels
     {
         private readonly AuthService _authService;
 
-        [ObservableProperty]
-        private string email;
+        private string? email;
+        public string? Email
+        {
+            get => email;
+            set => SetProperty(ref email, value?.Trim().ToLowerInvariant()); // 이메일 소문자 및 공백 제거
+        }
 
-        [ObservableProperty]
-        private string password;
-
-        [ObservableProperty]
-        private bool isBusy;
-
-        [ObservableProperty]
-        private string errorMessage;
-
+        private string? password;
+        public string? Password
+        {
+            get => password;
+            set => SetProperty(ref password, value?.Trim()); // 비밀번호 공백 제거
+        }
+        
+        private bool? isBusy;
+        public bool? IsBusy
+        {
+            get => isBusy;
+            set => SetProperty(ref isBusy, value);
+        }
+        
+        private string? errorMessage;
+        public string? ErrorMessage
+        {
+            get => errorMessage;
+            set => SetProperty(ref errorMessage, value);
+        }
+        
         public LoginViewModel(AuthService authService)
         {
             _authService = authService;

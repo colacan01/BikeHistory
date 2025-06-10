@@ -12,48 +12,103 @@ namespace BikeHistory.Mobile.ViewModels
         private readonly BikeService _bikeService;
         private readonly CatalogService _catalogService;
 
-        [ObservableProperty]
-        private string frameNumber;
+        private string? frameNumber;
+        public string? FrameNumber
+        {
+            get => frameNumber;
+            set => SetProperty(ref frameNumber, value);
+        }
 
-        [ObservableProperty]
-        private string model;
+        private string? model;
+        public string? Model
+        {
+            get => model;
+            set => SetProperty(ref model, value);
+        }
 
-        [ObservableProperty]
-        private string color;
+        private string? color;
+        public string? Color
+        {
+            get => color;
+            set => SetProperty(ref color, value);
+        }
 
-        [ObservableProperty]
         private int? manufactureYear;
-
-        [ObservableProperty]
-        private ObservableCollection<Manufacturer> manufacturers;
-
-        [ObservableProperty]
-        private ObservableCollection<Brand> brands;
-
-        [ObservableProperty]
-        private ObservableCollection<BikeType> bikeTypes;
-
-        [ObservableProperty]
-        private Manufacturer selectedManufacturer;
-
-        [ObservableProperty]
-        private Brand selectedBrand;
-
-        [ObservableProperty]
-        private BikeType selectedBikeType;
-
-        [ObservableProperty]
+        public int? ManufactureYear
+        {
+            get => manufactureYear;
+            set => SetProperty(ref manufactureYear, value);
+        }
+        
+        private ObservableCollection<Manufacturer>? manufacturers;
+        public ObservableCollection<Manufacturer>? Manufacturers
+        {
+            get => manufacturers;
+            set => SetProperty(ref manufacturers, value);
+        }
+        
+        private ObservableCollection<Brand>? brands;
+        public ObservableCollection<Brand>? Brands
+        {
+            get => brands;
+            set => SetProperty(ref brands, value);
+        }
+        
+        private ObservableCollection<BikeType>? bikeTypes;
+        public ObservableCollection<BikeType>? BikeTypes
+        {
+            get => bikeTypes;
+            set => SetProperty(ref bikeTypes, value);
+        }
+        
+        private Manufacturer? selectedManufacturer;
+        public Manufacturer? SelectedManufacturer
+        {
+            get => selectedManufacturer;
+            set => SetProperty(ref selectedManufacturer, value);
+        }
+        
+        private Brand? selectedBrand;
+        public Brand? SelectedBrand
+        {
+            get => selectedBrand;
+            set => SetProperty(ref selectedBrand, value);
+        }
+        
+        private BikeType? selectedBikeType;
+        public BikeType? SelectedBikeType
+        {
+            get => selectedBikeType;
+            set => SetProperty(ref selectedBikeType, value);
+        }
+        
         private bool isBusy;
-
-        [ObservableProperty]
+        public bool IsBusy
+        {
+            get => isBusy;
+            set => SetProperty(ref isBusy, value);
+        }
+        
         private bool isLoading;
-
-        [ObservableProperty]
-        private string errorMessage;
-
-        [ObservableProperty]
-        private string successMessage;
-
+        public bool IsLoading
+        {
+            get => isLoading;
+            set => SetProperty(ref isLoading, value);
+        }
+        
+        private string? errorMessage;
+        public string? ErrorMessage
+        {
+            get => errorMessage;
+            set => SetProperty(ref errorMessage, value);
+        }
+        
+        private string? successMessage;
+        public string? SuccessMessage
+        {
+            get => successMessage;
+            set => SetProperty(ref successMessage, value);
+        }
         public BikeRegisterViewModel(BikeService bikeService, CatalogService catalogService)
         {
             _bikeService = bikeService;
@@ -76,24 +131,30 @@ namespace BikeHistory.Mobile.ViewModels
                 ErrorMessage = string.Empty;
 
                 // 제조사 로드
-                var manufacturerList = await _catalogService.GetManufacturers();
+                if (Manufacturers == null)
+                    Manufacturers = new ObservableCollection<Manufacturer>();
                 Manufacturers.Clear();
+                var manufacturerList = await _catalogService.GetManufacturers();
                 foreach (var manufacturer in manufacturerList)
                 {
                     Manufacturers.Add(manufacturer);
                 }
 
                 // 브랜드 로드
-                var brandList = await _catalogService.GetBrands();
+                if (Brands == null)
+                    Brands = new ObservableCollection<Brand>();
                 Brands.Clear();
+                var brandList = await _catalogService.GetBrands();
                 foreach (var brand in brandList)
                 {
                     Brands.Add(brand);
                 }
 
                 // 자전거 타입 로드
-                var bikeTypeList = await _catalogService.GetBikeTypes();
+                if (BikeTypes == null)
+                    BikeTypes = new ObservableCollection<BikeType>();
                 BikeTypes.Clear();
+                var bikeTypeList = await _catalogService.GetBikeTypes();
                 foreach (var bikeType in bikeTypeList)
                 {
                     BikeTypes.Add(bikeType);

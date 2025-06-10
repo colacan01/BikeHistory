@@ -13,26 +13,54 @@ namespace BikeHistory.Mobile.ViewModels
         private readonly BikeService _bikeService;
         private readonly AuthService _authService;
 
-        [ObservableProperty]
-        private BikeFrame bike;
+        private BikeFrame? bike;
+        public BikeFrame? Bike
+        {
+            get => bike;
+            set => SetProperty(ref bike, value);
+        }
 
-        [ObservableProperty]
-        private ObservableCollection<OwnershipRecord> ownershipHistory;
+        private ObservableCollection<OwnershipRecord>? ownershipHistory;
+        public ObservableCollection<OwnershipRecord>? OwnershipHistory 
+        { 
+            get => ownershipHistory; 
+            private set => SetProperty(ref ownershipHistory, value);
+        }
 
-        [ObservableProperty]
         private bool isBusy;
+        public bool IsBusy
+        {
+            get => isBusy;
+            set => SetProperty(ref isBusy, value);
+        }   
 
-        [ObservableProperty]
         private bool isHistoryBusy;
+        public bool IsHistoryBusy
+        {
+            get => isHistoryBusy;
+            set => SetProperty(ref isHistoryBusy, value);
+        }
 
-        [ObservableProperty]
-        private string errorMessage;
+        private string? errorMessage;
+        public string? ErrorMessage
+        {
+            get => errorMessage;
+            set => SetProperty(ref errorMessage, value);
+        }
 
-        [ObservableProperty]
         private int bikeId;
+        public int BikeId
+        {
+            get => bikeId;
+            set => SetProperty(ref bikeId, value);
+        }
 
-        [ObservableProperty]
         private bool isOwner;
+        public bool IsOwner
+        {
+            get => isOwner;
+            set => SetProperty(ref isOwner, value);
+        }
 
         public BikeDetailViewModel(BikeService bikeService, AuthService authService)
         {
@@ -91,7 +119,9 @@ namespace BikeHistory.Mobile.ViewModels
                 IsHistoryBusy = true;
 
                 var history = await _bikeService.GetBikeHistory(BikeId);
-                
+
+                // OwnershipHistory가 null인지 확인 후 초기화
+                OwnershipHistory ??= new ObservableCollection<OwnershipRecord>();
                 OwnershipHistory.Clear();
                 foreach (var record in history)
                 {

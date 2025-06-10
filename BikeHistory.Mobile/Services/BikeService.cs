@@ -35,7 +35,8 @@ namespace BikeHistory.Mobile.Services
             var response = await _httpClient.GetAsync($"{_baseUrl}/BikeFrames");
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadFromJsonAsync<List<BikeFrame>>();
+            var bikes = await response.Content.ReadFromJsonAsync<List<BikeFrame>>();
+            return bikes ?? new List<BikeFrame>(); // null 반환 방지
         }
 
         public async Task<BikeFrame> GetBikeById(int id)
@@ -46,7 +47,12 @@ namespace BikeHistory.Mobile.Services
             var response = await _httpClient.GetAsync($"{_baseUrl}/BikeFrames/{id}");
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadFromJsonAsync<BikeFrame>();
+            var bike = await response.Content.ReadFromJsonAsync<BikeFrame>();
+            if (bike == null)
+            {
+                throw new InvalidOperationException("Bike data is null."); // null 반환 방지
+            }
+            return bike;
         }
 
         public async Task<BikeFrame> RegisterBike(BikeFrameRegisterRequest request)
@@ -57,7 +63,12 @@ namespace BikeHistory.Mobile.Services
             var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/BikeFrames", request);
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadFromJsonAsync<BikeFrame>();
+            var bike = await response.Content.ReadFromJsonAsync<BikeFrame>();
+            if (bike == null)
+            {
+                throw new InvalidOperationException("Bike registration response is null."); // null 반환 방지
+            }
+            return bike;
         }
 
         public async Task<BikeFrame> UpdateBike(int id, BikeFrameRegisterRequest request)
@@ -65,7 +76,12 @@ namespace BikeHistory.Mobile.Services
             var response = await _httpClient.PutAsJsonAsync($"{_baseUrl}/BikeFrames/{id}", request);
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadFromJsonAsync<BikeFrame>();
+            var bike = await response.Content.ReadFromJsonAsync<BikeFrame>();
+            if (bike == null)
+            {
+                throw new InvalidOperationException("Bike update response is null."); // null 반환 방지
+            }
+            return bike;
         }
 
         public async Task<bool> TransferBike(int id, OwnershipTransferRequest request)
@@ -79,7 +95,8 @@ namespace BikeHistory.Mobile.Services
             var response = await _httpClient.GetAsync($"{_baseUrl}/BikeFrames/{id}/history");
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadFromJsonAsync<List<OwnershipRecord>>();
+            var history = await response.Content.ReadFromJsonAsync<List<OwnershipRecord>>();
+            return history ?? new List<OwnershipRecord>(); // null 반환 방지
         }
 
 
@@ -92,7 +109,7 @@ namespace BikeHistory.Mobile.Services
 
 
         // 토큰이 변경될 때 호출되는 메서드
-        public void UpdateAuthToken(string token)
+        public void UpdateAuthToken(string? token)
         {
             if (!string.IsNullOrEmpty(token))
             {

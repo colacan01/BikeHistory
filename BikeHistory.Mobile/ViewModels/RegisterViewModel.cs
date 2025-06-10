@@ -10,30 +10,60 @@ namespace BikeHistory.Mobile.ViewModels
     {
         private readonly AuthService _authService;
 
-        [ObservableProperty]
-        private string email;
+        private string? email;
+        public string? Email
+        {
+            get => email;
+            set => SetProperty(ref email, value);
+        }
 
-        [ObservableProperty]
-        private string password;
+        private string? password;
+        public string? Password
+        {
+            get => password;
+            set => SetProperty(ref password, value);
+        }
 
-        [ObservableProperty]
-        private string confirmPassword;
+        private string? confirmPassword;
+        public string? ConfirmPassword
+        {
+            get => confirmPassword;
+            set => SetProperty(ref confirmPassword, value);
+        }
 
-        [ObservableProperty]
-        private string firstName;
+        private string? firstName;
+        public string? FirstName
+        {
+            get => firstName;
+            set => SetProperty(ref firstName, value);
+        }
 
-        [ObservableProperty]
-        private string lastName;
+        private string? lastName;
+        public string? LastName
+        {
+            get => lastName;
+            set => SetProperty(ref lastName, value);
+        }
 
-        [ObservableProperty]
         private bool isBusy;
+        public bool IsBusy
+        {
+            get => isBusy;
+            set => SetProperty(ref isBusy, value);
+        }
 
-        [ObservableProperty]
-        private string errorMessage;
-
-        [ObservableProperty]
-        private string successMessage;
-
+        private string? errorMessage;
+        public string? ErrorMessage
+        {
+            get => errorMessage;
+            set => SetProperty(ref errorMessage, value);
+        }
+        private string? successMessage;
+        public string? SuccessMessage
+        {
+            get => successMessage;
+            set => SetProperty(ref successMessage, value);
+        }
         public RegisterViewModel(AuthService authService)
         {
             _authService = authService;

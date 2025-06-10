@@ -86,7 +86,7 @@ namespace BikeHistory.Mobile.Services
 
             AuthenticationStateChanged?.Invoke();
 
-            return authResponse!;
+            return authResponse; // null이 아님이 보장됨
         }
 
         public async Task<bool> Register(RegisterRequest request)

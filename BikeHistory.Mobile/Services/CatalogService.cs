@@ -27,7 +27,8 @@ namespace BikeHistory.Mobile.Services
             var response = await _httpClient.GetAsync($"{_baseUrl}/catalog/manufacturers");
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadFromJsonAsync<List<Manufacturer>>();
+            var manufacturers = await response.Content.ReadFromJsonAsync<List<Manufacturer>>();
+            return manufacturers ?? new List<Manufacturer>();
         }
 
         public async Task<List<Brand>> GetBrands()
@@ -35,7 +36,8 @@ namespace BikeHistory.Mobile.Services
             var response = await _httpClient.GetAsync($"{_baseUrl}/catalog/brands");
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadFromJsonAsync<List<Brand>>();
+            var brands = await response.Content.ReadFromJsonAsync<List<Brand>>();
+            return brands ?? new List<Brand>();
         }
 
         public async Task<List<BikeType>> GetBikeTypes()
@@ -43,7 +45,8 @@ namespace BikeHistory.Mobile.Services
             var response = await _httpClient.GetAsync($"{_baseUrl}/catalog/biketypes");
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadFromJsonAsync<List<BikeType>>();
+            var bikeTypes = await response.Content.ReadFromJsonAsync<List<BikeType>>();
+            return bikeTypes ?? new List<BikeType>();
         }
     }
 }
