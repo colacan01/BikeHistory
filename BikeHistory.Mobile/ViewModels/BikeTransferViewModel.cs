@@ -12,34 +12,72 @@ namespace BikeHistory.Mobile.ViewModels
         private readonly BikeService _bikeService;
         private readonly AuthService _authService;
 
-        [ObservableProperty]
-        private BikeFrame bike;
+        private BikeFrame? bike;
+        public BikeFrame? Bike
+        {
+            get => bike;
+            set => SetProperty(ref bike, value);
+        }
 
-        [ObservableProperty]
         private string newOwnerId;
+        public string NewOwnerId 
+        { 
+            get => newOwnerId; 
+            set => SetProperty(ref newOwnerId, value); 
+        }
 
-        [ObservableProperty]
         private string notes;
+        public string Notes 
+        { 
+            get => notes; 
+            set => SetProperty(ref notes, value); 
+        }
 
-        [ObservableProperty]
         private bool isBusy;
+        public bool IsBusy
+        {
+            get => isBusy;
+            set => SetProperty(ref isBusy, value);
+        }
 
-        [ObservableProperty]
         private bool isLoading;
+        public bool IsLoading
+        {
+            get => isLoading;
+            set => SetProperty(ref isLoading, value);
+        }
 
-        [ObservableProperty]
         private string errorMessage;
+        public string ErrorMessage
+        { 
+            get => errorMessage; 
+            set => SetProperty(ref errorMessage, value); 
+        }
 
-        [ObservableProperty]
         private string successMessage;
+        public string SuccessMessage
+        {
+            get => successMessage;
+            set => SetProperty(ref successMessage, value);
+        }
 
-        [ObservableProperty]
         private int bikeId;
+        public int BikeId
+        {
+            get => bikeId; 
+            set => SetProperty(ref bikeId, value);
+        }
 
         public BikeTransferViewModel(BikeService bikeService, AuthService authService)
         {
             _bikeService = bikeService;
             _authService = authService;
+
+            // null을 허용하지 않는 필드 초기화
+            newOwnerId = string.Empty;
+            notes = string.Empty;
+            errorMessage = string.Empty;
+            successMessage = string.Empty;
         }
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)

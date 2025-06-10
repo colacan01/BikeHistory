@@ -11,10 +11,10 @@ namespace BikeHistory.Mobile.Services
         private readonly HttpClient _httpClient;
         private readonly string _baseUrl;
 
-        public User CurrentUser { get; private set; }
+        public User? CurrentUser { get; private set; } // Made nullable to address CS8618
         public bool IsLoggedIn => CurrentUser != null;
 
-        public event Action AuthenticationStateChanged;
+        public event Action? AuthenticationStateChanged; // Made nullable to address CS8618
 
         public AuthService()
         {
@@ -38,7 +38,7 @@ namespace BikeHistory.Mobile.Services
 
                     CurrentUser = new User
                     {
-                        Id = jwtToken.Claims.FirstOrDefault(c => c.Type == "nameid" || c.Type == "sub")?.Value,
+                        Id = jwtToken.Claims.FirstOrDefault(c => c.Type == "nameid" || c.Type == "sub")?.Value ?? string.Empty,
                         Email = jwtToken.Claims.FirstOrDefault(c => c.Type == "email")?.Value,
                         FirstName = jwtToken.Claims.FirstOrDefault(c => c.Type == "given_name")?.Value,
                         LastName = jwtToken.Claims.FirstOrDefault(c => c.Type == "family_name")?.Value,
@@ -64,6 +64,11 @@ namespace BikeHistory.Mobile.Services
 
             var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>();
 
+            if (authResponse == null)
+            {
+                throw new InvalidOperationException("AuthResponse is null.");
+            }
+
             // 토큰 저장 및 헤더 설정
             await SecureStorage.SetAsync(Constants.AuthTokenKey, authResponse.Token);
             _httpClient.DefaultRequestHeaders.Authorization =
@@ -81,7 +86,7 @@ namespace BikeHistory.Mobile.Services
 
             AuthenticationStateChanged?.Invoke();
 
-            return authResponse;
+            return authResponse!;
         }
 
         public async Task<bool> Register(RegisterRequest request)
@@ -105,7 +110,13 @@ namespace BikeHistory.Mobile.Services
             var response = await _httpClient.GetAsync($"{_baseUrl}/auth/profile");
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadFromJsonAsync<ProfileResponse>();
+            var profileResponse = await response.Content.ReadFromJsonAsync<ProfileResponse>();
+            if (profileResponse == null)
+            {
+                throw new InvalidOperationException("ProfileResponse is null.");
+            }
+
+            return profileResponse;
         }
 
         public async Task<AuthResponse> UpdateProfile(UpdateProfileRequest request)
@@ -115,15 +126,20 @@ namespace BikeHistory.Mobile.Services
 
             var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>();
 
-            if (!string.IsNullOrEmpty(authResponse.Token))
+            if (!string.IsNullOrEmpty(authResponse?.Token))
             {
                 await SecureStorage.SetAsync(Constants.AuthTokenKey, authResponse.Token);
                 _httpClient.DefaultRequestHeaders.Authorization =
                     new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authResponse.Token);
 
-                CurrentUser.FirstName = authResponse.FirstName;
-                CurrentUser.LastName = authResponse.LastName;
-                CurrentUser.Token = authResponse.Token;
+                CurrentUser = new User
+                {
+                    Id = authResponse.UserId,
+                    Email = authResponse.Email,
+                    FirstName = authResponse.FirstName,
+                    LastName = authResponse.LastName,
+                    Token = authResponse.Token
+                };
 
                 AuthenticationStateChanged?.Invoke();
             }
