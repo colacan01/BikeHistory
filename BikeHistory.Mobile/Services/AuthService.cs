@@ -46,8 +46,7 @@ namespace BikeHistory.Mobile.Services
                     };
 
                     // 토큰 헤더 설정
-                    _httpClient.DefaultRequestHeaders.Authorization =
-                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
                 }
                 catch
                 {
@@ -62,17 +61,11 @@ namespace BikeHistory.Mobile.Services
             var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/auth/login", request);
             response.EnsureSuccessStatusCode();
 
-            var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>();
-
-            if (authResponse == null)
-            {
-                throw new InvalidOperationException("AuthResponse is null.");
-            }
+            var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>() ?? throw new InvalidOperationException("AuthResponse is null.");
 
             // 토큰 저장 및 헤더 설정
             await SecureStorage.SetAsync(Constants.AuthTokenKey, authResponse.Token);
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authResponse.Token);
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authResponse.Token);
 
             // 사용자 정보 설정
             CurrentUser = new User
@@ -110,11 +103,7 @@ namespace BikeHistory.Mobile.Services
             var response = await _httpClient.GetAsync($"{_baseUrl}/auth/profile");
             response.EnsureSuccessStatusCode();
 
-            var profileResponse = await response.Content.ReadFromJsonAsync<ProfileResponse>();
-            if (profileResponse == null)
-            {
-                throw new InvalidOperationException("ProfileResponse is null.");
-            }
+            var profileResponse = await response.Content.ReadFromJsonAsync<ProfileResponse>() ?? throw new InvalidOperationException("ProfileResponse is null.");
 
             return profileResponse;
         }
@@ -124,13 +113,12 @@ namespace BikeHistory.Mobile.Services
             var response = await _httpClient.PutAsJsonAsync($"{_baseUrl}/auth/profile", request);
             response.EnsureSuccessStatusCode();
 
-            var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>();
+            var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>() ?? throw new InvalidOperationException("AuthResponse is null.");
 
-            if (!string.IsNullOrEmpty(authResponse?.Token))
+            if (!string.IsNullOrEmpty(authResponse.Token))
             {
                 await SecureStorage.SetAsync(Constants.AuthTokenKey, authResponse.Token);
-                _httpClient.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authResponse.Token);
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authResponse.Token);
 
                 CurrentUser = new User
                 {
@@ -143,7 +131,6 @@ namespace BikeHistory.Mobile.Services
 
                 AuthenticationStateChanged?.Invoke();
             }
-
             return authResponse;
         }
 
