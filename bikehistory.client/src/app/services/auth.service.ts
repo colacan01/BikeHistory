@@ -48,6 +48,18 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  /**
+* 현재 로그인된 사용자의 ID를 반환합니다
+* @returns 사용자 ID, 로그인되지 않은 경우 null 반환
+*/
+  public getCurrentUserId(): string | null {
+    return this.currentUser?.id || null;
+  }
+
+  /**
+   * 현재 로그인된 사용자가 있는지 확인합니다
+   * @returns 로그인된 경우 true, 그렇지 않으면 false
+   */
   public get isLoggedIn(): boolean {
     return !!this.currentUser;
   }
@@ -58,6 +70,14 @@ export class AuthService {
 
   public get isAdmin(): boolean {
     return this.hasRole('Admin');
+  }
+
+  public get isStore(): boolean {
+    return this.hasRole('Store');
+  }
+
+  public get isLeader(): boolean {
+    return this.hasRole('Leader');
   }
 
   /**

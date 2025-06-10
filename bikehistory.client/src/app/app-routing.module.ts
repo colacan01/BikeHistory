@@ -7,6 +7,9 @@ import { BikeDetailComponent } from './components/bikes/bike-detail.component';
 import { BikeListComponent } from './components/bikes/bike-list.component';
 import { BikeRegisterComponent } from './components/bikes/bike-register.component';
 import { BikeTransferComponent } from './components/bikes/bike-transfer.component';
+import { MaintenanceListComponent } from './components/maintenance/maintenance-list.component';
+import { MaintenanceDetailComponent } from './components/maintenance/maintenance-detail.component';
+import { MaintenanceFormComponent } from './components/maintenance/maintenance-form.component';
 import { AuthGuard } from './guards/auth.guard';
 import { ManufacturerManagementComponent } from './components/admin/manufacturer-management.component';
 import { BrandManagementComponent } from './components/admin/brand-management.component';
@@ -69,7 +72,31 @@ const routes: Routes = [
     canActivate: [AuthGuard], // 추가
     data: { roles: ['Admin'] } // 추가
   },
-
+  // 유지보수 관련 라우트
+  {
+    path: 'maintenances',
+    component: MaintenanceListComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Admin', 'Store'] }
+  },
+  {
+    path: 'maintenances/new',
+    component: MaintenanceFormComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Admin', 'Store'] }
+  },
+  {
+    path: 'maintenances/edit/:id',
+    component: MaintenanceFormComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Admin', 'Store'] }
+  },
+  {
+    path: 'maintenances/:id',
+    component: MaintenanceDetailComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['Admin', 'Store'] }
+  },
   // 존재하지 않는 경로는 자전거 목록으로 리다이렉트
   { path: '**', redirectTo: '/bikes' }
 ];

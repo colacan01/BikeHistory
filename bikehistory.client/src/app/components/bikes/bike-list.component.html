@@ -35,7 +35,8 @@
         </div>
         <div class="card-footer">
           <a [routerLink]="['/bikes', bike.id]" class="btn btn-primary me-2">Details</a>
-          <a [routerLink]="['/bikes', bike.id, 'transfer']" class="btn btn-outline-secondary">Transfer</a>
+          <a [routerLink]="['/bikes', bike.id, 'transfer']" class="btn btn-outline-secondary me-2">Transfer</a>
+          <a [routerLink]="['/maintenances/new']" [queryParams]="{bikeFrameId: bike.id}" class="btn btn-outline-secondary">Mainternance</a>
         </div>
       </div>
     </div>

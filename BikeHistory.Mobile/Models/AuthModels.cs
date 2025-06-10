@@ -6,7 +6,7 @@ namespace BikeHistory.Mobile.Models
     public class User
     {
         [Required]
-        public string Id { get; set; }
+        public required string Id { get; set; }
         public string? Email { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
@@ -16,40 +16,40 @@ namespace BikeHistory.Mobile.Models
     public class LoginRequest
     {
         [Required]
-        public string Email { get; set; }
+        public required string Email { get; set; }
 
         [Required]
-        public string Password { get; set; }
+        public required string Password { get; set; }
     }
 
     public class RegisterRequest
     {
         [Required]
-        public string Email { get; set; }
+        public required string Email { get; set; }
 
         [Required]
-        public string Password { get; set; }
+        public required string Password { get; set; }
 
         [Required]
-        public string ConfirmPassword { get; set; }
+        public required string ConfirmPassword { get; set; }
 
         [Required]
-        public string FirstName { get; set; }
+        public required string FirstName { get; set; }
 
         [Required]
-        public string LastName { get; set; }
+        public required string LastName { get; set; }
     }
 
     public class AuthResponse
     {
         [Required]
-        public string Token { get; set; }
+        public required string Token { get; set; }
 
         [Required]
-        public string UserId { get; set; }
+        public required string UserId { get; set; }
 
         [Required]
-        public string Email { get; set; }
+        public required string Email { get; set; }
 
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
@@ -58,10 +58,10 @@ namespace BikeHistory.Mobile.Models
     public class ProfileResponse
     {
         [Required]
-        public string UserId { get; set; }
+        public required string UserId { get; set; }
 
         [Required]
-        public string Email { get; set; }
+        public required string Email { get; set; }
 
 
         public string? FirstName { get; set; }
@@ -76,12 +76,12 @@ namespace BikeHistory.Mobile.Models
         public string? LastName { get; set; }
 
         [Required]
-        public string CurrentPassword { get; set; }
+        public string? CurrentPassword { get; set; }
 
         [Required]
-        public string NewPassword { get; set; }
+        public string? NewPassword { get; set; }
 
         [Required]
-        public string ConfirmNewPassword { get; set; }
+        public string? ConfirmNewPassword { get; set; }
     }
 }

@@ -19,7 +19,7 @@ namespace BikeHistory.Mobile.ViewModels
         private bool isBusy;
 
         [ObservableProperty]
-        private string errorMessage;
+        private string? errorMessage;
 
         [ObservableProperty]
         private bool isRefreshing;
@@ -28,7 +28,8 @@ namespace BikeHistory.Mobile.ViewModels
         {
             _bikeService = bikeService;
             _authService = authService;
-            Bikes = new ObservableCollection<BikeFrame>();
+            //Bikes = new ObservableCollection<BikeFrame>();
+            Bikes = [];
         }
 
         [RelayCommand]

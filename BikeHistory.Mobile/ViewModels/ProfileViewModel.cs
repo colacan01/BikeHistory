@@ -49,7 +49,8 @@ namespace BikeHistory.Mobile.ViewModels
         public ProfileViewModel(AuthService authService)
         {
             _authService = authService;
-            Roles = new List<string>();
+            //Roles = new List<string>();
+            Roles = [];
             IsPasswordChangeVisible = false;
         }
 
@@ -68,9 +69,9 @@ namespace BikeHistory.Mobile.ViewModels
                 var profile = await _authService.GetProfile();
                 
                 Email = profile.Email;
-                FirstName = profile.FirstName;
-                LastName = profile.LastName;
-                Roles = profile.Roles;
+                FirstName = profile.FirstName ?? string.Empty;
+                LastName = profile.LastName ?? string.Empty;
+                Roles = profile.Roles ?? [];        // roles가 없다면, 빈 리스트로 초기화
             }
             catch (Exception ex)
             {
