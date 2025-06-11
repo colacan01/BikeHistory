@@ -24,8 +24,8 @@ namespace BikeHistory.Mobile.ViewModels
             set => SetProperty(ref password, value?.Trim()); // 비밀번호 공백 제거
         }
         
-        private bool? isBusy;
-        public bool? IsBusy
+        private bool isBusy;
+        public bool IsBusy
         {
             get => isBusy;
             set => SetProperty(ref isBusy, value);
@@ -41,6 +41,7 @@ namespace BikeHistory.Mobile.ViewModels
         public LoginViewModel(AuthService authService)
         {
             _authService = authService;
+            IsBusy = false;  // 명시적으로 초기화
         }
 
         [RelayCommand]
