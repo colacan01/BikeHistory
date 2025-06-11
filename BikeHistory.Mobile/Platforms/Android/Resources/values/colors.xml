@@ -3,4 +3,10 @@
     <color name="colorPrimary">#512BD4</color>
     <color name="colorPrimaryDark">#2B0B98</color>
     <color name="colorAccent">#2B0B98</color>
+	<color name="maui_splash_color">#FFFFFF</color>
+    <color name="maui_splash_text_color">#512BD4</color>
+    <color name="maui_splash_icon_color">#512BD4</color>
+    <color name="maui_splash_background_color">#FFFFFF</color>
+    <color name="maui_splash_foreground_color">#512BD4</color>
+	<color name="maui_splash_border_color">#512BD4</color>
 </resources>
