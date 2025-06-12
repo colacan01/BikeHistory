@@ -6,11 +6,11 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "bikehistory.client", "bikehistory.client\bikehistory.client.esproj", "{9E825C07-FA82-595D-3E93-E435FEEA8ABC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeHistory.Server", "BikeHistory.Server\BikeHistory.Server.csproj", "{34E2C5CA-B941-4F6D-A128-61E9420FD0E4}"
-	ProjectSection(ProjectDependencies) = postProject
-		{CE0EA69C-7A07-4F71-B800-40ABE181FCF0} = {CE0EA69C-7A07-4F71-B800-40ABE181FCF0}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BikeHistory.Mobile", "BikeHistory.Mobile\BikeHistory.Mobile.csproj", "{CE0EA69C-7A07-4F71-B800-40ABE181FCF0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{34E2C5CA-B941-4F6D-A128-61E9420FD0E4} = {34E2C5CA-B941-4F6D-A128-61E9420FD0E4}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
