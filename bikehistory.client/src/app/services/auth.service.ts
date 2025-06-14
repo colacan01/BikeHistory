@@ -16,7 +16,7 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
   ) {
     // Initialize from localStorage
     const storedToken = localStorage.getItem(this.tokenKey);
@@ -144,7 +144,7 @@ export class AuthService {
   logout(): void {
     // Remove token from localStorage
     localStorage.removeItem(this.tokenKey);
-    
+
     // Set current user to null
     this.currentUserSubject.next(null);
     

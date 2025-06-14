@@ -65,6 +65,7 @@ builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<BikeService>();
 builder.Services.AddScoped<CatalogService>();
 builder.Services.AddScoped<MaintenanceService>();
+builder.Services.AddScoped<IUserActivityLogger, UserActivityLogger>();
 
 // Configure CORS
 builder.Services.AddCors(options =>
