@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MaintenanceService } from '../../services/maintenance.service';
 import { Maintenance, MaintenanceType, PaymentMethod } from '../../models/maintenance.model';
+import { ActivityLoggerService } from '../../services/activity-logger.service';
 
 @Component({
   selector: 'app-maintenance-list',
@@ -23,7 +24,8 @@ export class MaintenanceListComponent implements OnInit {
   constructor(
     private maintenanceService: MaintenanceService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private activityLogger: ActivityLoggerService
   ) { }
 
   ngOnInit(): void {
@@ -32,6 +34,7 @@ export class MaintenanceListComponent implements OnInit {
       this.bikeFrameId = params['bikeFrameId'] ? +params['bikeFrameId'] : undefined;
       this.ownerId = params['ownerId'];
       this.storeId = params['storeId'];
+
       
       this.loadMaintenances();
     });
@@ -45,6 +48,13 @@ export class MaintenanceListComponent implements OnInit {
       this.maintenanceService.getMaintenancesByBikeId(this.bikeFrameId)
         .subscribe({
           next: (data) => {
+            // 자전거 상세 페이지 조회 로깅
+            this.activityLogger.logAction('ViewMaintenanceHistoryAll', {
+              bikeFrameId: this.bikeFrameId?.toString() ?? 'undefined',
+              ownerId: this.ownerId ?? 'undefined',
+              storeId: this.storeId ?? 'undefined'
+            });
+
             this.maintenances = data;
             this.loading = false;
           },
@@ -59,6 +69,10 @@ export class MaintenanceListComponent implements OnInit {
       this.maintenanceService.getMaintenances(this.ownerId, this.storeId)
         .subscribe({
           next: (data) => {
+            this.activityLogger.logAction('ViewMaintenanceHistoryUser', {
+              ownerId: this.ownerId ?? 'undefined',
+              storeId: this.storeId ?? 'undefined',
+            });
             this.maintenances = data;
             this.loading = false;
           },

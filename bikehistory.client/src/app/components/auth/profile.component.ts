@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProfileResponse, UpdateProfileRequest } from '../../models/auth.model';
 import { AuthService } from '../../services/auth.service';
+import { ActivityLoggerService } from '../../services/activity-logger.service';
 
 @Component({
   selector: 'app-profile',
@@ -24,12 +25,15 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private activityLogger: ActivityLoggerService
   ) { }
 
   ngOnInit(): void {
     this.initForms();
     this.loadProfile();
+    // 자전거 상세 페이지 조회 로깅
+    this.activityLogger.logAction('ViewUserProfile');
   }
 
   get f() { return this.profileForm.controls; }
@@ -138,12 +142,24 @@ export class ProfileComponent implements OnInit {
     this.authService.updateProfile(profileData).subscribe({
       next: (response) => {
         if (isPasswordChange) {
+          // 자전거 상세 페이지 조회 로깅
+          this.activityLogger.logAction('ChangePassword', {
+            firstName: profileData.firstName,
+            lastName: profileData.lastName
+          });
+
           this.passwordSuccess = 'Password updated successfully.';
           this.passwordLoading = false;
           this.passwordSubmitted = false;
           this.passwordForm.reset();
           this.showPasswordChange = false;
         } else {
+          // 자전거 상세 페이지 조회 로깅
+          this.activityLogger.logAction('UpdateUserProfile', {
+            firstName: profileData.firstName,
+            lastName: profileData.lastName
+          });
+
           this.success = 'Profile updated successfully.';
           this.loading = false;
           

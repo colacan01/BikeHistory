@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { BikeType, Brand, Manufacturer } from '../../models/catalog.model';
 import { BikeService } from '../../services/bike.service';
 import { CatalogService } from '../../services/catalog.service';
+import { ActivityLoggerService } from '../../services/activity-logger.service';
 
 @Component({
   selector: 'app-bike-register',
@@ -26,7 +27,8 @@ export class BikeRegisterComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private bikeService: BikeService,
-    private catalogService: CatalogService
+    private catalogService: CatalogService,
+    private activityLogger: ActivityLoggerService
   ) { }
 
   ngOnInit(): void {
@@ -39,6 +41,9 @@ export class BikeRegisterComponent implements OnInit {
       manufactureYear: [null],
       color: ['']
     });
+
+    // 자전거 등록양식 페이지 조회 로깅
+    this.activityLogger.logAction('ViewBikeRegisterForm');
 
     this.loadCatalogData();
   }
@@ -102,6 +107,17 @@ export class BikeRegisterComponent implements OnInit {
     })
       .subscribe({
         next: () => {
+          // 자전거 프레임 등록 로깅
+          this.activityLogger.logAction('RegistBikeFrame', {
+            frameNumber: this.f['frameNumber'].value,
+            manufacturerId: this.f['manufacturerId'].value,
+            brandId: this.f['brandId'].value,
+            bikeTypeId: this.f['bikeTypeId'].value,
+            model: this.f['model'].value,
+            manufactureYear: this.f['manufactureYear'].value,
+            color: this.f['color'].value
+          });
+
           this.router.navigate(['/bikes']);
         },
         error: error => {

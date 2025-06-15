@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BikeFrame } from '../../models/bike.model';
 import { BikeService } from '../../services/bike.service';
 import { ActivatedRoute } from '@angular/router';
-
+import { ActivityLoggerService } from '../../services/activity-logger.service';
 
 @Component({
   selector: 'app-bike-list',
@@ -17,7 +17,8 @@ export class BikeListComponent implements OnInit {
 
   constructor(
     private bikeService: BikeService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private activityLogger: ActivityLoggerService
   ) { }
 
   ngOnInit(): void {
@@ -25,6 +26,8 @@ export class BikeListComponent implements OnInit {
     if (ownerId) {
       this.fromUserManagement = true;
     }
+
+    this.activityLogger.logAction('ViewBikeList');
 
     this.loadBikes(ownerId);
   }
