@@ -182,7 +182,7 @@ namespace BikeHistory.Server.Controllers
 
         // 사용자 목록 조회 (관리자 전용)
         [HttpGet("users")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Store")]
         public async Task<IActionResult> GetUsers()
         {
             // 모든 사용자 조회
@@ -212,7 +212,7 @@ namespace BikeHistory.Server.Controllers
 
         // 특정 사용자 조회 (관리자 전용)
         [HttpGet("users/{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Store")]
         public async Task<IActionResult> GetUser(string id)
         {
             // 사용자 정보 조회
