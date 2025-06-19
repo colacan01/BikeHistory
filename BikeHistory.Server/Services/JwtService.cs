@@ -37,7 +37,17 @@ namespace BikeHistory.Server.Services
                 claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
                 claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
             }
-            
+
+            if(!string.IsNullOrEmpty(user.FirstName))
+            {
+                claims.Add(new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName));
+            }
+
+            if (!string.IsNullOrEmpty(user.LastName))
+            {
+                claims.Add(new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName));
+            }
+
             if (!string.IsNullOrEmpty(user.Email))
             {
                 claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));

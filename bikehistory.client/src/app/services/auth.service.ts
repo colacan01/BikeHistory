@@ -33,6 +33,20 @@ export class AuthService {
           lastName: decodedToken.family_name || decodedToken.lastName,
           token: storedToken
         };
+
+        // firstName과 lastName이 없을 경우를 대비한 추가 처리
+        if (!userData.firstName && !userData.lastName && decodedToken.name) {
+          const nameParts = decodedToken.name.split(' ');
+          userData.firstName = nameParts[0] || '';
+          userData.lastName = nameParts.slice(1).join(' ') || '';
+        }
+
+        // 계속 firstName이나 lastName이 없다면 email에서 유추
+        if (!userData.firstName && userData.email) {
+          userData.firstName = userData.email.split('@')[0];
+          userData.lastName = '';
+        }
+
       } catch (error) {
         // Token is invalid, remove it
         localStorage.removeItem(this.tokenKey);
