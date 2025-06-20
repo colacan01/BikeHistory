@@ -11,7 +11,7 @@ namespace BikeHistory.Mobile
             InitializeComponent();
 
             _authService = authService;
-            MainPage = new AppShell();
+            MainPage = new AppShell(authService); // AppShell 생성자에 AuthService 전달
 
             // 인증 상태에 따라 시작 페이지 설정
             CheckAuthState();

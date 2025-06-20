@@ -8,6 +8,43 @@
     xmlns:bikes="clr-namespace:BikeHistory.Mobile.Views.Bikes"
     Shell.FlyoutBehavior="Disabled">
 
+    <Shell.Resources>
+        <ResourceDictionary>
+            <Style x:Key="BaseStyle" TargetType="Element">
+                <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Gray950}}" />
+                <Setter Property="Shell.ForegroundColor" Value="{OnPlatform WinUI={StaticResource Primary}, Default={StaticResource White}}" />
+                <Setter Property="Shell.TitleColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+                <Setter Property="Shell.DisabledColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray950}}" />
+                <Setter Property="Shell.UnselectedColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray950}}" />
+            </Style>
+            <Style TargetType="ShellContent" BasedOn="{StaticResource BaseStyle}" />
+        </ResourceDictionary>
+    </Shell.Resources>
+
+    <Shell.TitleView>
+        <Grid ColumnDefinitions="Auto,*" VerticalOptions="Center" Margin="0,5,0,5">
+            <Image Grid.Column="0" 
+               Source="default_profile.jpg" 
+               HeightRequest="40" 
+               WidthRequest="40"
+               Aspect="AspectFill" 
+               VerticalOptions="Center"
+               HorizontalOptions="Start"
+               Margin="10,0">
+                <Image.Clip>
+                    <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20" />
+                </Image.Clip>
+            </Image>
+            <Label Grid.Column="1" 
+               x:Name="UserFullName"
+               Text="{Binding FullName, Source={RelativeSource AncestorType={x:Type local:AppShell}}}"
+               FontAttributes="Bold"
+               FontSize="16"
+               VerticalOptions="Center"
+               HorizontalOptions="Start" />
+        </Grid>
+    </Shell.TitleView>
+    
     <ShellContent
     Title="로그인"
     ContentTemplate="{DataTemplate auth:LoginPage}"
