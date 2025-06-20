@@ -5,13 +5,15 @@ namespace BikeHistory.Mobile
     public partial class App : Application
     {
         private readonly AuthService _authService;
+        private readonly ActivityLoggerService _activityLogger;
 
-        public App(AuthService authService)
+        public App(AuthService authService, ActivityLoggerService activityLogger)
         {
             InitializeComponent();
 
             _authService = authService;
-            MainPage = new AppShell(authService); // AppShell 생성자에 AuthService 전달
+            _activityLogger = activityLogger;
+            MainPage = new AppShell(_authService, _activityLogger);
 
             // 인증 상태에 따라 시작 페이지 설정
             CheckAuthState();

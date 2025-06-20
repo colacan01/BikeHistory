@@ -1,10 +1,7 @@
 ﻿using BikeHistory.Mobile.Services;
 using BikeHistory.Mobile.Views.Auth;
 using BikeHistory.Mobile.Views.Bikes;
-using Microsoft.Maui.Controls;
-using System;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace BikeHistory.Mobile
@@ -12,6 +9,7 @@ namespace BikeHistory.Mobile
     public partial class AppShell : Shell, INotifyPropertyChanged
     {
         private readonly AuthService _authService;
+        private readonly ActivityLoggerService _activityLogger;
         private string _userFullName = string.Empty;
 
         public string FullName
@@ -22,16 +20,20 @@ namespace BikeHistory.Mobile
                 if (_userFullName != value)
                 {
                     _userFullName = value;
-                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(FullName));
                 }
             }
         }
 
-        public AppShell(AuthService authService)
+        public AppShell(AuthService authService, ActivityLoggerService activityLogger)
         {
             InitializeComponent();
 
             _authService = authService;
+            _activityLogger = activityLogger;
+
+            // 네비게이션 이벤트 구독
+            Navigated += OnShellNavigated;
 
             // 인증 상태 변경 이벤트 구독
             _authService.AuthenticationStateChanged += OnAuthenticationStateChanged;
@@ -45,6 +47,12 @@ namespace BikeHistory.Mobile
             Routing.RegisterRoute("login", typeof(LoginPage));
             Routing.RegisterRoute("register", typeof(RegisterPage));
             Routing.RegisterRoute("profile", typeof(ProfilePage));
+        }
+
+        private async void OnShellNavigated(object? sender, ShellNavigatedEventArgs e)
+        {
+            // 페이지 이동 로깅
+            await _activityLogger.LogNavigationAsync(e.Current.Location.ToString());
         }
 
         private void OnAuthenticationStateChanged()
@@ -73,6 +81,7 @@ namespace BikeHistory.Mobile
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
+            Navigated -= OnShellNavigated;
             _authService.AuthenticationStateChanged -= OnAuthenticationStateChanged;
         }
 

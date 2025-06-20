@@ -22,6 +22,7 @@ namespace BikeHistory.Mobile
             builder.Services.AddSingleton<AuthService>();
             builder.Services.AddSingleton<BikeService>();
             builder.Services.AddSingleton<CatalogService>();
+            builder.Services.AddSingleton<ActivityLoggerService>();
 
             // 뷰모델 등록
             builder.Services.AddTransient<LoginViewModel>();
