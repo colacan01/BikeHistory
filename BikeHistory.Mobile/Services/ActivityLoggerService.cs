@@ -1,6 +1,7 @@
 using BikeHistory.Mobile.Models;
 using System.Diagnostics;
 using System.Net.Http.Json;
+using System.Net.Http.Headers;
 
 namespace BikeHistory.Mobile.Services
 {
@@ -12,7 +13,15 @@ namespace BikeHistory.Mobile.Services
 
         public ActivityLoggerService(AuthService authService)
         {
-            _httpClient = new HttpClient();
+            _httpClient = new HttpClient
+            {
+                DefaultRequestHeaders =
+                {
+                    Authorization = authService.CurrentUser?.Token != null
+                        ? new AuthenticationHeaderValue("Bearer", authService.CurrentUser.Token)
+                        : null
+                }
+            };
             _authService = authService;
         }
 
@@ -60,7 +69,7 @@ namespace BikeHistory.Mobile.Services
                 if (_authService.CurrentUser?.Token != null)
                 {
                     _httpClient.DefaultRequestHeaders.Authorization = 
-                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _authService.CurrentUser.Token);
+                        new AuthenticationHeaderValue("Bearer", _authService.CurrentUser.Token);
                 }
 
                 await _httpClient.PostAsJsonAsync($"{Constants.BaseApiUrl}/useractivity", log);

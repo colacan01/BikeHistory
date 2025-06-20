@@ -4,7 +4,7 @@ namespace BikeHistory.Mobile.Converters
 {
     public class NullOrEmptyToBoolConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             if (value == null)
                 return false;
@@ -15,7 +15,7 @@ namespace BikeHistory.Mobile.Converters
             return true;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

@@ -85,15 +85,16 @@ namespace BikeHistory.Mobile.ViewModels
             _maintenanceService = maintenanceService;
             _activityLogger = activityLogger;
 
-            OwnershipHistory = new ObservableCollection<OwnershipRecord>();
-            
+            OwnershipHistory = new ObservableCollection<OwnershipRecord>(); // IDE0028 수정
+            MaintenancHistory = new ObservableCollection<Maintenance>();    // IDE0028 수정   
+
         }
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            if (query.ContainsKey("id"))
+            if (query.TryGetValue("id", out var idValue))
             {
-                BikeId = Convert.ToInt32(query["id"]);
+                BikeId = Convert.ToInt32(idValue);
                 LoadBikeCommand.Execute(null);
             }
         }
@@ -166,6 +167,7 @@ namespace BikeHistory.Mobile.ViewModels
             catch (Exception ex)
             {
                 Debug.WriteLine($"유지보수 이력 로드 오류: {ex.Message}");
+                ErrorMessage = "자전거 유지보수 이력을 불러오는데 실패했습니다.";
             }
             finally
             {
@@ -201,6 +203,7 @@ namespace BikeHistory.Mobile.ViewModels
             catch (Exception ex)
             {
                 Debug.WriteLine($"소유권 이력 로드 오류: {ex.Message}");
+                ErrorMessage = "자전거 소유권 이력을 불러오는데 실패했습니다.";
             }
             finally
             {
@@ -224,7 +227,7 @@ namespace BikeHistory.Mobile.ViewModels
         }
 
         [RelayCommand]
-        private async Task GoBack()
+        private static async Task GoBack()
         {
             await Shell.Current.GoToAsync("..");
         }
