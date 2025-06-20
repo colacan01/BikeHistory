@@ -231,5 +231,14 @@ namespace BikeHistory.Mobile.ViewModels
         {
             await Shell.Current.GoToAsync("..");
         }
+
+        [RelayCommand]
+        private static async Task ViewMaintenanceDetail(object selectedItem)
+        {
+            if (selectedItem is Maintenance maintenance)
+            {
+                await Shell.Current.GoToAsync($"///bikes/maintenance?id={maintenance.Id}");
+            }
+        }
     }
 }

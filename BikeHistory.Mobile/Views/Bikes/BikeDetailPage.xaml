@@ -247,7 +247,7 @@
 
                 <CollectionView ItemsSource="{Binding MaintenancHistory}"
                     HeightRequest="300"
-                    SelectionMode="None">     
+                    SelectionMode="None">
                     <CollectionView.EmptyView>
                         <Label Text="유지보수 이력이 없습니다"
                              HorizontalOptions="Center"
@@ -262,6 +262,12 @@
                                  BorderColor="LightGray">
                                 <Grid RowDefinitions="Auto,Auto,Auto" 
                                     ColumnDefinitions="*,Auto">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BikeDetailViewModel}}, Path=ViewMaintenanceDetailCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Grid.GestureRecognizers>
+                                    
                                     <Label Grid.Row="0" 
                                          Grid.Column="0"
                                          Text="{Binding MaintenanceDate, StringFormat='{0:yyyy년 MM월 dd일}'}"

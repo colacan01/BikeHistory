@@ -41,6 +41,13 @@ namespace BikeHistory.Mobile.Services
         {
             try
             {
+                var token = await SecureStorage.GetAsync(Constants.AuthTokenKey);
+                if (!string.IsNullOrEmpty(token))
+                {
+                    _httpClient.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                }
+
                 return await _httpClient.GetFromJsonAsync<Maintenance>($"{_baseUrl}/maintenances/{id}");
             }
             catch (Exception ex)

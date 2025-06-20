@@ -1,8 +1,10 @@
 ﻿using BikeHistory.Mobile.Services;
 using BikeHistory.Mobile.Views.Auth;
 using BikeHistory.Mobile.Views.Bikes;
+using BikeHistory.Mobile.Views.Maintenance;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+
 
 namespace BikeHistory.Mobile
 {
@@ -44,6 +46,7 @@ namespace BikeHistory.Mobile
             Routing.RegisterRoute("bikes/register", typeof(BikeRegisterPage));
             Routing.RegisterRoute("bikes/detail", typeof(BikeDetailPage));
             Routing.RegisterRoute("bikes/transfer", typeof(BikeTransferPage));
+            Routing.RegisterRoute("bikes/maintenance", typeof(MaintenanceDetailPage));
             Routing.RegisterRoute("login", typeof(LoginPage));
             Routing.RegisterRoute("register", typeof(RegisterPage));
             Routing.RegisterRoute("profile", typeof(ProfilePage));
