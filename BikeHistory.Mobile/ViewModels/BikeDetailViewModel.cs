@@ -85,8 +85,10 @@ namespace BikeHistory.Mobile.ViewModels
             _maintenanceService = maintenanceService;
             _activityLogger = activityLogger;
 
-            OwnershipHistory = new ObservableCollection<OwnershipRecord>(); // IDE0028 수정
-            MaintenancHistory = new ObservableCollection<Maintenance>();    // IDE0028 수정   
+            //OwnershipHistory = new ObservableCollection<OwnershipRecord>(); 
+            //MaintenancHistory = new ObservableCollection<Maintenance>();       
+            OwnershipHistory = [];
+            MaintenancHistory = [];
 
         }
 
@@ -151,7 +153,8 @@ namespace BikeHistory.Mobile.ViewModels
                 var history = await _maintenanceService.GetMaintenancesByBikeId(BikeId);
 
                 // MaintenanceHistory가 null인지 확인 후 초기화
-                MaintenancHistory ??= new ObservableCollection<Maintenance>();
+                //MaintenancHistory ??= new ObservableCollection<Maintenance>();
+                MaintenancHistory ??= [];
                 MaintenancHistory.Clear();
                 foreach (var record in history)
                 {
@@ -188,7 +191,8 @@ namespace BikeHistory.Mobile.ViewModels
                 var history = await _bikeService.GetBikeHistory(BikeId);
 
                 // OwnershipHistory가 null인지 확인 후 초기화
-                OwnershipHistory ??= new ObservableCollection<OwnershipRecord>();
+                //OwnershipHistory ??= new ObservableCollection<OwnershipRecord>();
+                OwnershipHistory ??= [];
                 OwnershipHistory.Clear();
                 foreach (var record in history)
                 {

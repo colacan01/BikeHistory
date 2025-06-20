@@ -40,6 +40,13 @@ namespace BikeHistory.Mobile.ViewModels
             set => SetProperty(ref maintenanceId, value);
         }
 
+        public MaintenanceDetailViewModel()
+        {
+            _maintenanceService = null!;
+            _activityLogger = null!;
+            maintenanceId = string.Empty;
+        }
+
         public MaintenanceDetailViewModel(MaintenanceService maintenanceService, ActivityLoggerService activityLogger)
         {
             _maintenanceService = maintenanceService;
