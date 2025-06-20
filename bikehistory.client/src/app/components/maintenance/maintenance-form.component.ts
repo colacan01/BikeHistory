@@ -5,6 +5,7 @@ import { MaintenanceService } from '../../services/maintenance.service';
 import { BikeService } from '../../services/bike.service';
 import { AuthService } from '../../services/auth.service';
 import { MaintenanceType, PaymentMethod, MaintenanceCreateDto, MaintenanceUpdateDto } from '../../models/maintenance.model';
+import { ActivityLoggerService } from '../../services/activity-logger.service';
 
 @Component({
   selector: 'app-maintenance-form',
@@ -33,7 +34,8 @@ export class MaintenanceFormComponent implements OnInit {
     private bikeService: BikeService,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private activityLogger: ActivityLoggerService
   ) {
     this.maintenanceForm = this.createForm();
   }
@@ -54,6 +56,12 @@ export class MaintenanceFormComponent implements OnInit {
       if (params['id']) {
         this.isEditMode = true;
         this.maintenanceId = params['id'];
+
+        // 자전거 상세 페이지 조회 로깅
+        this.activityLogger.logAction('ViewEditMaintenanceById', {
+          mMaintenanceId: this.maintenanceId.toString() ?? 'undefined',
+        });
+
         this.loadMaintenance(this.maintenanceId);
       }
     });
@@ -221,6 +229,13 @@ export class MaintenanceFormComponent implements OnInit {
       this.maintenanceService.updateMaintenance(this.maintenanceId, updateDto).subscribe({
         next: () => {
           this.submitting = false;
+
+          this.activityLogger.logAction('UpdateMaintenance', {
+            maintenanceId: this.maintenanceId,
+            storeId: this.maintenanceForm.value.storeId,
+            ownerId: this.maintenanceForm.value.ownerId
+          });
+
           this.router.navigate(['/maintenances', this.maintenanceId]);
         },
         error: (error) => {
@@ -244,6 +259,13 @@ export class MaintenanceFormComponent implements OnInit {
       this.maintenanceService.createMaintenance(createDto).subscribe({
         next: (result) => {
           this.submitting = false;
+
+          this.activityLogger.logAction('CreateMaintenance', {
+            maintenanceId: result.id,
+            storeId: createDto.storeId,
+            ownerId: createDto.ownerId
+          });
+
           this.router.navigate(['/maintenances', result.id]);
         },
         error: (error) => {
@@ -256,6 +278,13 @@ export class MaintenanceFormComponent implements OnInit {
   }
 
   cancel(): void {
+
+    // 유지보수 생성 또는 수정 취소 시 로깅
+    this.activityLogger.logAction('CancelMaintenanceForm', {
+      maintenanceId: this.maintenanceId || 'new',
+      isEditMode: this.isEditMode.toString()
+    });
+
     if (this.isEditMode) {
       this.router.navigate(['/maintenances', this.maintenanceId]);
     } else {

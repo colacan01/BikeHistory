@@ -24,8 +24,12 @@
             <li><a class="dropdown-item" routerLink="/admin/biketypes" routerLinkActive="active">Bike Types</a></li>
           </ul>
         </li>
-
-
+        <!-- 기존 내비게이션 코드에 추가 -->
+        <li class="nav-item" *ngIf="authService.isAdmin">
+          <a class="nav-link" [routerLink]="['/admin/logs']" routerLinkActive="active">
+            <i class="bi bi-list-check"></i> 사용자 활동 로그
+          </a>
+        </li>
         <!-- Maintenanc 메뉴 추가 -->
         <li class="nav-item dropdown" *ngIf="authService.isAdmin || authService.isStore">
           <a class="nav-link dropdown-toggle" href="#" id="maintenancDropdown" role="button"

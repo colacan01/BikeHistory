@@ -20,6 +20,8 @@ import { MaintenanceListComponent } from './components/maintenance/maintenance-l
 import { MaintenanceDetailComponent } from './components/maintenance/maintenance-detail.component';
 import { MaintenanceFormComponent } from './components/maintenance/maintenance-form.component';
 import { SumPipe } from './pipes/sum.pipe';
+import { ActivityLoggerService } from './services/activity-logger.service';
+import { UserActivityLogsComponent } from './components/admin/user-activity-logs.component';
 
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { AuthService } from './services/auth.service';
@@ -43,7 +45,8 @@ import { CatalogService } from './services/catalog.service';
     MaintenanceListComponent,
     MaintenanceDetailComponent,
     MaintenanceFormComponent,
-    SumPipe
+    SumPipe,
+    UserActivityLogsComponent
 
   ],
   imports: [
@@ -57,7 +60,8 @@ import { CatalogService } from './services/catalog.service';
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     AuthService,
     BikeService,
-    CatalogService
+    CatalogService,
+    ActivityLoggerService
   ],
   bootstrap: [AppComponent]
 })

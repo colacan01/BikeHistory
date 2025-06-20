@@ -15,6 +15,8 @@ import { ManufacturerManagementComponent } from './components/admin/manufacturer
 import { BrandManagementComponent } from './components/admin/brand-management.component';
 import { BikeTypeManagementComponent } from './components/admin/bike-type-management.component';
 import { UserManagementComponent } from './components/admin/user-management.component'; // 추가
+import { UserActivityLogsComponent } from './components/admin/user-activity-logs.component';
+import { AdminGuard } from './guards/admin.guard';
 
 const routes: Routes = [
   // 메인 페이지는 자전거 목록 페이지로 리다이렉트
@@ -97,7 +99,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: ['Admin', 'Store'] }
   },
-  // 존재하지 않는 경로는 자전거 목록으로 리다이렉트
+  {
+    path: 'admin/logs',
+    component: UserActivityLogsComponent,
+    canActivate: [AdminGuard] // 관리자 권한 확인을 위한 가드 추가
+  },
+// 존재하지 않는 경로는 자전거 목록으로 리다이렉트
   { path: '**', redirectTo: '/bikes' }
 ];
 

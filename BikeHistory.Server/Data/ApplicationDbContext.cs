@@ -1,11 +1,16 @@
 using BikeHistory.Server.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace BikeHistory.Server.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public ApplicationDbContext() : base(new DbContextOptions<ApplicationDbContext>())
+        {
+        }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -18,6 +23,7 @@ namespace BikeHistory.Server.Data
         public DbSet<OwnershipRecord> OwnershipRecords { get; set; }
         public DbSet<Maintenance> Maintenances { get; set; }
         public DbSet<MaintenanceDetail> MaintenanceDetails { get; set; }
+        public DbSet<UserActivityLog> UserActivityLogs { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -92,6 +98,14 @@ namespace BikeHistory.Server.Data
                 .WithOne(md => md.Maintenance)
                 .HasForeignKey(md => md.MaintenanceId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // UserActivityLog ¼³Á¤
+            builder.Entity<UserActivityLog>()
+                .HasKey(u => u.Id);
+
+            builder.Entity<UserActivityLog>()
+                .Property(u => u.Timestamp)
+                .HasDefaultValueSql("GETUTCDATE()");
         }
     }
 }

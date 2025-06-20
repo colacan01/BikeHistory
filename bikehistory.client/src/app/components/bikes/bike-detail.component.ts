@@ -4,7 +4,7 @@ import { BikeFrame, OwnershipRecord } from '../../models/bike.model';
 import { BikeService } from '../../services/bike.service';
 import { MaintenanceService } from '../../services/maintenance.service';
 import { AuthService } from '../../services/auth.service'; // Assuming you have an AuthService to check user roles
-
+import { ActivityLoggerService } from '../../services/activity-logger.service';
 
 @Component({
   selector: 'app-bike-detail',
@@ -30,12 +30,19 @@ export class BikeDetailComponent implements OnInit {
     private router: Router,
     private bikeService: BikeService,
     private maintenanceService: MaintenanceService,
-    private authService: AuthService
+    private authService: AuthService,
+    private activityLogger: ActivityLoggerService
   ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.bikeId = +params['id'];
+
+      // 자전거 상세 페이지 조회 로깅
+      this.activityLogger.logAction('ViewBikeDetail', {
+        bikeId: this.bikeId.toString()
+      });
+
       this.loadBikeDetails();
       this.loadOwnershipHistory();
       this.loadMaintenances();
@@ -98,6 +105,12 @@ export class BikeDetailComponent implements OnInit {
   }
 
   createNewMaintenance(): void {
+    // 유지보수 생성 페이지로 이동하기 전에 명시적으로 로깅
+    this.activityLogger.logNavigationExplicitly('/maintenances/new', {
+      bikeId: this.bikeId.toString(),
+      action: 'InitiateMaintenanceCreate'
+    });
+
     this.router.navigate(['/maintenances/new'], {
       queryParams: { bikeFrameId: this.bikeId }
     });

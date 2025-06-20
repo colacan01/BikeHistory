@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MaintenanceService } from '../../services/maintenance.service';
 import { AuthService } from '../../services/auth.service';
 import { Maintenance, MaintenanceType, PaymentMethod } from '../../models/maintenance.model';
+import { ActivityLoggerService } from '../../services/activity-logger.service';
 
 @Component({
   selector: 'app-maintenance-detail',
@@ -25,7 +26,8 @@ export class MaintenanceDetailComponent implements OnInit {
     private maintenanceService: MaintenanceService,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private activityLogger: ActivityLoggerService
   ) { }
 
   ngOnInit(): void {
@@ -44,6 +46,11 @@ export class MaintenanceDetailComponent implements OnInit {
     this.maintenanceService.getMaintenanceById(id)
       .subscribe({
         next: (maintenance) => {
+          // 자전거 상세 페이지 조회 로깅
+          this.activityLogger.logAction('ViewMaintenanceById', {
+            bikeId: this.maintenance?.bikeFrameId?.toString() ?? 'undefined',
+          });
+
           this.maintenance = maintenance;
           this.loading = false;
 
@@ -75,6 +82,11 @@ export class MaintenanceDetailComponent implements OnInit {
       this.maintenanceService.deleteMaintenance(this.maintenance.id)
         .subscribe({
           next: () => {
+            // 자전거 상세 페이지 조회 로깅
+            this.activityLogger.logAction('DeleteMaintenance', {
+              MaintenanceId: this.maintenance?.id ?? 'undefined'
+            });
+
             this.loading = false;
             this.router.navigate(['/maintenances']);
           },
