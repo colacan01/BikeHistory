@@ -12,6 +12,8 @@ namespace BikeHistory.Mobile.ViewModels
     {
         private readonly BikeService _bikeService;
         private readonly AuthService _authService;
+        private readonly MaintenanceService _maintenanceService;
+        private readonly ActivityLoggerService _activityLogger;
 
         private BikeFrame? bike;
         public BikeFrame? Bike
@@ -27,6 +29,13 @@ namespace BikeHistory.Mobile.ViewModels
             private set => SetProperty(ref ownershipHistory, value);
         }
 
+        private ObservableCollection<Maintenance>? maintenancHistory;
+        public ObservableCollection<Maintenance>? MaintenancHistory
+        {
+            get => maintenancHistory;
+            private set => SetProperty(ref maintenancHistory, value);
+        }
+
         private bool isBusy;
         public bool IsBusy
         {
@@ -39,6 +48,13 @@ namespace BikeHistory.Mobile.ViewModels
         {
             get => isHistoryBusy;
             set => SetProperty(ref isHistoryBusy, value);
+        }
+
+        private bool isMaintenanceBusy;
+        public bool IsMaintenanceBusy
+        {
+            get => isMaintenanceBusy;
+            set => SetProperty(ref isMaintenanceBusy, value);
         }
 
         private string? errorMessage;
@@ -62,11 +78,15 @@ namespace BikeHistory.Mobile.ViewModels
             set => SetProperty(ref isOwner, value);
         }
 
-        public BikeDetailViewModel(BikeService bikeService, AuthService authService)
+        public BikeDetailViewModel(BikeService bikeService, AuthService authService, MaintenanceService maintenanceService, ActivityLoggerService activityLogger)
         {
             _bikeService = bikeService;
             _authService = authService;
+            _maintenanceService = maintenanceService;
+            _activityLogger = activityLogger;
+
             OwnershipHistory = new ObservableCollection<OwnershipRecord>();
+            
         }
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -96,6 +116,15 @@ namespace BikeHistory.Mobile.ViewModels
 
                 // 소유권 이력 로드
                 await LoadOwnershipHistory();
+
+                // 유지보수 이력 로드
+                await LoadMaintenanceHistory();
+
+                // 자전거 상세 페이지 조회 로깅
+                await _activityLogger.LogActionAsync("ViewBikeDetail", new Dictionary<string, string>
+                {
+                    { "bikeId", bikeId.ToString() }
+                });
             }
             catch (Exception ex)
             {
@@ -105,6 +134,42 @@ namespace BikeHistory.Mobile.ViewModels
             finally
             {
                 IsBusy = false;
+            }
+        }
+
+        [RelayCommand]
+        private async Task LoadMaintenanceHistory()
+        {
+            if (BikeId <= 0 || IsMaintenanceBusy)
+                return;
+
+            try
+            {
+                IsMaintenanceBusy = true;
+
+                var history = await _maintenanceService.GetMaintenancesByBikeId(BikeId);
+
+                // MaintenanceHistory가 null인지 확인 후 초기화
+                MaintenancHistory ??= new ObservableCollection<Maintenance>();
+                MaintenancHistory.Clear();
+                foreach (var record in history)
+                {
+                    MaintenancHistory.Add(record);
+                }
+
+                // 자전거 유지보수 내역 조회 로깅
+                await _activityLogger.LogActionAsync("ViewMaintenanceHistoryAll", new Dictionary<string, string>
+                {
+                    { "bikeId", bikeId.ToString() }
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"유지보수 이력 로드 오류: {ex.Message}");
+            }
+            finally
+            {
+                IsMaintenanceBusy = false;
             }
         }
 
@@ -127,6 +192,11 @@ namespace BikeHistory.Mobile.ViewModels
                 {
                     OwnershipHistory.Add(record);
                 }
+                // 자전거 소유 내역 조회 로깅
+                await _activityLogger.LogActionAsync("ViewOwnershipHistoryAll", new Dictionary<string, string>
+                {
+                    { "bikeId", bikeId.ToString() }
+                });
             }
             catch (Exception ex)
             {
@@ -136,6 +206,12 @@ namespace BikeHistory.Mobile.ViewModels
             {
                 IsHistoryBusy = false;
             }
+        }
+
+        [RelayCommand]
+        private async Task RefreshAsync()
+        {
+            await LoadBike();            
         }
 
         [RelayCommand]
