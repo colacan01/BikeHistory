@@ -1,97 +1,211 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header bg-primary text-white">
-          <h4 class="mb-0">Register</h4>
+<div class="register-container">
+  <div class="register-wrapper">
+    <div class="register-card">
+      <!-- Header Section -->
+      <div class="register-header">
+        <div class="logo-section">
+          <div class="logo-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 21V19A4 4 0 0 0 12 15H5A4 4 0 0 0 1 19V21" stroke="currentColor" stroke-width="2" />
+              <circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2" />
+              <path d="M20 8V6A4 4 0 0 0 16 2H15" stroke="currentColor" stroke-width="2" />
+              <line x1="17" y1="11" x2="23" y2="11" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </div>
+          <h1 class="register-title">Create Account</h1>
+          <p class="register-subtitle">Join us to get started</p>
         </div>
-        <div class="card-body">
-          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-            <div class="alert alert-danger" *ngIf="error">
-              {{error}}
+      </div>
+
+      <!-- Form Section -->
+      <div class="register-form-section">
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+          <!-- Error Alert -->
+          <div class="error-alert" *ngIf="error">
+            <div class="error-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2" />
+                <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2" />
+              </svg>
             </div>
-            
-            <div class="form-group mb-3">
-              <label for="firstName">First Name</label>
-              <input 
-                type="text" 
-                formControlName="firstName" 
-                class="form-control" 
-                [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }" />
-              <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
+            <span>{{error}}</span>
+          </div>
+
+          <!-- Name Fields Row -->
+          <div class="form-row">
+            <!-- First Name Field -->
+            <div class="form-group">
+              <label for="firstName" class="form-label">First Name</label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 21V19A4 4 0 0 0 16 15H8A4 4 0 0 0 4 19V21" stroke="currentColor" stroke-width="2" />
+                    <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" />
+                  </svg>
+                </div>
+                <input type="text"
+                       id="firstName"
+                       formControlName="firstName"
+                       class="form-input"
+                       [ngClass]="{ 'error': submitted && f['firstName'].errors }"
+                       placeholder="Enter your first name" />
+              </div>
+              <div *ngIf="submitted && f['firstName'].errors" class="field-error">
                 <div *ngIf="f['firstName'].errors['required']">First Name is required</div>
               </div>
             </div>
-            
-            <div class="form-group mb-3">
-              <label for="lastName">Last Name</label>
-              <input 
-                type="text" 
-                formControlName="lastName" 
-                class="form-control" 
-                [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }" />
-              <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
+
+            <!-- Last Name Field -->
+            <div class="form-group">
+              <label for="lastName" class="form-label">Last Name</label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 21V19A4 4 0 0 0 16 15H8A4 4 0 0 0 4 19V21" stroke="currentColor" stroke-width="2" />
+                    <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" />
+                  </svg>
+                </div>
+                <input type="text"
+                       id="lastName"
+                       formControlName="lastName"
+                       class="form-input"
+                       [ngClass]="{ 'error': submitted && f['lastName'].errors }"
+                       placeholder="Enter your last name" />
+              </div>
+              <div *ngIf="submitted && f['lastName'].errors" class="field-error">
                 <div *ngIf="f['lastName'].errors['required']">Last Name is required</div>
               </div>
             </div>
-            
-            <div class="form-group mb-3">
-              <label for="email">Email</label>
-              <input 
-                type="email" 
-                formControlName="email" 
-                class="form-control" 
-                [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" />
-              <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
-                <div *ngIf="f['email'].errors['required']">Email is required</div>
-                <div *ngIf="f['email'].errors['email']">Enter a valid email address</div>
+          </div>
+
+          <!-- Email Field -->
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <div class="input-wrapper">
+              <div class="input-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2" />
+                  <polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="2" />
+                </svg>
               </div>
+              <input type="email"
+                     id="email"
+                     formControlName="email"
+                     class="form-input"
+                     [ngClass]="{ 'error': submitted && f['email'].errors }"
+                     placeholder="Enter your email address" />
             </div>
-            
-            <div class="form-group mb-3">
-              <label for="password">Password</label>
-              <input 
-                type="password" 
-                formControlName="password" 
-                class="form-control" 
-                [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" />
-              <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
-                <div *ngIf="f['password'].errors['required']">Password is required</div>
-                <div *ngIf="f['password'].errors['minlength']">Password must be at least 8 characters</div>
+            <div *ngIf="submitted && f['email'].errors" class="field-error">
+              <div *ngIf="f['email'].errors['required']">Email is required</div>
+              <div *ngIf="f['email'].errors['email']">Enter a valid email address</div>
+            </div>
+          </div>
+
+          <!-- Password Field -->
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <div class="input-wrapper">
+              <div class="input-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
+                  <circle cx="12" cy="16" r="1" stroke="currentColor" stroke-width="2" />
+                  <path d="M7 11V7A5 5 0 0 1 17 7V11" stroke="currentColor" stroke-width="2" />
+                </svg>
               </div>
-              <small class="form-text text-muted">
-                Password must be at least 8 characters long and contain:
-                <ul class="mb-0 ps-3 mt-1">
-                  <li>At least one uppercase letter</li>
-                  <li>At least one lowercase letter</li>
-                  <li>At least one number</li>
-                </ul>
-              </small>
+              <input type="password"
+                     id="password"
+                     formControlName="password"
+                     class="form-input"
+                     [ngClass]="{ 'error': submitted && f['password'].errors }"
+                     placeholder="Create a strong password" />
             </div>
-            
-            <div class="form-group mb-3">
-              <label for="confirmPassword">Confirm Password</label>
-              <input 
-                type="password" 
-                formControlName="confirmPassword" 
-                class="form-control" 
-                [ngClass]="{ 'is-invalid': submitted && f['confirmPassword'].errors }" />
-              <div *ngIf="submitted && f['confirmPassword'].errors" class="invalid-feedback">
-                <div *ngIf="f['confirmPassword'].errors['required']">Confirm Password is required</div>
-                <div *ngIf="f['confirmPassword'].errors['mustMatch']">Passwords must match</div>
+            <div *ngIf="submitted && f['password'].errors" class="field-error">
+              <div *ngIf="f['password'].errors['required']">Password is required</div>
+              <div *ngIf="f['password'].errors['minlength']">Password must be at least 8 characters</div>
+              <div *ngIf="f['password'].errors['pattern']">Password must contain uppercase, lowercase, and number</div>
+            </div>
+            <div class="password-requirements">
+              <p class="requirements-title">Password must contain:</p>
+              <ul class="requirements-list">
+                <li class="requirement-item">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <polyline points="20,6 9,17 4,12" stroke="currentColor" stroke-width="2" />
+                  </svg>
+                  At least 8 characters
+                </li>
+                <li class="requirement-item">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <polyline points="20,6 9,17 4,12" stroke="currentColor" stroke-width="2" />
+                  </svg>
+                  One uppercase letter
+                </li>
+                <li class="requirement-item">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <polyline points="20,6 9,17 4,12" stroke="currentColor" stroke-width="2" />
+                  </svg>
+                  One lowercase letter
+                </li>
+                <li class="requirement-item">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <polyline points="20,6 9,17 4,12" stroke="currentColor" stroke-width="2" />
+                  </svg>
+                  One number
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Confirm Password Field -->
+          <div class="form-group">
+            <label for="confirmPassword" class="form-label">Confirm Password</label>
+            <div class="input-wrapper">
+              <div class="input-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
+                  <circle cx="12" cy="16" r="1" stroke="currentColor" stroke-width="2" />
+                  <path d="M7 11V7A5 5 0 0 1 17 7V11" stroke="currentColor" stroke-width="2" />
+                </svg>
               </div>
+              <input type="password"
+                     id="confirmPassword"
+                     formControlName="confirmPassword"
+                     class="form-input"
+                     [ngClass]="{ 'error': submitted && f['confirmPassword'].errors }"
+                     placeholder="Confirm your password" />
             </div>
-            
-            <div class="form-group">
-              <button [disabled]="loading" class="btn btn-primary">
-                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                Register
-              </button>
-              <a routerLink="/login" class="btn btn-link">Cancel</a>
+            <div *ngIf="submitted && f['confirmPassword'].errors" class="field-error">
+              <div *ngIf="f['confirmPassword'].errors['required']">Confirm Password is required</div>
+              <div *ngIf="f['confirmPassword'].errors['mustMatch']">Passwords must match</div>
             </div>
-          </form>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="form-actions">
+            <button [disabled]="loading" class="register-btn" type="submit">
+              <span *ngIf="loading" class="loading-spinner"></span>
+              <span *ngIf="!loading">Create Account</span>
+              <span *ngIf="loading">Creating Account...</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Login Link -->
+        <div class="login-section">
+          <p class="login-text">
+            Already have an account?
+            <a routerLink="/login" class="login-link">Sign In</a>
+          </p>
         </div>
       </div>
+    </div>
+
+    <!-- Background Decoration -->
+    <div class="bg-decoration">
+      <div class="decoration-circle circle-1"></div>
+      <div class="decoration-circle circle-2"></div>
+      <div class="decoration-circle circle-3"></div>
+      <div class="decoration-circle circle-4"></div>
     </div>
   </div>
 </div>

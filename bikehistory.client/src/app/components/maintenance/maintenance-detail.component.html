@@ -1,102 +1,309 @@
-<div class="container">
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-
-  <div *ngIf="loading" class="d-flex justify-content-center">
-    <div class="spinner-border" role="status">
-      <span class="visually-hidden">로딩 중...</span>
+<div class="maintenance-detail-container">
+  <!-- Error Message -->
+  <div class="error-alert" *ngIf="error">
+    <div class="alert-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+        <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2" />
+        <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2" />
+      </svg>
     </div>
+    <span>{{error}}</span>
   </div>
 
-  <div *ngIf="!loading && maintenance">
-    <h2>유지보수 상세 정보</h2>
-    
-    <div class="card mb-4">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">기본 정보</h5>
-        <div>
-          <button *ngIf="isAdmin || isStore" class="btn btn-primary me-2" (click)="editMaintenance()">수정</button>
-          <button *ngIf="isAdmin || isStore" class="btn btn-danger me-2" (click)="deleteMaintenance()">삭제</button>
-          <button class="btn btn-secondary" (click)="goBack()">목록</button>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="row mb-3">
-          <div class="col-md-3 fw-bold">유지보수 일자:</div>
-          <div class="col-md-9">{{ maintenance.maintenanceDate | date:'yyyy-MM-dd' }}</div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-md-3 fw-bold">유지보수 유형:</div>
-          <div class="col-md-9">{{ getMaintenanceTypeName(maintenance.maintenanceType) }}</div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-md-3 fw-bold">자전거:</div>
-          <div class="col-md-9">
-            {{ maintenance.bikeFrame.frameNumber }} ({{ maintenance.bikeFrame.model }})
-            <a [routerLink]="['/bikes', maintenance.bikeFrameId]" class="ms-2">상세보기</a>
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="loading">
+    <div class="loading-spinner large"></div>
+    <h3>유지보수 정보를 불러오는 중...</h3>
+    <p>잠시만 기다려주세요</p>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!loading && maintenance" class="detail-content">
+    <!-- Header Section -->
+    <div class="detail-header">
+      <div class="header-content">
+        <div class="title-section">
+          <div class="maintenance-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </div>
+          <div class="title-text">
+            <h1 class="page-title">유지보수 상세 정보</h1>
+            <p class="page-subtitle">{{maintenance.maintenanceDate | date:'yyyy-MM-dd'}} · {{getMaintenanceTypeName(maintenance.maintenanceType)}}</p>
           </div>
         </div>
-        <div class="row mb-3">
-          <div class="col-md-3 fw-bold">정비소:</div>
-          <div class="col-md-9">{{ maintenance.store.firstName }} {{ maintenance.store.lastName }}</div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-md-3 fw-bold">소유자:</div>
-          <div class="col-md-9">{{ maintenance.owner.firstName }} {{ maintenance.owner.lastName }}</div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-md-3 fw-bold">총 금액:</div>
-          <div class="col-md-9">{{ maintenance.totalAmount | currency:'KRW':'symbol':'1.0-0' }}</div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-md-3 fw-bold">결제 방법:</div>
-          <div class="col-md-9">{{ getPaymentMethodName(maintenance.paymentMethod) }}</div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-md-3 fw-bold">비고:</div>
-          <div class="col-md-9">{{ maintenance.notes || '없음' }}</div>
+
+        <div class="header-actions">
+          <button *ngIf="isAdmin || isStore" class="action-btn edit-btn" (click)="editMaintenance()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" />
+            </svg>
+            수정
+          </button>
+
+          <button *ngIf="isAdmin || isStore" class="action-btn delete-btn" (click)="deleteMaintenance()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <polyline points="3,6 5,6 21,6" stroke="currentColor" stroke-width="2" />
+              <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" stroke="currentColor" stroke-width="2" />
+              <line x1="10" y1="11" x2="10" y2="17" stroke="currentColor" stroke-width="2" />
+              <line x1="14" y1="11" x2="14" y2="17" stroke="currentColor" stroke-width="2" />
+            </svg>
+            삭제
+          </button>
+
+          <button class="action-btn back-btn" (click)="goBack()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            목록
+          </button>
         </div>
       </div>
     </div>
 
-    <div class="card">
+    <!-- Basic Information Card -->
+    <div class="info-card">
       <div class="card-header">
-        <h5 class="mb-0">유지보수 상세 항목</h5>
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <h2 class="card-title">기본 정보</h2>
       </div>
+
       <div class="card-body">
-        <div class="table-responsive">
-          <table class="table table-striped">
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
+                <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" />
+                <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" />
+                <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="info-content">
+              <span class="info-label">유지보수 일자</span>
+              <span class="info-value">{{maintenance.maintenanceDate | date:'yyyy-MM-dd'}}</span>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 7H4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2Z" stroke="currentColor" stroke-width="2" />
+                <path d="M20 7v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="info-content">
+              <span class="info-label">유지보수 유형</span>
+              <span class="info-value">
+                <span class="type-badge" [class]="'type-' + maintenance.maintenanceType.toLowerCase()">
+                  {{getMaintenanceTypeName(maintenance.maintenanceType)}}
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="18.5" cy="17.5" r="3.5" stroke="currentColor" stroke-width="2" />
+                <circle cx="5.5" cy="17.5" r="3.5" stroke="currentColor" stroke-width="2" />
+                <path d="M15 6a1 1 0 0 0-1-1H6.5a1 1 0 0 0-.8.4L3.9 8.7A1 1 0 0 0 4.7 10H19a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="info-content">
+              <span class="info-label">자전거</span>
+              <div class="bike-info">
+                <span class="info-value">{{maintenance.bikeFrame.frameNumber}}</span>
+                <span class="bike-model" *ngIf="maintenance.bikeFrame.model">({{maintenance.bikeFrame.model}})</span>
+                <a [routerLink]="['/bikes', maintenance.bikeFrameId]" class="bike-link">상세보기</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 7V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2l-1 5H4l-1-5Z" stroke="currentColor" stroke-width="2" />
+                <path d="M5 7c0 1.1.9 2 2 2s2-.9 2-2M11 7c0 1.1.9 2 2 2s2-.9 2-2M17 7c0 1.1.9 2 2 2" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="info-content">
+              <span class="info-label">정비소</span>
+              <span class="info-value">{{maintenance.store.firstName}} {{maintenance.store.lastName}}</span>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 21V19A4 4 0 0 0 16 15H8A4 4 0 0 0 4 19V21" stroke="currentColor" stroke-width="2" />
+                <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="info-content">
+              <span class="info-label">소유자</span>
+              <span class="info-value">{{maintenance.owner.firstName}} {{maintenance.owner.lastName}}</span>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="12" y1="1" x2="12" y2="23" stroke="currentColor" stroke-width="2" />
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="info-content">
+              <span class="info-label">총 금액</span>
+              <span class="info-value amount">{{maintenance.totalAmount | currency:'KRW':'symbol':'1.0-0'}}</span>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
+                <line x1="1" y1="10" x2="23" y2="10" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="info-content">
+              <span class="info-label">결제 방법</span>
+              <span class="info-value">{{getPaymentMethodName(maintenance.paymentMethod)}}</span>
+            </div>
+          </div>
+
+          <div class="info-item full-width">
+            <div class="info-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" />
+                <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2" />
+                <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2" />
+                <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="info-content">
+              <span class="info-label">비고</span>
+              <span class="info-value notes">{{maintenance.notes || '없음'}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Details Table Card -->
+    <div class="details-card">
+      <div class="card-header">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 9L12 2L21 9V20a2 2 0 01-2 2H5a2 2 0 01-2-2V9Z" stroke="currentColor" stroke-width="2" />
+            <polyline points="9,22 9,12 15,12 15,22" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </div>
+        <div class="header-info">
+          <h2 class="card-title">유지보수 상세 항목</h2>
+          <p class="item-count">{{maintenance.maintenanceDetails.length}}개의 항목</p>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <div class="table-wrapper" *ngIf="maintenance.maintenanceDetails.length > 0">
+          <table class="details-table">
             <thead>
               <tr>
-                <th>번호</th>
-                <th>부품명</th>
-                <th>규격</th>
-                <th>공임비</th>
-                <th>부품가격</th>
-                <th>소계</th>
+                <th class="seq-column">
+                  <!--<div class="header-content">-->
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                      <polyline points="12,6 12,12 16,14" stroke="currentColor" stroke-width="2" />
+                    </svg>
+                    번호
+                  <!--</div>-->
+                </th>
+                <th class="part-column">
+                  <!--<div class="header-content">-->
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" />
+                    </svg>
+                    부품명
+                  <!--</div>-->
+                </th>
+                <th class="spec-column">
+                  <!--<div class="header-content">-->
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
+                      <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2" />
+                      <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2" />
+                    </svg>
+                    규격
+                  <!--</div>-->
+                </th>
+                <th class="labor-column">
+                  <!--<div class="header-content">-->
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" stroke="currentColor" stroke-width="2" />
+                    </svg>
+                    공임비
+                  <!--</div>-->
+                </th>
+                <th class="part-price-column">
+                  <!--<div class="header-content">-->
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <line x1="12" y1="1" x2="12" y2="23" stroke="currentColor" stroke-width="2" />
+                      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2" />
+                    </svg>
+                    부품가격
+                  <!--</div>-->
+                </th>
+                <th class="subtotal-column">
+                  <!--<div class="header-content">-->
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M16 21V19A4 4 0 0 0 12 15H5A4 4 0 0 0 1 19V21" stroke="currentColor" stroke-width="2" />
+                      <circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2" />
+                      <path d="M20 8V6A4 4 0 0 0 16 2H15" stroke="currentColor" stroke-width="2" />
+                      <line x1="17" y1="11" x2="23" y2="11" stroke="currentColor" stroke-width="2" />
+                    </svg>
+                    소계
+                  <!--</div>-->
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let detail of maintenance.maintenanceDetails">
-                <td>{{ detail.seq }}</td>
-                <td>{{ detail.partName || '-' }}</td>
-                <td>{{ detail.partSpecification || '-' }}</td>
-                <td>{{ detail.laborCost | currency:'KRW':'symbol':'1.0-0' }}</td>
-                <td>{{ detail.partPrice | currency:'KRW':'symbol':'1.0-0' }}</td>
-                <td>{{ (detail.laborCost + detail.partPrice) | currency:'KRW':'symbol':'1.0-0' }}</td>
-              </tr>
-              <tr *ngIf="maintenance.maintenanceDetails.length === 0">
-                <td colspan="6" class="text-center">상세 항목이 없습니다.</td>
+              <tr *ngFor="let detail of maintenance.maintenanceDetails" class="detail-row">
+                <td class="seq-cell">{{detail.seq}}</td>
+                <td class="part-cell">{{detail.partName || '-'}}</td>
+                <td class="spec-cell">{{detail.partSpecification || '-'}}</td>
+                <td class="labor-cell">{{detail.laborCost | currency:'KRW':'symbol':'1.0-0'}}</td>
+                <td class="part-price-cell">{{detail.partPrice | currency:'KRW':'symbol':'1.0-0'}}</td>
+                <td class="subtotal-cell">{{(detail.laborCost + detail.partPrice) | currency:'KRW':'symbol':'1.0-0'}}</td>
               </tr>
             </tbody>
             <tfoot>
-              <tr class="table-dark">
-                <td colspan="3" class="text-end fw-bold">총 합계:</td>
-                <td>{{ maintenance.maintenanceDetails | sum:'laborCost' | currency:'KRW':'symbol':'1.0-0' }}</td>
-                <td>{{ maintenance.maintenanceDetails | sum:'partPrice' | currency:'KRW':'symbol':'1.0-0' }}</td>
-                <td>{{ maintenance.totalAmount | currency:'KRW':'symbol':'1.0-0' }}</td>
+              <tr class="total-row">
+                <td colspan="3" class="total-label">총 합계</td>
+                <td class="total-labor">{{maintenance.maintenanceDetails | sum:'laborCost' | currency:'KRW':'symbol':'1.0-0'}}</td>
+                <td class="total-parts">{{maintenance.maintenanceDetails | sum:'partPrice' | currency:'KRW':'symbol':'1.0-0'}}</td>
+                <td class="total-amount">{{maintenance.totalAmount | currency:'KRW':'symbol':'1.0-0'}}</td>
               </tr>
             </tfoot>
           </table>
+        </div>
+
+        <!-- Empty State for Details -->
+        <div class="empty-details" *ngIf="maintenance.maintenanceDetails.length === 0">
+          <div class="empty-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 9L12 2L21 9V20a2 2 0 01-2 2H5a2 2 0 01-2-2V9Z" stroke="currentColor" stroke-width="2" opacity="0.5" />
+            </svg>
+          </div>
+          <h4>상세 항목이 없습니다</h4>
+          <p>이 유지보수 기록에는 세부 항목이 등록되지 않았습니다.</p>
         </div>
       </div>
     </div>

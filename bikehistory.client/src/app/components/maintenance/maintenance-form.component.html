@@ -1,215 +1,422 @@
-<div class="container">
-  <h2>{{ isEditMode ? '유지보수 정보 수정' : '새 유지보수 기록 등록' }}</h2>
-
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-
-  <div *ngIf="loading" class="d-flex justify-content-center">
-    <div class="spinner-border" role="status">
-      <span class="visually-hidden">로딩 중...</span>
-    </div>
-  </div>
-
-  <form [formGroup]="maintenanceForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
-    <div class="card mb-4">
-      <div class="card-header">
-        <h5 class="mb-0">기본 정보</h5>
-      </div>
-      <div class="card-body">
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label for="maintenanceDate" class="form-label">유지보수 일자</label>
-            <input 
-              type="date" 
-              class="form-control" 
-              id="maintenanceDate" 
-              formControlName="maintenanceDate"
-              [class.is-invalid]="maintenanceForm.get('maintenanceDate')?.invalid && maintenanceForm.get('maintenanceDate')?.touched"
-            >
-            <div class="invalid-feedback">유지보수 일자를 선택해주세요.</div>
+<div class="maintenance-container">
+  <div class="maintenance-wrapper">
+    <div class="maintenance-card">
+      <!-- Header Section -->
+      <div class="maintenance-header">
+        <div class="logo-section">
+          <div class="logo-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M16 10.5A2.5 2.5 0 0 1 13.5 8H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M14.207 13.146a3.5 3.5 0 0 0-4.975 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M10 20.777a8.942 8.942 0 0 1-2.48-.969" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M14 20.777a8.942 8.942 0 0 0 2.48-.969" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M3.33 17a10.03 10.03 0 0 1-.33-2.5 10 10 0 1 1 18 6.5 10.03 10.03 0 0 1-.33 2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
           </div>
-          <div class="col-md-6">
-            <label for="maintenanceType" class="form-label">유지보수 유형</label>
-            <select 
-              class="form-select" 
-              id="maintenanceType" 
-              formControlName="maintenanceType"
-              [class.is-invalid]="maintenanceForm.get('maintenanceType')?.invalid && maintenanceForm.get('maintenanceType')?.touched"
-            >
-              <option *ngFor="let type of maintenanceTypes" [value]="type">{{ getMaintenanceTypeName(type) }}</option>
-            </select>
-            <div class="invalid-feedback">유지보수 유형을 선택해주세요.</div>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label for="bikeFrameId" class="form-label">자전거</label>
-            <select 
-              class="form-select" 
-              id="bikeFrameId" 
-              formControlName="bikeFrameId"
-              [class.is-invalid]="maintenanceForm.get('bikeFrameId')?.invalid && maintenanceForm.get('bikeFrameId')?.touched"
-              [disabled]="isEditMode || bikeFrameId !== undefined"
-            >
-              <option [ngValue]="null" disabled>자전거 선택</option>
-              <option *ngFor="let bike of bikes" [value]="bike.id">
-                {{ bike.frameNumber }} - {{ bike.model || '모델명 없음' }} ({{ bike.color || '색상 없음' }})
-              </option>
-            </select>
-            <div class="invalid-feedback">자전거를 선택해주세요.</div>
-          </div>
-          <div class="col-md-6">
-            <label for="ownerId" class="form-label">소유자</label>
-            <select 
-              class="form-select" 
-              id="ownerId" 
-              formControlName="ownerId"
-              [class.is-invalid]="maintenanceForm.get('ownerId')?.invalid && maintenanceForm.get('ownerId')?.touched"
-              [disabled]="isEditMode"
-            >
-              <option [ngValue]="''" disabled>소유자 선택</option>
-              <option *ngFor="let owner of owners" [value]="owner.userId">
-                {{ owner.firstName }} {{ owner.lastName }} ({{ owner.email }})
-              </option>
-            </select>
-            <div class="invalid-feedback">소유자를 선택해주세요.</div>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label for="storeId" class="form-label">정비소</label>
-            <select 
-              class="form-select" 
-              id="storeId" 
-              formControlName="storeId"
-              [class.is-invalid]="maintenanceForm.get('storeId')?.invalid && maintenanceForm.get('storeId')?.touched"
-              [disabled]="isEditMode"
-            >
-              <option [ngValue]="''" disabled>정비소 선택</option>
-              <option *ngFor="let store of stores" [value]="store.userId">
-                {{ store.firstName }} {{ store.lastName }} ({{ store.email }})
-              </option>
-            </select>
-            <div class="invalid-feedback">정비소를 선택해주세요.</div>
-          </div>
-          <div class="col-md-6">
-            <label for="paymentMethod" class="form-label">결제 방법</label>
-            <select 
-              class="form-select" 
-              id="paymentMethod" 
-              formControlName="paymentMethod"
-              [class.is-invalid]="maintenanceForm.get('paymentMethod')?.invalid && maintenanceForm.get('paymentMethod')?.touched"
-            >
-              <option *ngFor="let method of paymentMethods" [value]="method">{{ getPaymentMethodName(method) }}</option>
-            </select>
-            <div class="invalid-feedback">결제 방법을 선택해주세요.</div>
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="notes" class="form-label">비고</label>
-          <textarea 
-            class="form-control" 
-            id="notes" 
-            rows="3" 
-            formControlName="notes"
-          ></textarea>
+          <h1 class="maintenance-title">{{ isEditMode ? '유지보수 정보 수정' : '새 유지보수 기록 등록' }}</h1>
+          <p class="maintenance-subtitle">자전거 정비 관리 시스템</p>
         </div>
       </div>
-    </div>
 
-    <div class="card mb-4">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">상세 항목</h5>
-        <button type="button" class="btn btn-sm btn-primary" (click)="addDetail()">항목 추가</button>
-      </div>
-      <div class="card-body">
-        <div formArrayName="details">
-          <div *ngFor="let detailForm of details.controls; let i = index" [formGroupName]="i" class="card mb-3">
-            <div class="card-header d-flex justify-content-between align-items-center">
-              <span>항목 #{{ i+1 }}</span>
-              <button 
-                type="button" 
-                class="btn btn-sm btn-danger" 
-                *ngIf="details.length > 1" 
-                (click)="removeDetail(i)"
-              >
-                삭제
+      <!-- Form Section -->
+      <div class="maintenance-form-section">
+        <!-- Error Alert -->
+        <div class="error-alert" *ngIf="error">
+          <div class="error-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+              <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2" />
+              <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </div>
+          <span>{{ error }}</span>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading-container" *ngIf="loading">
+          <div class="loading-spinner"></div>
+          <p class="loading-text">로딩 중...</p>
+        </div>
+
+        <!-- Main Form -->
+        <form [formGroup]="maintenanceForm" (ngSubmit)="onSubmit()" *ngIf="!loading" class="maintenance-form">
+
+          <!-- 기본 정보 섹션 -->
+          <div class="form-section">
+            <div class="section-header">
+              <h3 class="section-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+                  <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24" stroke="currentColor" stroke-width="2" />
+                </svg>
+                기본 정보
+              </h3>
+            </div>
+
+            <div class="section-content">
+              <!-- First Row -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="maintenanceDate" class="form-label">유지보수 일자</label>
+                  <div class="input-wrapper">
+                    <div class="input-icon">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" />
+                        <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" />
+                        <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2" />
+                      </svg>
+                    </div>
+                    <input type="date"
+                           id="maintenanceDate"
+                           formControlName="maintenanceDate"
+                           class="form-input"
+                           [ngClass]="{ 'error': maintenanceForm.get('maintenanceDate')?.invalid && maintenanceForm.get('maintenanceDate')?.touched }">
+                  </div>
+                  <div *ngIf="maintenanceForm.get('maintenanceDate')?.invalid && maintenanceForm.get('maintenanceDate')?.touched" class="field-error">
+                    유지보수 일자를 선택해주세요.
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="maintenanceType" class="form-label">유지보수 유형</label>
+                  <div class="input-wrapper">
+                    <div class="input-icon">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" stroke="currentColor" stroke-width="2" />
+                      </svg>
+                    </div>
+                    <select id="maintenanceType"
+                            formControlName="maintenanceType"
+                            class="form-select"
+                            [ngClass]="{ 'error': maintenanceForm.get('maintenanceType')?.invalid && maintenanceForm.get('maintenanceType')?.touched }">
+                      <option *ngFor="let type of maintenanceTypes" [value]="type">
+                        {{ getMaintenanceTypeName(type) }}
+                      </option>
+                    </select>
+                  </div>
+                  <div *ngIf="maintenanceForm.get('maintenanceType')?.invalid && maintenanceForm.get('maintenanceType')?.touched" class="field-error">
+                    유지보수 유형을 선택해주세요.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Second Row -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="bikeFrameId" class="form-label">자전거</label>
+                  <div class="input-wrapper">
+                    <div class="input-icon">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="18.5" cy="17.5" r="3.5" stroke="currentColor" stroke-width="2" />
+                        <circle cx="5.5" cy="17.5" r="3.5" stroke="currentColor" stroke-width="2" />
+                        <circle cx="15" cy="5" r="1" stroke="currentColor" stroke-width="2" />
+                        <path d="M12 17.5V14l-3-3 4-3 2 3h2" stroke="currentColor" stroke-width="2" />
+                      </svg>
+                    </div>
+                    <select id="bikeFrameId"
+                            formControlName="bikeFrameId"
+                            class="form-select"
+                            [ngClass]="{ 'error': maintenanceForm.get('bikeFrameId')?.invalid && maintenanceForm.get('bikeFrameId')?.touched }"
+                            [disabled]="isEditMode || bikeFrameId !== undefined">
+                      <option [ngValue]="null" disabled>자전거 선택</option>
+                      <option *ngFor="let bike of bikes" [value]="bike.id">
+                        {{ bike.frameNumber }} - {{ bike.model || '모델명 없음' }} ({{ bike.color || '색상 없음' }})
+                      </option>
+                    </select>
+                  </div>
+                  <div *ngIf="maintenanceForm.get('bikeFrameId')?.invalid && maintenanceForm.get('bikeFrameId')?.touched" class="field-error">
+                    자전거를 선택해주세요.
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="ownerId" class="form-label">소유자</label>
+                  <div class="input-wrapper">
+                    <div class="input-icon">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 21V19A4 4 0 0 0 16 15H8A4 4 0 0 0 4 19V21" stroke="currentColor" stroke-width="2" />
+                        <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" />
+                      </svg>
+                    </div>
+                    <select id="ownerId"
+                            formControlName="ownerId"
+                            class="form-select"
+                            [ngClass]="{ 'error': maintenanceForm.get('ownerId')?.invalid && maintenanceForm.get('ownerId')?.touched }"
+                            [disabled]="isEditMode">
+                      <option [ngValue]="''" disabled>소유자 선택</option>
+                      <option *ngFor="let owner of owners" [value]="owner.userId">
+                        {{ owner.firstName }} {{ owner.lastName }} ({{ owner.email }})
+                      </option>
+                    </select>
+                  </div>
+                  <div *ngIf="maintenanceForm.get('ownerId')?.invalid && maintenanceForm.get('ownerId')?.touched" class="field-error">
+                    소유자를 선택해주세요.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Third Row -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="storeId" class="form-label">정비소</label>
+                  <div class="input-wrapper">
+                    <div class="input-icon">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 21H21" stroke="currentColor" stroke-width="2" />
+                        <path d="M5 21V7L13 2L21 7V21" stroke="currentColor" stroke-width="2" />
+                        <path d="M9 9H15" stroke="currentColor" stroke-width="2" />
+                      </svg>
+                    </div>
+                    <select id="storeId"
+                            formControlName="storeId"
+                            class="form-select"
+                            [ngClass]="{ 'error': maintenanceForm.get('storeId')?.invalid && maintenanceForm.get('storeId')?.touched }"
+                            [disabled]="isEditMode">
+                      <option [ngValue]="''" disabled>정비소 선택</option>
+                      <option *ngFor="let store of stores" [value]="store.userId">
+                        {{ store.firstName }} {{ store.lastName }} ({{ store.email }})
+                      </option>
+                    </select>
+                  </div>
+                  <div *ngIf="maintenanceForm.get('storeId')?.invalid && maintenanceForm.get('storeId')?.touched" class="field-error">
+                    정비소를 선택해주세요.
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="paymentMethod" class="form-label">결제 방법</label>
+                  <div class="input-wrapper">
+                    <div class="input-icon">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
+                        <line x1="1" y1="10" x2="23" y2="10" stroke="currentColor" stroke-width="2" />
+                      </svg>
+                    </div>
+                    <select id="paymentMethod"
+                            formControlName="paymentMethod"
+                            class="form-select"
+                            [ngClass]="{ 'error': maintenanceForm.get('paymentMethod')?.invalid && maintenanceForm.get('paymentMethod')?.touched }">
+                      <option *ngFor="let method of paymentMethods" [value]="method">
+                        {{ getPaymentMethodName(method) }}
+                      </option>
+                    </select>
+                  </div>
+                  <div *ngIf="maintenanceForm.get('paymentMethod')?.invalid && maintenanceForm.get('paymentMethod')?.touched" class="field-error">
+                    결제 방법을 선택해주세요.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Notes Field -->
+              <div class="form-group">
+                <label for="notes" class="form-label">비고</label>
+                <div class="input-wrapper">
+                  <div class="input-icon textarea-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M14 2H6A2 2 0 0 0 4 4V20A2 2 0 0 0 6 22H18A2 2 0 0 0 20 20V8Z" stroke="currentColor" stroke-width="2" />
+                      <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2" />
+                      <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2" />
+                      <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2" />
+                      <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="2" />
+                    </svg>
+                  </div>
+                  <textarea id="notes"
+                            formControlName="notes"
+                            class="form-textarea"
+                            rows="3"
+                            placeholder="추가 메모사항을 입력하세요..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 상세 항목 섹션 -->
+          <div class="form-section">
+            <div class="section-header">
+              <h3 class="section-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <line x1="8" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2" />
+                  <line x1="8" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2" />
+                  <line x1="8" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2" />
+                  <line x1="3" y1="6" x2="3.01" y2="6" stroke="currentColor" stroke-width="2" />
+                  <line x1="3" y1="12" x2="3.01" y2="12" stroke="currentColor" stroke-width="2" />
+                  <line x1="3" y1="18" x2="3.01" y2="18" stroke="currentColor" stroke-width="2" />
+                </svg>
+                상세 항목
+              </h3>
+              <button type="button" class="add-detail-btn" (click)="addDetail()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" />
+                  <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" />
+                </svg>
+                항목 추가
               </button>
             </div>
-            <div class="card-body">
-              <div class="row mb-3">
-                <div class="col-md-6">
-                  <label [for]="'partName' + i" class="form-label">부품명</label>
-                  <input 
-                    type="text" 
-                    class="form-control" 
-                    [id]="'partName' + i" 
-                    formControlName="partName"
-                  >
-                </div>
-                <div class="col-md-6">
-                  <label [for]="'partSpecification' + i" class="form-label">규격</label>
-                  <input 
-                    type="text" 
-                    class="form-control" 
-                    [id]="'partSpecification' + i" 
-                    formControlName="partSpecification"
-                  >
+
+            <div class="section-content">
+              <div formArrayName="details" class="details-container">
+                <div *ngFor="let detailForm of details.controls; let i = index"
+                     [formGroupName]="i"
+                     class="detail-card">
+                  <div class="detail-header">
+                    <span class="detail-number">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="2" />
+                      </svg>
+                      항목 #{{ i+1 }}
+                    </span>
+                    <button type="button"
+                            class="remove-detail-btn"
+                            *ngIf="details.length > 1"
+                            (click)="removeDetail(i)">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <polyline points="3,6 5,6 21,6" stroke="currentColor" stroke-width="2" />
+                        <path d="M19 6V20A2 2 0 0 1 17 22H7A2 2 0 0 1 5 20V6M8 6V4A2 2 0 0 1 10 2H14A2 2 0 0 1 16 4V6" stroke="currentColor" stroke-width="2" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  <div class="detail-content">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label [for]="'partName' + i" class="form-label">부품명</label>
+                        <div class="input-wrapper">
+                          <div class="input-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z" stroke="currentColor" stroke-width="2" />
+                              <line x1="16" y1="8" x2="2" y2="22" stroke="currentColor" stroke-width="2" />
+                              <line x1="17.5" y1="15" x2="9" y2="15" stroke="currentColor" stroke-width="2" />
+                            </svg>
+                          </div>
+                          <input type="text"
+                                 [id]="'partName' + i"
+                                 formControlName="partName"
+                                 class="form-input"
+                                 placeholder="부품명을 입력하세요">
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label [for]="'partSpecification' + i" class="form-label">규격</label>
+                        <div class="input-wrapper">
+                          <div class="input-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" stroke="currentColor" stroke-width="2" />
+                            </svg>
+                          </div>
+                          <input type="text"
+                                 [id]="'partSpecification' + i"
+                                 formControlName="partSpecification"
+                                 class="form-input"
+                                 placeholder="규격을 입력하세요">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label [for]="'laborCost' + i" class="form-label">공임비</label>
+                        <div class="input-wrapper currency-input">
+                          <div class="input-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M6 2L3 6V20A2 2 0 0 0 5 22H19A2 2 0 0 0 21 20V6L18 2Z" stroke="currentColor" stroke-width="2" />
+                              <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2" />
+                              <path d="M16 10A4 4 0 0 1 12 14H8" stroke="currentColor" stroke-width="2" />
+                              <path d="M12 14A4 4 0 0 1 8 10" stroke="currentColor" stroke-width="2" />
+                            </svg>
+                          </div>
+                          <input type="number"
+                                 [id]="'laborCost' + i"
+                                 formControlName="laborCost"
+                                 class="form-input"
+                                 min="0"
+                                 placeholder="0"
+                                 [ngClass]="{ 'error': detailForm.get('laborCost')?.invalid && detailForm.get('laborCost')?.touched }">
+                          <span class="currency-suffix">원</span>
+                        </div>
+                        <div *ngIf="detailForm.get('laborCost')?.invalid && detailForm.get('laborCost')?.touched" class="field-error">
+                          유효한 공임비를 입력해주세요.
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label [for]="'partPrice' + i" class="form-label">부품 가격</label>
+                        <div class="input-wrapper currency-input">
+                          <div class="input-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" stroke="currentColor" stroke-width="2" />
+                              <line x1="7" y1="7" x2="7.01" y2="7" stroke="currentColor" stroke-width="2" />
+                            </svg>
+                          </div>
+                          <input type="number"
+                                 [id]="'partPrice' + i"
+                                 formControlName="partPrice"
+                                 class="form-input"
+                                 min="0"
+                                 placeholder="0"
+                                 [ngClass]="{ 'error': detailForm.get('partPrice')?.invalid && detailForm.get('partPrice')?.touched }">
+                          <span class="currency-suffix">원</span>
+                        </div>
+                        <div *ngIf="detailForm.get('partPrice')?.invalid && detailForm.get('partPrice')?.touched" class="field-error">
+                          유효한 부품 가격을 입력해주세요.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <label [for]="'laborCost' + i" class="form-label">공임비</label>
-                  <input 
-                    type="number" 
-                    class="form-control" 
-                    [id]="'laborCost' + i" 
-                    formControlName="laborCost"
-                    min="0"
-                    [class.is-invalid]="detailForm.get('laborCost')?.invalid && detailForm.get('laborCost')?.touched"
-                  >
-                  <div class="invalid-feedback">유효한 공임비를 입력해주세요.</div>
+
+              <!-- 합계 표시 -->
+              <div class="total-summary">
+                <div class="total-row">
+                  <span class="total-label">총 공임비:</span>
+                  <span class="total-value">{{ calculateTotal('laborCost') | currency:'KRW':'symbol':'1.0-0' }}</span>
                 </div>
-                <div class="col-md-6">
-                  <label [for]="'partPrice' + i" class="form-label">부품 가격</label>
-                  <input 
-                    type="number" 
-                    class="form-control" 
-                    [id]="'partPrice' + i" 
-                    formControlName="partPrice"
-                    min="0"
-                    [class.is-invalid]="detailForm.get('partPrice')?.invalid && detailForm.get('partPrice')?.touched"
-                  >
-                  <div class="invalid-feedback">유효한 부품 가격을 입력해주세요.</div>
+                <div class="total-row">
+                  <span class="total-label">총 부품비:</span>
+                  <span class="total-value">{{ calculateTotal('partPrice') | currency:'KRW':'symbol':'1.0-0' }}</span>
+                </div>
+                <div class="total-row grand-total">
+                  <span class="total-label">총 금액:</span>
+                  <span class="total-value">{{ calculateTotal('total') | currency:'KRW':'symbol':'1.0-0' }}</span>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="row mt-4">
-          <div class="col-md-8 text-end fw-bold">총 공임비:</div>
-          <div class="col-md-4">{{ calculateTotal('laborCost') | currency:'KRW':'symbol':'1.0-0' }}</div>
-        </div>
-        <div class="row">
-          <div class="col-md-8 text-end fw-bold">총 부품비:</div>
-          <div class="col-md-4">{{ calculateTotal('partPrice') | currency:'KRW':'symbol':'1.0-0' }}</div>
-        </div>
-        <div class="row">
-          <div class="col-md-8 text-end fw-bold">총 금액:</div>
-          <div class="col-md-4 fs-5 fw-bold">{{ calculateTotal('total') | currency:'KRW':'symbol':'1.0-0' }}</div>
-        </div>
+          <!-- Action Buttons -->
+          <div class="form-actions">
+            <button type="button" class="cancel-btn" (click)="cancel()" [disabled]="submitting">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" />
+                <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" />
+              </svg>
+              취소
+            </button>
+            <button type="submit" class="submit-btn" [disabled]="submitting">
+              <span *ngIf="submitting" class="loading-spinner"></span>
+              <svg *ngIf="!submitting" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 21H5A2 2 0 0 1 3 19V5A2 2 0 0 1 5 3H16L21 8V19A2 2 0 0 1 19 21Z" stroke="currentColor" stroke-width="2" />
+                <polyline points="17,21 17,13 7,13 7,21" stroke="currentColor" stroke-width="2" />
+                <polyline points="7,3 7,8 15,8" stroke="currentColor" stroke-width="2" />
+              </svg>
+              {{ isEditMode ? '수정 완료' : '저장하기' }}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
 
-    <div class="d-flex justify-content-center mt-4 mb-5">
-      <button type="button" class="btn btn-secondary me-2" (click)="cancel()" [disabled]="submitting">취소</button>
-      <button type="submit" class="btn btn-primary" [disabled]="submitting">
-        <span *ngIf="submitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-        {{ isEditMode ? '수정' : '저장' }}
-      </button>
+    <!-- Background Decoration -->
+    <div class="bg-decoration">
+      <div class="decoration-circle circle-1"></div>
+      <div class="decoration-circle circle-2"></div>
+      <div class="decoration-circle circle-3"></div>
+      <div class="decoration-circle circle-4"></div>
     </div>
-  </form>
+  </div>
 </div>

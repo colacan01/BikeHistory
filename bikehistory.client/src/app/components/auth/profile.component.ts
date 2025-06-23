@@ -7,7 +7,7 @@ import { ActivityLoggerService } from '../../services/activity-logger.service';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styles: []
+  styleUrl: './profile.component.css'
 })
 export class ProfileComponent implements OnInit {
   profileForm!: FormGroup;

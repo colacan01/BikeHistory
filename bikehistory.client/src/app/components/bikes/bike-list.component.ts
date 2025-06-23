@@ -47,4 +47,9 @@ export class BikeListComponent implements OnInit {
         }
       });
   }
+  // bike-list.component.ts에 추가할 메서드
+
+  trackByBike(index: number, bike: BikeFrame): any {
+    return bike.id || index;
+  }
 }

@@ -10,7 +10,7 @@ import { ActivityLoggerService } from '../../services/activity-logger.service';
 @Component({
   selector: 'app-maintenance-form',
   templateUrl: './maintenance-form.component.html',
-  //styleUrls: ['./maintenance-form.component.css']
+  styleUrls: ['./maintenance-form.component.css']
 })
 export class MaintenanceFormComponent implements OnInit {
   maintenanceForm: FormGroup;

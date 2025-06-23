@@ -9,7 +9,7 @@ import { ActivityLoggerService } from '../../services/activity-logger.service';
 @Component({
   selector: 'app-bike-detail',
   templateUrl: './bike-detail.component.html',
-  styles: []
+  styleUrl: './bike-detail.component.css'
 })
 export class BikeDetailComponent implements OnInit {
   bikeId!: number;

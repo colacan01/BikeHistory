@@ -9,7 +9,7 @@ import { ActivityLoggerService } from '../../services/activity-logger.service';
 @Component({
   selector: 'app-bike-register',
   templateUrl: './bike-register.component.html',
-  styles: []
+  styleUrl: './bike-register.component.css'
 })
 export class BikeRegisterComponent implements OnInit {
   bikeForm!: FormGroup;

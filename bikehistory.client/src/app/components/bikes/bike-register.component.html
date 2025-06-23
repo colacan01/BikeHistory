@@ -1,98 +1,230 @@
-<div class="container mt-4">
-  <h2>Register New Bike</h2>
-  
-  <div class="alert alert-danger" *ngIf="error">
-    {{error}}
+<div class="bike-register-container">
+  <!-- Header Section -->
+  <div class="register-header">
+    <div class="header-content">
+      <div class="title-section">
+        <div class="bike-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="18.5" cy="17.5" r="3.5" stroke="currentColor" stroke-width="2" />
+            <circle cx="5.5" cy="17.5" r="3.5" stroke="currentColor" stroke-width="2" />
+            <path d="M15 6a1 1 0 0 0-1-1H6.5a1 1 0 0 0-.8.4L3.9 8.7A1 1 0 0 0 4.7 10H19a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </div>
+        <h1 class="page-title">Register New Bike</h1>
+        <p class="page-subtitle">Add a new bike to your collection</p>
+      </div>
+    </div>
   </div>
 
-  <form [formGroup]="bikeForm" (ngSubmit)="onSubmit()" class="mt-4">
-    <div class="row">
-      <div class="col-md-6 mb-3">
-        <label for="frameNumber" class="form-label">Frame Number *</label>
-        <input 
-          type="text" 
-          formControlName="frameNumber" 
-          class="form-control" 
-          [ngClass]="{ 'is-invalid': submitted && f['frameNumber'].errors }" />
-        <div *ngIf="submitted && f['frameNumber'].errors" class="invalid-feedback">
-          <div *ngIf="f['frameNumber'].errors['required']">Frame Number is required</div>
-        </div>
-      </div>
+  <!-- Error Message -->
+  <div class="error-alert" *ngIf="error">
+    <div class="alert-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+        <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2" />
+        <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2" />
+      </svg>
+    </div>
+    <span>{{error}}</span>
+  </div>
 
-      <div class="col-md-6 mb-3">
-        <label for="bikeTypeId" class="form-label">Bike Type *</label>
-        <select 
-          formControlName="bikeTypeId" 
-          class="form-select" 
-          [ngClass]="{ 'is-invalid': submitted && f['bikeTypeId'].errors }">
-          <option value="">-- Select Bike Type --</option>
-          <option *ngFor="let type of bikeTypes" [value]="type.id">{{type.name}}</option>
-        </select>
-        <div *ngIf="submitted && f['bikeTypeId'].errors" class="invalid-feedback">
-          <div *ngIf="f['bikeTypeId'].errors['required']">Bike Type is required</div>
-        </div>
+  <!-- Main Form Card -->
+  <div class="register-card">
+    <div class="card-header">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" />
+          <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2" />
+        </svg>
       </div>
+      <h2 class="card-title">Bike Information</h2>
     </div>
 
-    <div class="row">
-      <div class="col-md-6 mb-3">
-        <label for="manufacturerId" class="form-label">Manufacturer *</label>
-        <select 
-          formControlName="manufacturerId" 
-          class="form-select" 
-          [ngClass]="{ 'is-invalid': submitted && f['manufacturerId'].errors }"
-          (change)="onManufacturerChange()">
-          <option value="">-- Select Manufacturer --</option>
-          <option *ngFor="let manufacturer of manufacturers" [value]="manufacturer.id">{{manufacturer.name}}</option>
-        </select>
-        <div *ngIf="submitted && f['manufacturerId'].errors" class="invalid-feedback">
-          <div *ngIf="f['manufacturerId'].errors['required']">Manufacturer is required</div>
+    <div class="card-body">
+      <form [formGroup]="bikeForm" (ngSubmit)="onSubmit()">
+        <!-- Frame Number -->
+        <div class="form-section">
+          <div class="form-group full-width">
+            <label for="frameNumber" class="form-label">Frame Number <span class="required">*</span></label>
+            <div class="input-wrapper">
+              <div class="input-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
+                  <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2" />
+                  <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2" />
+                </svg>
+              </div>
+              <input type="text"
+                     id="frameNumber"
+                     formControlName="frameNumber"
+                     class="form-input"
+                     [ngClass]="{ 'error': submitted && f['frameNumber'].errors }"
+                     placeholder="Enter the frame number" />
+            </div>
+            <div *ngIf="submitted && f['frameNumber'].errors" class="field-error">
+              <div *ngIf="f['frameNumber'].errors['required']">Frame Number is required</div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="col-md-6 mb-3">
-        <label for="brandId" class="form-label">Brand *</label>
-        <select 
-          formControlName="brandId" 
-          class="form-select" 
-          [ngClass]="{ 'is-invalid': submitted && f['brandId'].errors }">
-          <option value="">-- Select Brand --</option>
-          <option *ngFor="let brand of brands" [value]="brand.id">{{brand.name}}</option>
-        </select>
-        <div *ngIf="submitted && f['brandId'].errors" class="invalid-feedback">
-          <div *ngIf="f['brandId'].errors['required']">Brand is required</div>
+        <!-- Bike Type and Manufacturer -->
+        <div class="form-section">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="bikeTypeId" class="form-label">Bike Type <span class="required">*</span></label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 7H4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2Z" stroke="currentColor" stroke-width="2" />
+                    <path d="M20 7v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7" stroke="currentColor" stroke-width="2" />
+                  </svg>
+                </div>
+                <select id="bikeTypeId"
+                        formControlName="bikeTypeId"
+                        class="form-select"
+                        [ngClass]="{ 'error': submitted && f['bikeTypeId'].errors }">
+                  <option value="">Select Bike Type</option>
+                  <option *ngFor="let type of bikeTypes" [value]="type.id">{{type.name}}</option>
+                </select>
+              </div>
+              <div *ngIf="submitted && f['bikeTypeId'].errors" class="field-error">
+                <div *ngIf="f['bikeTypeId'].errors['required']">Bike Type is required</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="manufacturerId" class="form-label">Manufacturer <span class="required">*</span></label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" stroke="currentColor" stroke-width="2" />
+                  </svg>
+                </div>
+                <select id="manufacturerId"
+                        formControlName="manufacturerId"
+                        class="form-select"
+                        [ngClass]="{ 'error': submitted && f['manufacturerId'].errors }"
+                        (change)="onManufacturerChange()">
+                  <option value="">Select Manufacturer</option>
+                  <option *ngFor="let manufacturer of manufacturers" [value]="manufacturer.id">{{manufacturer.name}}</option>
+                </select>
+              </div>
+              <div *ngIf="submitted && f['manufacturerId'].errors" class="field-error">
+                <div *ngIf="f['manufacturerId'].errors['required']">Manufacturer is required</div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+
+        <!-- Brand -->
+        <div class="form-section">
+          <div class="form-group full-width">
+            <label for="brandId" class="form-label">Brand <span class="required">*</span></label>
+            <div class="input-wrapper">
+              <div class="input-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" />
+                </svg>
+              </div>
+              <select id="brandId"
+                      formControlName="brandId"
+                      class="form-select"
+                      [ngClass]="{ 'error': submitted && f['brandId'].errors }">
+                <option value="">Select Brand</option>
+                <option *ngFor="let brand of brands" [value]="brand.id">{{brand.name}}</option>
+              </select>
+            </div>
+            <div *ngIf="submitted && f['brandId'].errors" class="field-error">
+              <div *ngIf="f['brandId'].errors['required']">Brand is required</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Optional Fields -->
+        <div class="form-section">
+          <div class="optional-header">
+            <h3 class="section-title">Optional Information</h3>
+            <p class="section-subtitle">Add additional details about your bike</p>
+          </div>
+
+          <div class="form-row three-columns">
+            <div class="form-group">
+              <label for="model" class="form-label">Model</label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" stroke-width="2" />
+                    <path d="M6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" stroke="currentColor" stroke-width="2" />
+                  </svg>
+                </div>
+                <input type="text"
+                       id="model"
+                       formControlName="model"
+                       class="form-input"
+                       placeholder="e.g., X1 Pro" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="manufactureYear" class="form-label">Year</label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" />
+                    <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" />
+                    <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2" />
+                  </svg>
+                </div>
+                <input type="number"
+                       id="manufactureYear"
+                       formControlName="manufactureYear"
+                       class="form-input"
+                       min="1900"
+                       [max]="currentYear"
+                       placeholder="e.g., 2023" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="color" class="form-label">Color</label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+                    <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1m15.5-6.5l-4.24 4.24M7.76 16.24l-4.24 4.24m12.72 0l-4.24-4.24M7.76 7.76L3.52 3.52" stroke="currentColor" stroke-width="2" />
+                  </svg>
+                </div>
+                <input type="text"
+                       id="color"
+                       formControlName="color"
+                       class="form-input"
+                       placeholder="e.g., Red" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="form-actions">
+          <button type="button" class="cancel-btn" routerLink="/bikes">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            Cancel
+          </button>
+
+          <button type="submit" class="submit-btn" [disabled]="loading">
+            <span *ngIf="loading" class="loading-spinner"></span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="!loading">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" stroke-width="2" />
+              <polyline points="22,4 12,14.01 9,11.01" stroke="currentColor" stroke-width="2" />
+            </svg>
+            <span *ngIf="!loading">Register Bike</span>
+            <span *ngIf="loading">Registering...</span>
+          </button>
+        </div>
+      </form>
     </div>
-
-    <div class="row">
-      <div class="col-md-4 mb-3">
-        <label for="model" class="form-label">Model</label>
-        <input type="text" formControlName="model" class="form-control" />
-      </div>
-
-      <div class="col-md-4 mb-3">
-        <label for="manufactureYear" class="form-label">Year</label>
-        <input 
-          type="number" 
-          formControlName="manufactureYear" 
-          class="form-control"
-          min="1900" 
-          [max]="currentYear" />
-      </div>
-
-      <div class="col-md-4 mb-3">
-        <label for="color" class="form-label">Color</label>
-        <input type="text" formControlName="color" class="form-control" />
-      </div>
-    </div>
-
-    <div class="d-flex justify-content-between mt-4">
-      <button type="button" class="btn btn-outline-secondary" routerLink="/bikes">Cancel</button>
-      <button type="submit" class="btn btn-primary" [disabled]="loading">
-        <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
-        Register Bike
-      </button>
-    </div>
-  </form>
+  </div>
 </div>

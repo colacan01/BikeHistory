@@ -8,7 +8,7 @@ import { ActivityLoggerService } from '../../services/activity-logger.service';
 @Component({
   selector: 'app-bike-transfer',
   templateUrl: './bike-transfer.component.html',
-  styles: []
+  styleUrl: './bike-transfer.component.css'
 })
 export class BikeTransferComponent implements OnInit {
   bikeId!: number;

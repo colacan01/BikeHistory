@@ -1,44 +1,697 @@
-<div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>My Bikes</h2>
-    <div class="d-flex">
-      <a *ngIf="fromUserManagement" routerLink="/admin/users" class="btn btn-secondary me-2">Back to Users</a>
-      <a routerLink="/bikes/register" class="btn btn-primary">Register New Bike</a>
+<div class="bike-list-container">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="title-section">
+        <div class="page-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="18.5" cy="17.5" r="3.5" stroke="currentColor" stroke-width="2" />
+            <circle cx="5.5" cy="17.5" r="3.5" stroke="currentColor" stroke-width="2" />
+            <path d="M15 6a1 1 0 0 0-1-1H6.5a1 1 0 0 0-.8.4L3.9 8.7A1 1 0 0 0 4.7 10H19a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </div>
+        <h1 class="page-title">My Bikes</h1>
+      </div>
+
+      <div class="header-actions">
+        <a *ngIf="fromUserManagement" routerLink="/admin/users" class="action-btn secondary-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          Back to Users
+        </a>
+        <a routerLink="/bikes/register" class="action-btn primary-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" />
+            <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" />
+          </svg>
+          Register New Bike
+        </a>
+      </div>
     </div>
   </div>
 
-  <div class="alert alert-info" *ngIf="loading">
-    Loading bikes...
+  <!-- Status Messages -->
+  <div class="status-message loading-message" *ngIf="loading">
+    <div class="status-icon">
+      <div class="loading-spinner"></div>
+    </div>
+    <div class="status-content">
+      <h3>Loading bikes...</h3>
+      <p>Please wait while we fetch your bike collection</p>
+    </div>
   </div>
 
-  <div class="alert alert-danger" *ngIf="error">
-    {{error}}
+  <div class="status-message error-message" *ngIf="error">
+    <div class="status-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+        <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2" />
+        <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2" />
+      </svg>
+    </div>
+    <div class="status-content">
+      <h3>Oops! Something went wrong</h3>
+      <p>{{error}}</p>
+    </div>
   </div>
 
-  <div class="alert alert-info" *ngIf="!loading && !error && bikes.length === 0">
-    You don't have any bikes registered yet. Click "Register New Bike" to add one.
+  <div class="status-message empty-message" *ngIf="!loading && !error && bikes.length === 0">
+    <div class="status-icon">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="18.5" cy="17.5" r="3.5" stroke="currentColor" stroke-width="2" />
+        <circle cx="5.5" cy="17.5" r="3.5" stroke="currentColor" stroke-width="2" />
+        <path d="M15 6a1 1 0 0 0-1-1H6.5a1 1 0 0 0-.8.4L3.9 8.7A1 1 0 0 0 4.7 10H19a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z" stroke="currentColor" stroke-width="2" opacity="0.5" />
+      </svg>
+    </div>
+    <div class="status-content">
+      <h3>No bikes registered yet</h3>
+      <p>You don't have any bikes registered yet. Click "Register New Bike" to add your first bike to the collection!</p>
+      <a routerLink="/bikes/register" class="cta-button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" />
+          <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" />
+        </svg>
+        Register Your First Bike
+      </a>
+    </div>
   </div>
 
-  <div class="row" *ngIf="bikes.length > 0">
-    <div class="col-md-4 mb-4" *ngFor="let bike of bikes">
-      <div class="card h-100">
-        <div class="card-header">
-          <h5 class="card-title mb-0">{{bike.brand?.name || 'Unknown Brand'}} {{bike.model || ''}}</h5>
+  <!-- Bikes Grid -->
+  <div class="bikes-grid" *ngIf="bikes.length > 0">
+    <div class="bike-card" *ngFor="let bike of bikes; trackBy: trackByBike">
+      <div class="bike-card-header">
+        <div class="bike-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="18.5" cy="17.5" r="3.5" stroke="currentColor" stroke-width="2" />
+            <circle cx="5.5" cy="17.5" r="3.5" stroke="currentColor" stroke-width="2" />
+            <path d="M15 6a1 1 0 0 0-1-1H6.5a1 1 0 0 0-.8.4L3.9 8.7A1 1 0 0 0 4.7 10H19a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z" stroke="currentColor" stroke-width="2" />
+          </svg>
         </div>
-        <div class="card-body">
-          <p><strong>Frame Number:</strong> {{bike.frameNumber}}</p>
-          <p><strong>Type:</strong> {{bike.bikeType?.name || 'Unknown Type'}}</p>
-          <p><strong>Manufacturer:</strong> {{bike.manufacturer?.name || 'Unknown Manufacturer'}}</p>
-          <p *ngIf="bike.color"><strong>Color:</strong> {{bike.color}}</p>
-          <p *ngIf="bike.manufactureYear"><strong>Year:</strong> {{bike.manufactureYear}}</p>
-          <p><strong>Registered:</strong> {{bike.registeredDate | date}}</p>
+        <div class="bike-title">
+          <h3>{{bike.brand?.name || 'Unknown Brand'}}</h3>
+          <span class="bike-model" *ngIf="bike.model">{{bike.model}}</span>
         </div>
-        <div class="card-footer">
-          <a [routerLink]="['/bikes', bike.id]" class="btn btn-primary me-2">Details</a>
-          <a [routerLink]="['/bikes', bike.id, 'transfer']" class="btn btn-outline-secondary me-2">Transfer</a>
-          <a [routerLink]="['/maintenances/new']" [queryParams]="{bikeFrameId: bike.id}" class="btn btn-outline-secondary">Mainternance</a>
+      </div>
+
+      <div class="bike-card-body">
+        <div class="bike-details">
+          <div class="detail-item">
+            <div class="detail-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
+                <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2" />
+                <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="detail-content">
+              <span class="detail-label">Frame Number</span>
+              <span class="detail-value">{{bike.frameNumber}}</span>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <div class="detail-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 7H4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2Z" stroke="currentColor" stroke-width="2" />
+                <path d="M20 7v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="detail-content">
+              <span class="detail-label">Type</span>
+              <span class="detail-value">{{bike.bikeType?.name || 'Unknown Type'}}</span>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <div class="detail-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="detail-content">
+              <span class="detail-label">Manufacturer</span>
+              <span class="detail-value">{{bike.manufacturer?.name || 'Unknown Manufacturer'}}</span>
+            </div>
+          </div>
+
+          <div class="detail-item" *ngIf="bike.color">
+            <div class="detail-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+                <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1m15.5-6.5l-4.24 4.24M7.76 16.24l-4.24 4.24m12.72 0l-4.24-4.24M7.76 7.76L3.52 3.52" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="detail-content">
+              <span class="detail-label">Color</span>
+              <span class="detail-value">{{bike.color}}</span>
+            </div>
+          </div>
+
+          <div class="detail-item" *ngIf="bike.manufactureYear">
+            <div class="detail-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
+                <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" />
+                <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" />
+                <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="detail-content">
+              <span class="detail-label">Year</span>
+              <span class="detail-value">{{bike.manufactureYear}}</span>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <div class="detail-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 21V19A4 4 0 0 0 16 15H8A4 4 0 0 0 4 19V21" stroke="currentColor" stroke-width="2" />
+                <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <div class="detail-content">
+              <span class="detail-label">Registered</span>
+              <span class="detail-value">{{bike.registeredDate | date}}</span>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div class="bike-card-footer">
+        <a [routerLink]="['/bikes', bike.id]" class="card-btn primary-card-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" />
+            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+          </svg>
+          Details
+        </a>
+
+        <a [routerLink]="['/bikes', bike.id, 'transfer']" class="card-btn secondary-card-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17 1L21 5L17 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M3 11V9A4 4 0 0 1 7 5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M7 23L3 19L7 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M21 13V15A4 4 0 0 1 17 19H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          Transfer
+        </a>
+
+        <a [routerLink]="['/maintenances/new']" [queryParams]="{bikeFrameId: bike.id}" class="card-btn maintenance-card-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" stroke="currentColor" stroke-width="2" />
+          </svg>
+          Maintenance
+        </a>
       </div>
     </div>
   </div>
 </div>
+
+<style>
+  .bike-list-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* Header Section */
+  .page-header {
+    margin-bottom: 40px;
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .title-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .page-icon {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+  }
+
+  .page-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0;
+    letter-spacing: -0.5px;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .primary-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: 1px solid transparent;
+  }
+
+    .primary-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(102, 126, 234, 0.3);
+      color: white;
+      text-decoration: none;
+    }
+
+  .secondary-btn {
+    background: white;
+    color: #667eea;
+    border: 2px solid #e5e7eb;
+  }
+
+    .secondary-btn:hover {
+      background: #f8fafc;
+      border-color: #667eea;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      color: #667eea;
+      text-decoration: none;
+    }
+
+  /* Status Messages */
+  .status-message {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    margin-bottom: 32px;
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  .status-icon {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(102, 126, 234, 0.2);
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .loading-message .status-icon {
+    color: #667eea;
+  }
+
+  .error-message {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border-color: #fca5a5;
+  }
+
+    .error-message .status-icon {
+      color: #dc2626;
+    }
+
+  .empty-message .status-icon {
+    color: #9ca3af;
+  }
+
+  .status-content h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #1f2937;
+  }
+
+  .status-content p {
+    color: #6b7280;
+    margin-bottom: 0;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+  }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+      color: white;
+      text-decoration: none;
+    }
+
+  /* Bikes Grid */
+  .bikes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 24px;
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  .bike-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: fit-content;
+  }
+
+    .bike-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+  .bike-card-header {
+    padding: 24px 24px 16px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .bike-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .bike-title h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 4px 0;
+    line-height: 1.2;
+  }
+
+  .bike-model {
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .bike-card-body {
+    padding: 24px;
+  }
+
+  .bike-details {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .detail-icon {
+    width: 32px;
+    height: 32px;
+    background: #f8fafc;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #667eea;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .detail-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .detail-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+
+  .detail-value {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+    word-break: break-word;
+  }
+
+  .bike-card-footer {
+    padding: 20px 24px 24px;
+    background: #f8fafc;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .card-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    flex: 1;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .primary-card-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+  }
+
+    .primary-card-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+      color: white;
+      text-decoration: none;
+    }
+
+  .secondary-card-btn {
+    background: white;
+    color: #667eea;
+    border: 1px solid #e5e7eb;
+  }
+
+    .secondary-card-btn:hover {
+      background: #f8fafc;
+      border-color: #667eea;
+      transform: translateY(-2px);
+      color: #667eea;
+      text-decoration: none;
+    }
+
+  .maintenance-card-btn {
+    background: #f59e0b;
+    color: white;
+  }
+
+    .maintenance-card-btn:hover {
+      background: #d97706;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(245, 158, 11, 0.3);
+      color: white;
+      text-decoration: none;
+    }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .bike-list-container {
+      padding: 0 16px;
+    }
+
+    .page-title {
+      font-size: 28px;
+    }
+
+    .header-content {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .header-actions {
+      justify-content: stretch;
+    }
+
+    .action-btn {
+      flex: 1;
+      justify-content: center;
+    }
+
+    .bikes-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .bike-card-footer {
+      flex-direction: column;
+    }
+
+    .card-btn {
+      flex: none;
+    }
+
+    .status-message {
+      padding: 32px 20px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .page-icon {
+      width: 48px;
+      height: 48px;
+    }
+
+    .bike-icon {
+      width: 40px;
+      height: 40px;
+    }
+
+    .bike-title h3 {
+      font-size: 18px;
+    }
+
+    .action-btn {
+      padding: 10px 16px;
+      font-size: 14px;
+    }
+  }
+
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    .page-title {
+      color: #f9fafb;
+    }
+
+    .bike-card {
+      background: #1f2937;
+      border-color: #374151;
+    }
+
+    .bike-card-header {
+      background: rgba(102, 126, 234, 0.1);
+      border-bottom-color: #374151;
+    }
+
+    .bike-title h3 {
+      color: #f9fafb;
+    }
+
+    .bike-model {
+      color: #9ca3af;
+    }
+
+    .detail-icon {
+      background: #374151;
+    }
+
+    .detail-value {
+      color: #f3f4f6;
+    }
+
+    .bike-card-footer {
+      background: #374151;
+    }
+
+    .secondary-card-btn {
+      background: #1f2937;
+      border-color: #4b5563;
+      color: #9ca3af;
+    }
+
+      .secondary-card-btn:hover {
+        background: #374151;
+        color: #667eea;
+      }
+
+    .status-message {
+      background: #1f2937;
+      border-color: #374151;
+    }
+
+    .status-content h3 {
+      color: #f9fafb;
+    }
+
+    .status-content p {
+      color: #9ca3af;
+    }
+  }
+
+  /* Animation */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

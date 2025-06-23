@@ -1,110 +1,352 @@
-<div class="container mt-4">
-  <div class="alert alert-info" *ngIf="loading">
-    Loading bike details...
+<div class="bike-detail-container">
+  <!-- Status Messages -->
+  <div class="status-message loading-message" *ngIf="loading">
+    <div class="status-icon">
+      <div class="loading-spinner"></div>
+    </div>
+    <div class="status-content">
+      <h3>Loading bike details...</h3>
+      <p>Please wait while we fetch the bike information</p>
+    </div>
   </div>
 
-  <div class="alert alert-danger" *ngIf="error">
-    {{error}}
+  <div class="status-message error-message" *ngIf="error">
+    <div class="status-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+        <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2" />
+        <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2" />
+      </svg>
+    </div>
+    <div class="status-content">
+      <h3>Failed to load bike details</h3>
+      <p>{{error}}</p>
+    </div>
   </div>
 
-  <div *ngIf="bike && !loading">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2>{{bike.brand?.name || 'Unknown Brand'}} {{bike.model || 'Bike'}} Details</h2>
-      <div>
-        <a [routerLink]="['/bikes', bike.id, 'transfer']" class="btn btn-primary me-2">Transfer Ownership</a>
-        <a [routerLink]="['/bikes', bike.id, 'edit']" class="btn btn-outline-secondary">Edit</a>
+  <!-- Main Content -->
+  <div *ngIf="bike && !loading" class="detail-content">
+    <!-- Header Section -->
+    <div class="detail-header">
+      <div class="header-content">
+        <div class="title-section">
+          <div class="bike-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="18.5" cy="17.5" r="3.5" stroke="currentColor" stroke-width="2" />
+              <circle cx="5.5" cy="17.5" r="3.5" stroke="currentColor" stroke-width="2" />
+              <path d="M15 6a1 1 0 0 0-1-1H6.5a1 1 0 0 0-.8.4L3.9 8.7A1 1 0 0 0 4.7 10H19a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </div>
+          <div class="title-text">
+            <h1 class="page-title">{{bike.brand?.name || 'Unknown Brand'}} {{bike.model || 'Bike'}} Details</h1>
+            <p class="page-subtitle">Frame Number: {{bike.frameNumber}}</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <a [routerLink]="['/bikes', bike.id, 'transfer']" class="action-btn primary-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17 1L21 5L17 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M3 11V9A4 4 0 0 1 7 5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M7 23L3 19L7 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M21 13V15A4 4 0 0 1 17 19H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            Transfer Ownership
+          </a>
+          <a [routerLink]="['/bikes', bike.id, 'edit']" class="action-btn secondary-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" />
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" />
+            </svg>
+            Edit
+          </a>
+        </div>
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card mb-4">
-          <div class="card-header">
-            <h5 class="card-title mb-0">Bike Information</h5>
+    <!-- Content Grid -->
+    <div class="detail-grid">
+      <!-- Bike Information Card -->
+      <div class="detail-card">
+        <div class="card-header">
+          <div class="card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
           </div>
-          <div class="card-body">
-            <p><strong>Frame Number:</strong> {{bike.frameNumber}}</p>
-            <p><strong>Type:</strong> {{bike.bikeType?.name || 'Unknown Type'}}</p>
-            <p><strong>Manufacturer:</strong> {{bike.manufacturer?.name || 'Unknown Manufacturer'}}</p>
-            <p><strong>Brand:</strong> {{bike.brand?.name || 'Unknown Brand'}}</p>
-            <p *ngIf="bike.model"><strong>Model:</strong> {{bike.model}}</p>
-            <p *ngIf="bike.manufactureYear"><strong>Year:</strong> {{bike.manufactureYear}}</p>
-            <p *ngIf="bike.color"><strong>Color:</strong> {{bike.color}}</p>
-            <p><strong>Registered Date:</strong> {{bike.registeredDate | date}}</p>
-            <p><strong>Current Owner:</strong> {{bike.currentOwner?.firstName || 'You'}}</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-6">
-        <div class="card mb-4">
-          <div class="card-header">
-            <h5 class="card-title mb-0">Ownership History</h5>
-          </div>
-          <div class="card-body">
-            <div class="alert alert-info" *ngIf="loadingHistory">
-              Loading ownership history...
-            </div>
-            <div class="alert alert-danger" *ngIf="historyError">
-              {{historyError}}
-            </div>
-            <div *ngIf="!loadingHistory && !historyError">
-              <div *ngIf="ownershipHistory.length === 0" class="alert alert-info">
-                No ownership transfers have been recorded yet.
-              </div>
-              <ul class="list-group" *ngIf="ownershipHistory.length > 0">
-                <li class="list-group-item" *ngFor="let record of ownershipHistory">
-                  <div><strong>Date:</strong> {{record.transferDate | date}}</div>
-                  <div><strong>From:</strong> {{record.previousOwnerName?.firstName}}</div>
-                  <div><strong>To:</strong> {{record.newOwnerName?.firstName}}</div>
-                  <div *ngIf="record.notes"><strong>Notes:</strong> {{record.notes}}</div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 유지보수 기록 섹션 -->
-      <div class="card mb-4">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="card-title mb-0">유지보수 기록</h5>
-          <div *ngIf="isCurrentOwner || isStoreOwner">
-            <button class="btn btn-primary btn-sm" (click)="createNewMaintenance()">새 유지보수 기록 추가</button>
-          </div>
+          <h2 class="card-title">Bike Information</h2>
         </div>
         <div class="card-body">
-          <div class="alert alert-info" *ngIf="loadingMaintenances">
-            유지보수 기록을 불러오는 중...
-          </div>
-          <div class="alert alert-danger" *ngIf="maintenanceError">
-            {{maintenanceError}}
-          </div>
-          <div *ngIf="!loadingMaintenances && !maintenanceError">
-            <div *ngIf="maintenances.length === 0" class="alert alert-info">
-              유지보수 기록이 없습니다.
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
+                  <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2" />
+                  <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2" />
+                </svg>
+              </div>
+              <div class="info-content">
+                <span class="info-label">Frame Number</span>
+                <span class="info-value">{{bike.frameNumber}}</span>
+              </div>
             </div>
-            <div class="table-responsive" *ngIf="maintenances.length > 0">
-              <table class="table table-striped table-hover">
+
+            <div class="info-item">
+              <div class="info-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 7H4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2Z" stroke="currentColor" stroke-width="2" />
+                  <path d="M20 7v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7" stroke="currentColor" stroke-width="2" />
+                </svg>
+              </div>
+              <div class="info-content">
+                <span class="info-label">Type</span>
+                <span class="info-value">{{bike.bikeType?.name || 'Unknown Type'}}</span>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" stroke="currentColor" stroke-width="2" />
+                </svg>
+              </div>
+              <div class="info-content">
+                <span class="info-label">Manufacturer</span>
+                <span class="info-value">{{bike.manufacturer?.name || 'Unknown Manufacturer'}}</span>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" />
+                </svg>
+              </div>
+              <div class="info-content">
+                <span class="info-label">Brand</span>
+                <span class="info-value">{{bike.brand?.name || 'Unknown Brand'}}</span>
+              </div>
+            </div>
+
+            <div class="info-item" *ngIf="bike.model">
+              <div class="info-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" stroke-width="2" />
+                  <path d="M6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" stroke="currentColor" stroke-width="2" />
+                </svg>
+              </div>
+              <div class="info-content">
+                <span class="info-label">Model</span>
+                <span class="info-value">{{bike.model}}</span>
+              </div>
+            </div>
+
+            <div class="info-item" *ngIf="bike.manufactureYear">
+              <div class="info-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" />
+                  <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" />
+                  <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2" />
+                </svg>
+              </div>
+              <div class="info-content">
+                <span class="info-label">Year</span>
+                <span class="info-value">{{bike.manufactureYear}}</span>
+              </div>
+            </div>
+
+            <div class="info-item" *ngIf="bike.color">
+              <div class="info-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+                  <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1m15.5-6.5l-4.24 4.24M7.76 16.24l-4.24 4.24m12.72 0l-4.24-4.24M7.76 7.76L3.52 3.52" stroke="currentColor" stroke-width="2" />
+                </svg>
+              </div>
+              <div class="info-content">
+                <span class="info-label">Color</span>
+                <span class="info-value">{{bike.color}}</span>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 21V19A4 4 0 0 0 16 15H8A4 4 0 0 0 4 19V21" stroke="currentColor" stroke-width="2" />
+                  <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" />
+                </svg>
+              </div>
+              <div class="info-content">
+                <span class="info-label">Registered Date</span>
+                <span class="info-value">{{bike.registeredDate | date}}</span>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 21V19A4 4 0 0 0 12 15H5A4 4 0 0 0 1 19V21" stroke="currentColor" stroke-width="2" />
+                  <circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2" />
+                  <path d="M20 8V6A4 4 0 0 0 16 2H15" stroke="currentColor" stroke-width="2" />
+                  <line x1="17" y1="11" x2="23" y2="11" stroke="currentColor" stroke-width="2" />
+                </svg>
+              </div>
+              <div class="info-content">
+                <span class="info-label">Current Owner</span>
+                <span class="info-value">{{bike.currentOwner?.firstName || 'You'}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ownership History Card -->
+      <div class="detail-card">
+        <div class="card-header">
+          <div class="card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" />
+              <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" />
+              <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </div>
+          <h2 class="card-title">Ownership History</h2>
+        </div>
+        <div class="card-body">
+          <div class="loading-state" *ngIf="loadingHistory">
+            <div class="loading-spinner small"></div>
+            <span>Loading ownership history...</span>
+          </div>
+
+          <div class="error-state" *ngIf="historyError">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+              <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2" />
+              <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2" />
+            </svg>
+            <span>{{historyError}}</span>
+          </div>
+
+          <div *ngIf="!loadingHistory && !historyError">
+            <div class="empty-state" *ngIf="ownershipHistory.length === 0">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" opacity="0.5" />
+              </svg>
+              <p>No ownership transfers have been recorded yet.</p>
+            </div>
+
+            <div class="history-list" *ngIf="ownershipHistory.length > 0">
+              <div class="history-item" *ngFor="let record of ownershipHistory">
+                <div class="history-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17 1L21 5L17 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M3 11V9A4 4 0 0 1 7 5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M7 23L3 19L7 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M21 13V15A4 4 0 0 1 17 19H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </div>
+                <div class="history-content">
+                  <div class="history-main">
+                    <span class="transfer-date">{{record.transferDate | date}}</span>
+                    <div class="transfer-details">
+                      <span class="from">{{record.previousOwnerName?.firstName}}</span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" />
+                        <polyline points="12,5 19,12 12,19" stroke="currentColor" stroke-width="2" />
+                      </svg>
+                      <span class="to">{{record.newOwnerName?.firstName}}</span>
+                    </div>
+                  </div>
+                  <div class="history-notes" *ngIf="record.notes">
+                    <span class="notes-label">Notes:</span>
+                    <span class="notes-text">{{record.notes}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Maintenance Records Card -->
+    <div class="detail-card full-width">
+      <div class="card-header">
+        <div class="header-left">
+          <div class="card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </div>
+          <h2 class="card-title">Maintenance Records</h2>
+        </div>
+        <div class="header-right" *ngIf="isCurrentOwner || isStoreOwner">
+          <button class="add-btn" (click)="createNewMaintenance()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" />
+              <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" />
+            </svg>
+            Add New Record
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="loading-state" *ngIf="loadingMaintenances">
+          <div class="loading-spinner small"></div>
+          <span>Loading maintenance records...</span>
+        </div>
+
+        <div class="error-state" *ngIf="maintenanceError">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+            <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2" />
+            <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2" />
+          </svg>
+          <span>{{maintenanceError}}</span>
+        </div>
+
+        <div *ngIf="!loadingMaintenances && !maintenanceError">
+          <div class="empty-state" *ngIf="maintenances.length === 0">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" stroke="currentColor" stroke-width="2" opacity="0.5" />
+            </svg>
+            <p>No maintenance records available.</p>
+          </div>
+
+          <div class="maintenance-table-container" *ngIf="maintenances.length > 0">
+            <div class="table-wrapper">
+              <table class="maintenance-table">
                 <thead>
                   <tr>
-                    <th>날짜</th>
-                    <th>유형</th>
-                    <th>정비소</th>
-                    <th>금액</th>
-                    <th>결제방법</th>
-                    <th>액션</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Shop</th>
+                    <th>Amount</th>
+                    <th>Payment</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let maintenance of maintenances">
-                    <td>{{maintenance.maintenanceDate | date:'yyyy-MM-dd'}}</td>
-                    <td>{{getMaintenanceTypeName(maintenance.maintenanceType)}}</td>
-                    <td>{{maintenance.store?.firstName}} {{maintenance.store?.lastName}}</td>
-                    <td>{{maintenance.totalAmount | currency:'KRW':'symbol':'1.0-0'}}</td>
-                    <td>{{getPaymentMethodName(maintenance.paymentMethod)}}</td>
-                    <td>
-                      <a [routerLink]="['/maintenances', maintenance.id]" class="btn btn-sm btn-outline-primary">상세보기</a>
+                  <tr *ngFor="let maintenance of maintenances" class="maintenance-row">
+                    <td class="date-cell">{{maintenance.maintenanceDate | date:'yyyy-MM-dd'}}</td>
+                    <td class="type-cell">
+                      <span class="type-badge" [class]="'type-' + maintenance.maintenanceType.toLowerCase()">
+                        {{getMaintenanceTypeName(maintenance.maintenanceType)}}
+                      </span>
+                    </td>
+                    <td class="shop-cell">{{maintenance.store?.firstName}} {{maintenance.store?.lastName}}</td>
+                    <td class="amount-cell">{{maintenance.totalAmount | currency:'KRW':'symbol':'1.0-0'}}</td>
+                    <td class="payment-cell">{{getPaymentMethodName(maintenance.paymentMethod)}}</td>
+                    <td class="action-cell">
+                      <a [routerLink]="['/maintenances', maintenance.id]" class="view-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" />
+                          <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+                        </svg>
+                        View
+                      </a>
                     </td>
                   </tr>
                 </tbody>
@@ -112,11 +354,17 @@
             </div>
           </div>
         </div>
-
-      </div>
-
-      <div class="mt-3">
-        <a routerLink="/bikes" class="btn btn-outline-secondary">Back to My Bikes</a>
       </div>
     </div>
+
+    <!-- Back Button -->
+    <div class="back-section">
+      <a routerLink="/bikes" class="back-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        Back to My Bikes
+      </a>
+    </div>
+  </div>
 </div>

@@ -7,7 +7,7 @@ import { ActivityLoggerService } from '../../services/activity-logger.service';
 @Component({
   selector: 'app-maintenance-list',
   templateUrl: './maintenance-list.component.html',
-  //styleUrls: ['./maintenance-list.component.css']
+  styleUrls: ['./maintenance-list.component.css']
 })
 export class MaintenanceListComponent implements OnInit {
   maintenances: Maintenance[] = [];
@@ -125,5 +125,10 @@ export class MaintenanceListComponent implements OnInit {
       default:
         return method;
     }
+  }
+
+  // maintenance-list.component.ts에 추가할 메서드
+  trackByMaintenance(index: number, maintenance: Maintenance): any {
+    return maintenance.id || index;
   }
 }

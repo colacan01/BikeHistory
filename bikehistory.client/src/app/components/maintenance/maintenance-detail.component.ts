@@ -8,7 +8,7 @@ import { ActivityLoggerService } from '../../services/activity-logger.service';
 @Component({
   selector: 'app-maintenance-detail',
   templateUrl: './maintenance-detail.component.html',
-  //styleUrls: ['./maintenance-detail.component.css']
+  styleUrls: ['./maintenance-detail.component.css']
 })
 export class MaintenanceDetailComponent implements OnInit {
   maintenance?: Maintenance;
