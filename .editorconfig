@@ -1,0 +1,27 @@
+# 최상위 EditorConfig 파일
+root = true
+
+# 모든 파일에 적용
+[*]
+charset = utf-8
+end_of_line = crlf
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# C# 파일에 적용
+[*.cs]
+# 명명 규칙
+dotnet_naming_rule.pascal_case_for_public.severity = suggestion
+dotnet_naming_rule.pascal_case_for_public.symbols = public_symbols
+dotnet_naming_rule.pascal_case_for_public.style = pascal_case_style
+
+dotnet_naming_symbols.public_symbols.applicable_kinds = class,struct,interface,enum,property,method,event,delegate
+dotnet_naming_symbols.public_symbols.applicable_accessibilities = public,internal,protected,protected_internal
+
+dotnet_naming_style.pascal_case_style.capitalization = pascal_case
+
+# TypeScript/Angular 파일에 적용
+[*.{ts,html}]
+indent_size = 2
