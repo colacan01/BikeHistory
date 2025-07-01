@@ -1,145 +1,128 @@
-<div class="profile-container">
+<div class="main-container">
   <!-- Header Section -->
-  <div class="profile-header">
+  <div class="list-header">
     <div class="header-content">
       <div class="title-section">
         <div class="profile-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20 21V19A4 4 0 0 0 16 15H8A4 4 0 0 0 4 19V21" stroke="currentColor" stroke-width="2" />
-            <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" />
-          </svg>
+          <i class="fas fa-user"></i>
         </div>
-        <h1 class="page-title">내 프로필</h1>
+        <div class="title-text">
+          <h1 class="page-title">내 프로필</h1>
+          <p class="page-subtitle">개인 정보를 관리하고 업데이트합니다</p>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Status Messages -->
-  <div class="status-message loading-message" *ngIf="loading && !profile">
-    <div class="status-icon">
-      <div class="loading-spinner"></div>
-    </div>
-    <div class="status-content">
-      <h3>프로필 정보를 불러오는 중...</h3>
-      <p>잠시만 기다려주세요</p>
-    </div>
+  <div class="status-message info" *ngIf="loading && !profile">
+    <i class="fas fa-spinner fa-spin"></i>
+    프로필 정보를 불러오는 중입니다...
   </div>
 
-  <div class="status-message error-message" *ngIf="error">
-    <div class="status-icon">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
-        <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2" />
-        <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2" />
-      </svg>
-    </div>
-    <div class="status-content">
-      <h3>오류가 발생했습니다</h3>
-      <p>{{error}}</p>
-    </div>
+  <div class="status-message error" *ngIf="error">
+    <i class="fas fa-exclamation-triangle"></i>
+    {{ error }}
   </div>
 
   <!-- Main Content -->
   <div *ngIf="profile" class="profile-content">
     <!-- Basic Information Card -->
-    <div class="profile-card">
+    <div class="dashboard-card">
       <div class="card-header">
-        <div class="card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </div>
-        <h2 class="card-title">기본 정보</h2>
+        <h3 class="section-title">
+          <i class="fas fa-user-edit"></i>
+          기본 정보
+        </h3>
       </div>
-
-      <div class="card-body">
+      <div class="card-content">
         <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
-          <!-- Success Message -->
-          <div class="success-alert" *ngIf="success">
-            <div class="alert-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" stroke-width="2" />
-                <polyline points="22,4 12,14.01 9,11.01" stroke="currentColor" stroke-width="2" />
-              </svg>
-            </div>
-            <span>{{success}}</span>
+          <!-- Status Messages -->
+          <div class="status-message success" *ngIf="success">
+            <i class="fas fa-check-circle"></i>
+            {{ success }}
           </div>
 
-          <!-- Email Field (Disabled) -->
-          <div class="form-section">
+          <div class="form-grid">
+            <!-- Email Field (Disabled) -->
             <div class="form-group full-width">
-              <label for="email" class="form-label">이메일</label>
-              <div class="input-wrapper disabled">
-                <input type="email"
-                       id="email"
-                       class="form-input disabled"
-                       [value]="profile.email"
-                       disabled />
-              </div>
-              <div class="form-help">이메일은 변경할 수 없습니다.</div>
+              <label for="email" class="form-label">
+                <i class="fas fa-envelope"></i>
+                이메일
+              </label>
+              <input type="email"
+                     id="email"
+                     class="form-input"
+                     [value]="profile.email"
+                     disabled />
+              <div class="error-message">이메일은 변경할 수 없습니다.</div>
             </div>
-          </div>
 
-          <!-- Name Fields -->
-          <div class="form-section">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="firstName" class="form-label">이름 <span class="required">*</span></label>
-                <input type="text"
-                       id="firstName"
-                       formControlName="firstName"
-                       class="form-input"
-                       [ngClass]="{ 'error': submitted && f['firstName'].errors }"
-                       placeholder="이름을 입력하세요" />
-                <div *ngIf="submitted && f['firstName'].errors" class="field-error">
-                  <div *ngIf="f['firstName'].errors['required']">이름은 필수 항목입니다.</div>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="lastName" class="form-label">성 <span class="required">*</span></label>
-                <input type="text"
-                       id="lastName"
-                       formControlName="lastName"
-                       class="form-input"
-                       [ngClass]="{ 'error': submitted && f['lastName'].errors }"
-                       placeholder="성을 입력하세요" />
-                <div *ngIf="submitted && f['lastName'].errors" class="field-error">
-                  <div *ngIf="f['lastName'].errors['required']">성은 필수 항목입니다.</div>
-                </div>
+            <!-- Name Fields -->
+            <div class="form-group">
+              <label for="firstName" class="form-label">
+                <i class="fas fa-user"></i>
+                이름 *
+              </label>
+              <input type="text"
+                     id="firstName"
+                     formControlName="firstName"
+                     class="form-input"
+                     [ngClass]="{ 'error': submitted && f['firstName'].errors }"
+                     placeholder="이름을 입력하세요" />
+              <div *ngIf="submitted && f['firstName'].errors" class="error-message">
+                <div *ngIf="f['firstName'].errors['required']">이름은 필수 항목입니다</div>
               </div>
             </div>
-          </div>
 
-          <!-- Phone Number Field -->
-          <div class="form-section">
-            <div class="form-group full-width">
-              <label for="phoneNumber" class="form-label">전화번호</label>
+            <div class="form-group">
+              <label for="lastName" class="form-label">
+                <i class="fas fa-user"></i>
+                성 *
+              </label>
+              <input type="text"
+                     id="lastName"
+                     formControlName="lastName"
+                     class="form-input"
+                     [ngClass]="{ 'error': submitted && f['lastName'].errors }"
+                     placeholder="성을 입력하세요" />
+              <div *ngIf="submitted && f['lastName'].errors" class="error-message">
+                <div *ngIf="f['lastName'].errors['required']">성은 필수 항목입니다</div>
+              </div>
+            </div>
+
+            <!-- Phone Number Field -->
+            <div class="form-group">
+              <label for="phoneNumber" class="form-label">
+                <i class="fas fa-phone"></i>
+                전화번호
+              </label>
               <input type="tel"
                      id="phoneNumber"
                      formControlName="phoneNumber"
                      class="form-input"
                      placeholder="전화번호를 입력하세요" />
             </div>
-          </div>
 
-          <!-- Roles Display -->
-          <div class="form-section">
-            <div class="form-group full-width">
-              <label class="form-label">역할</label>
+            <!-- Roles Display -->
+            <div class="form-group">
+              <label class="form-label">
+                <i class="fas fa-user-tag"></i>
+                역할
+              </label>
               <div class="roles-display">
-                <span *ngFor="let role of profile.roles" class="role-badge">{{role}}</span>
-                <span *ngIf="!profile.roles || profile.roles.length === 0" class="role-badge default">일반 사용자</span>
+                <span *ngFor="let role of profile.roles" class="status-badge primary">{{ role }}</span>
+                <span *ngIf="!profile.roles || profile.roles.length === 0" class="status-badge secondary">일반 사용자</span>
               </div>
             </div>
           </div>
 
           <!-- Submit Button -->
-          <div class="form-actions">
-            <button type="submit" class="submit-btn" [disabled]="loading">
-              <span *ngIf="loading" class="loading-spinner small"></span>
-              <span *ngIf="!loading">정보 업데이트</span>
-              <span *ngIf="loading">업데이트 중...</span>
+          <div class="button-group">
+            <button type="submit" class="btn-primary" [disabled]="loading">
+              <i *ngIf="loading" class="fas fa-spinner fa-spin"></i>
+              <i *ngIf="!loading" class="fas fa-save"></i>
+              {{ loading ? '업데이트 중...' : '정보 업데이트' }}
             </button>
           </div>
         </form>
@@ -147,117 +130,101 @@
     </div>
 
     <!-- Password Change Card -->
-    <div class="profile-card">
+    <div class="dashboard-card">
       <div class="card-header">
-        <div class="card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
-            <circle cx="12" cy="16" r="1" stroke="currentColor" stroke-width="2" />
-            <path d="M7 11V7A5 5 0 0 1 17 7V11" stroke="currentColor" stroke-width="2" />
-          </svg>
+        <h3 class="section-title">
+          <i class="fas fa-lock"></i>
+          비밀번호 변경
+        </h3>
+      </div>
+      <div class="card-content">
+        <div class="button-group">
+          <button type="button"
+                  class="btn-secondary"
+                  (click)="togglePasswordChange()">
+            <i class="fas fa-key"></i>
+            {{ showPasswordChange ? '비밀번호 변경 취소' : '비밀번호 변경' }}
+          </button>
         </div>
-        <h2 class="card-title">비밀번호 변경</h2>
-        <button type="button"
-                class="toggle-btn"
-                [class]="showPasswordChange ? 'cancel-btn' : 'primary-btn'"
-                (click)="togglePasswordChange()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="!showPasswordChange">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" />
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" />
-          </svg>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="showPasswordChange">
-            <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" />
-            <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" />
-          </svg>
-          {{showPasswordChange ? '취소' : '비밀번호 변경'}}
-        </button>
-      </div>
 
-      <div class="card-body" *ngIf="showPasswordChange">
-        <form [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit()">
-          <!-- Success Message -->
-          <div class="success-alert" *ngIf="passwordSuccess">
-            <div class="alert-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" stroke-width="2" />
-                <polyline points="22,4 12,14.01 9,11.01" stroke="currentColor" stroke-width="2" />
-              </svg>
+        <div *ngIf="showPasswordChange">
+          <form [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit()">
+            <!-- Status Messages -->
+            <div class="status-message success" *ngIf="passwordSuccess">
+              <i class="fas fa-check-circle"></i>
+              {{ passwordSuccess }}
             </div>
-            <span>{{passwordSuccess}}</span>
-          </div>
 
-          <!-- Error Message -->
-          <div class="error-alert" *ngIf="passwordError">
-            <div class="alert-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
-                <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2" />
-                <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2" />
-              </svg>
+            <div class="status-message error" *ngIf="passwordError">
+              <i class="fas fa-exclamation-triangle"></i>
+              {{ passwordError }}
             </div>
-            <span>{{passwordError}}</span>
-          </div>
 
-          <!-- Current Password -->
-          <div class="form-section">
-            <div class="form-group full-width">
-              <label for="currentPassword" class="form-label">현재 비밀번호 <span class="required">*</span></label>
-              <input type="password"
-                     id="currentPassword"
-                     formControlName="currentPassword"
-                     class="form-input"
-                     [ngClass]="{ 'error': passwordSubmitted && p['currentPassword'].errors }"
-                     placeholder="현재 비밀번호를 입력하세요" />
-              <div *ngIf="passwordSubmitted && p['currentPassword'].errors" class="field-error">
-                <div *ngIf="p['currentPassword'].errors['required']">현재 비밀번호를 입력해주세요.</div>
+            <div class="form-grid">
+              <!-- Current Password -->
+              <div class="form-group full-width">
+                <label for="currentPassword" class="form-label">
+                  <i class="fas fa-lock"></i>
+                  현재 비밀번호 *
+                </label>
+                <input type="password"
+                       id="currentPassword"
+                       formControlName="currentPassword"
+                       class="form-input"
+                       [ngClass]="{ 'error': passwordSubmitted && p['currentPassword'].errors }"
+                       placeholder="현재 비밀번호를 입력하세요" />
+                <div *ngIf="passwordSubmitted && p['currentPassword'].errors" class="error-message">
+                  <div *ngIf="p['currentPassword'].errors['required']">현재 비밀번호를 입력해주세요</div>
+                </div>
+              </div>
+
+              <!-- New Password -->
+              <div class="form-group full-width">
+                <label for="newPassword" class="form-label">
+                  <i class="fas fa-key"></i>
+                  새 비밀번호 *
+                </label>
+                <input type="password"
+                       id="newPassword"
+                       formControlName="newPassword"
+                       class="form-input"
+                       [ngClass]="{ 'error': passwordSubmitted && p['newPassword'].errors }"
+                       placeholder="새 비밀번호를 입력하세요" />
+                <div *ngIf="passwordSubmitted && p['newPassword'].errors" class="error-message">
+                  <div *ngIf="p['newPassword'].errors['required']">새 비밀번호를 입력해주세요</div>
+                  <div *ngIf="p['newPassword'].errors['minlength']">비밀번호는 최소 6자 이상이어야 합니다</div>
+                </div>
+              </div>
+
+              <!-- Confirm New Password -->
+              <div class="form-group full-width">
+                <label for="confirmNewPassword" class="form-label">
+                  <i class="fas fa-key"></i>
+                  새 비밀번호 확인 *
+                </label>
+                <input type="password"
+                       id="confirmNewPassword"
+                       formControlName="confirmNewPassword"
+                       class="form-input"
+                       [ngClass]="{ 'error': passwordSubmitted && p['confirmNewPassword'].errors }"
+                       placeholder="새 비밀번호를 다시 입력하세요" />
+                <div *ngIf="passwordSubmitted && p['confirmNewPassword'].errors" class="error-message">
+                  <div *ngIf="p['confirmNewPassword'].errors['required']">비밀번호 확인을 입력해주세요</div>
+                  <div *ngIf="p['confirmNewPassword'].errors['mustMatch']">비밀번호가 일치하지 않습니다</div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- New Password -->
-          <div class="form-section">
-            <div class="form-group full-width">
-              <label for="newPassword" class="form-label">새 비밀번호 <span class="required">*</span></label>
-              <input type="password"
-                     id="newPassword"
-                     formControlName="newPassword"
-                     class="form-input"
-                     [ngClass]="{ 'error': passwordSubmitted && p['newPassword'].errors }"
-                     placeholder="새 비밀번호를 입력하세요" />
-              <div *ngIf="passwordSubmitted && p['newPassword'].errors" class="field-error">
-                <div *ngIf="p['newPassword'].errors['required']">새 비밀번호를 입력해주세요.</div>
-                <div *ngIf="p['newPassword'].errors['minlength']">비밀번호는 최소 6자 이상이어야 합니다.</div>
-              </div>
+            <!-- Submit Button -->
+            <div class="button-group">
+              <button type="submit" class="btn-primary" [disabled]="passwordLoading">
+                <i *ngIf="passwordLoading" class="fas fa-spinner fa-spin"></i>
+                <i *ngIf="!passwordLoading" class="fas fa-save"></i>
+                {{ passwordLoading ? '변경 중...' : '비밀번호 변경' }}
+              </button>
             </div>
-          </div>
-
-          <!-- Confirm New Password -->
-          <div class="form-section">
-            <div class="form-group full-width">
-              <label for="confirmNewPassword" class="form-label">새 비밀번호 확인 <span class="required">*</span></label>
-              <input type="password"
-                     id="confirmNewPassword"
-                     formControlName="confirmNewPassword"
-                     class="form-input"
-                     [ngClass]="{ 'error': passwordSubmitted && p['confirmNewPassword'].errors }"
-                     placeholder="새 비밀번호를 다시 입력하세요" />
-              <div *ngIf="passwordSubmitted && p['confirmNewPassword'].errors" class="field-error">
-                <div *ngIf="p['confirmNewPassword'].errors['required']">비밀번호 확인을 입력해주세요.</div>
-                <div *ngIf="p['confirmNewPassword'].errors['mustMatch']">비밀번호가 일치하지 않습니다.</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Submit Button -->
-          <div class="form-actions">
-            <button type="submit" class="submit-btn" [disabled]="passwordLoading">
-              <span *ngIf="passwordLoading" class="loading-spinner small"></span>
-              <span *ngIf="!passwordLoading">비밀번호 변경</span>
-              <span *ngIf="passwordLoading">변경 중...</span>
-            </button>
-          </div>
-        </form>
-      </div>
+          </form>
+        </div>
     </div>
   </div>
 </div>
