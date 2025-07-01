@@ -6,7 +6,7 @@ import { CatalogService } from '../../services/catalog.service';
 @Component({
   selector: 'app-manufacturer-management',
   templateUrl: './manufacturer-management.component.html',
-  styles: []
+  styleUrls: ['./manufacturer-management.component.css']
 })
 export class ManufacturerManagementComponent implements OnInit {
   manufacturerForm!: FormGroup;

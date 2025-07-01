@@ -6,7 +6,7 @@ import { CatalogService } from '../../services/catalog.service';
 @Component({
   selector: 'app-bike-type-management',
   templateUrl: './bike-type-management.component.html',
-  styles: []
+  styleUrls: ['./bike-type-management.component.css']
 })
 export class BikeTypeManagementComponent implements OnInit {
   bikeTypeForm!: FormGroup;

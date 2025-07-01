@@ -53,6 +53,11 @@ export class AppComponent implements OnInit {
     }
   }
 
+  closeMobileMenu(): void {
+    this.mobileMenuOpen = false;
+    this.closeAllDropdowns();
+  }
+
   toggleDropdown(dropdownName: string): void {
     // Close all other dropdowns
     Object.keys(this.dropdowns).forEach(key => {

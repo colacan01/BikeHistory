@@ -70,12 +70,6 @@
             <div class="form-group full-width">
               <label for="email" class="form-label">이메일</label>
               <div class="input-wrapper disabled">
-                <div class="input-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2" />
-                    <polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="2" />
-                  </svg>
-                </div>
                 <input type="email"
                        id="email"
                        class="form-input disabled"
@@ -91,20 +85,12 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="firstName" class="form-label">이름 <span class="required">*</span></label>
-                <div class="input-wrapper">
-                  <div class="input-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M20 21V19A4 4 0 0 0 16 15H8A4 4 0 0 0 4 19V21" stroke="currentColor" stroke-width="2" />
-                      <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" />
-                    </svg>
-                  </div>
-                  <input type="text"
-                         id="firstName"
-                         formControlName="firstName"
-                         class="form-input"
-                         [ngClass]="{ 'error': submitted && f['firstName'].errors }"
-                         placeholder="이름을 입력하세요" />
-                </div>
+                <input type="text"
+                       id="firstName"
+                       formControlName="firstName"
+                       class="form-input"
+                       [ngClass]="{ 'error': submitted && f['firstName'].errors }"
+                       placeholder="이름을 입력하세요" />
                 <div *ngIf="submitted && f['firstName'].errors" class="field-error">
                   <div *ngIf="f['firstName'].errors['required']">이름은 필수 항목입니다.</div>
                 </div>
@@ -112,20 +98,12 @@
 
               <div class="form-group">
                 <label for="lastName" class="form-label">성 <span class="required">*</span></label>
-                <div class="input-wrapper">
-                  <div class="input-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M20 21V19A4 4 0 0 0 16 15H8A4 4 0 0 0 4 19V21" stroke="currentColor" stroke-width="2" />
-                      <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" />
-                    </svg>
-                  </div>
-                  <input type="text"
-                         id="lastName"
-                         formControlName="lastName"
-                         class="form-input"
-                         [ngClass]="{ 'error': submitted && f['lastName'].errors }"
-                         placeholder="성을 입력하세요" />
-                </div>
+                <input type="text"
+                       id="lastName"
+                       formControlName="lastName"
+                       class="form-input"
+                       [ngClass]="{ 'error': submitted && f['lastName'].errors }"
+                       placeholder="성을 입력하세요" />
                 <div *ngIf="submitted && f['lastName'].errors" class="field-error">
                   <div *ngIf="f['lastName'].errors['required']">성은 필수 항목입니다.</div>
                 </div>
@@ -137,18 +115,11 @@
           <div class="form-section">
             <div class="form-group full-width">
               <label for="phoneNumber" class="form-label">전화번호</label>
-              <div class="input-wrapper">
-                <div class="input-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M22 16.92V19a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h2.09a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9a16 16 0 0 0 6 6l.36-1.36a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" stroke-width="2" />
-                  </svg>
-                </div>
-                <input type="tel"
-                       id="phoneNumber"
-                       formControlName="phoneNumber"
-                       class="form-input"
-                       placeholder="전화번호를 입력하세요" />
-              </div>
+              <input type="tel"
+                     id="phoneNumber"
+                     formControlName="phoneNumber"
+                     class="form-input"
+                     placeholder="전화번호를 입력하세요" />
             </div>
           </div>
 
@@ -178,32 +149,28 @@
     <!-- Password Change Card -->
     <div class="profile-card">
       <div class="card-header">
-        <div class="header-left">
-          <div class="card-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
-              <circle cx="12" cy="16" r="1" stroke="currentColor" stroke-width="2" />
-              <path d="M7 11V7A5 5 0 0 1 17 7V11" stroke="currentColor" stroke-width="2" />
-            </svg>
-          </div>
-          <h2 class="card-title">비밀번호 변경</h2>
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
+            <circle cx="12" cy="16" r="1" stroke="currentColor" stroke-width="2" />
+            <path d="M7 11V7A5 5 0 0 1 17 7V11" stroke="currentColor" stroke-width="2" />
+          </svg>
         </div>
-        <div class="header-right">
-          <button type="button"
-                  class="toggle-btn"
-                  [class]="showPasswordChange ? 'cancel-btn' : 'primary-btn'"
-                  (click)="togglePasswordChange()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="!showPasswordChange">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" />
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" />
-            </svg>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="showPasswordChange">
-              <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" />
-              <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" />
-            </svg>
-            {{showPasswordChange ? '취소' : '비밀번호 변경'}}
-          </button>
-        </div>
+        <h2 class="card-title">비밀번호 변경</h2>
+        <button type="button"
+                class="toggle-btn"
+                [class]="showPasswordChange ? 'cancel-btn' : 'primary-btn'"
+                (click)="togglePasswordChange()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="!showPasswordChange">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" />
+          </svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="showPasswordChange">
+            <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" />
+            <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" />
+          </svg>
+          {{showPasswordChange ? '취소' : '비밀번호 변경'}}
+        </button>
       </div>
 
       <div class="card-body" *ngIf="showPasswordChange">
@@ -235,21 +202,12 @@
           <div class="form-section">
             <div class="form-group full-width">
               <label for="currentPassword" class="form-label">현재 비밀번호 <span class="required">*</span></label>
-              <div class="input-wrapper">
-                <div class="input-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
-                    <circle cx="12" cy="16" r="1" stroke="currentColor" stroke-width="2" />
-                    <path d="M7 11V7A5 5 0 0 1 17 7V11" stroke="currentColor" stroke-width="2" />
-                  </svg>
-                </div>
-                <input type="password"
-                       id="currentPassword"
-                       formControlName="currentPassword"
-                       class="form-input"
-                       [ngClass]="{ 'error': passwordSubmitted && p['currentPassword'].errors }"
-                       placeholder="현재 비밀번호를 입력하세요" />
-              </div>
+              <input type="password"
+                     id="currentPassword"
+                     formControlName="currentPassword"
+                     class="form-input"
+                     [ngClass]="{ 'error': passwordSubmitted && p['currentPassword'].errors }"
+                     placeholder="현재 비밀번호를 입력하세요" />
               <div *ngIf="passwordSubmitted && p['currentPassword'].errors" class="field-error">
                 <div *ngIf="p['currentPassword'].errors['required']">현재 비밀번호를 입력해주세요.</div>
               </div>
@@ -260,21 +218,12 @@
           <div class="form-section">
             <div class="form-group full-width">
               <label for="newPassword" class="form-label">새 비밀번호 <span class="required">*</span></label>
-              <div class="input-wrapper">
-                <div class="input-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
-                    <circle cx="12" cy="16" r="1" stroke="currentColor" stroke-width="2" />
-                    <path d="M7 11V7A5 5 0 0 1 17 7V11" stroke="currentColor" stroke-width="2" />
-                  </svg>
-                </div>
-                <input type="password"
-                       id="newPassword"
-                       formControlName="newPassword"
-                       class="form-input"
-                       [ngClass]="{ 'error': passwordSubmitted && p['newPassword'].errors }"
-                       placeholder="새 비밀번호를 입력하세요" />
-              </div>
+              <input type="password"
+                     id="newPassword"
+                     formControlName="newPassword"
+                     class="form-input"
+                     [ngClass]="{ 'error': passwordSubmitted && p['newPassword'].errors }"
+                     placeholder="새 비밀번호를 입력하세요" />
               <div *ngIf="passwordSubmitted && p['newPassword'].errors" class="field-error">
                 <div *ngIf="p['newPassword'].errors['required']">새 비밀번호를 입력해주세요.</div>
                 <div *ngIf="p['newPassword'].errors['minlength']">비밀번호는 최소 6자 이상이어야 합니다.</div>
@@ -286,21 +235,12 @@
           <div class="form-section">
             <div class="form-group full-width">
               <label for="confirmNewPassword" class="form-label">새 비밀번호 확인 <span class="required">*</span></label>
-              <div class="input-wrapper">
-                <div class="input-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
-                    <circle cx="12" cy="16" r="1" stroke="currentColor" stroke-width="2" />
-                    <path d="M7 11V7A5 5 0 0 1 17 7V11" stroke="currentColor" stroke-width="2" />
-                  </svg>
-                </div>
-                <input type="password"
-                       id="confirmNewPassword"
-                       formControlName="confirmNewPassword"
-                       class="form-input"
-                       [ngClass]="{ 'error': passwordSubmitted && p['confirmNewPassword'].errors }"
-                       placeholder="새 비밀번호를 다시 입력하세요" />
-              </div>
+              <input type="password"
+                     id="confirmNewPassword"
+                     formControlName="confirmNewPassword"
+                     class="form-input"
+                     [ngClass]="{ 'error': passwordSubmitted && p['confirmNewPassword'].errors }"
+                     placeholder="새 비밀번호를 다시 입력하세요" />
               <div *ngIf="passwordSubmitted && p['confirmNewPassword'].errors" class="field-error">
                 <div *ngIf="p['confirmNewPassword'].errors['required']">비밀번호 확인을 입력해주세요.</div>
                 <div *ngIf="p['confirmNewPassword'].errors['mustMatch']">비밀번호가 일치하지 않습니다.</div>

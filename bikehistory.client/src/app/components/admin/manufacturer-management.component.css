@@ -1,0 +1,43 @@
+/* Manufacturer Management Component Styles */
+@import './user-management.component.css';
+
+/* Additional styles specific to manufacturer management */
+.link-external {
+  color: #3b82f6;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.link-external:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.link-external i {
+  font-size: 0.75rem;
+}
+
+.description-cell {
+  max-width: 300px;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+/* Form specific styles for manufacturer */
+.form-input[type="url"] {
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .description-cell {
+    max-width: 150px;
+  }
+  
+  .link-external {
+    font-size: 0.875rem;
+  }
+}

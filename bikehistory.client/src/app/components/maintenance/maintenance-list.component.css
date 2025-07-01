@@ -32,13 +32,13 @@
 .maintenance-icon {
   width: 64px;
   height: 64px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3b82f6;
   border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
 }
 
 .title-text {
@@ -69,7 +69,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: #3b82f6;
   color: white;
   border: none;
   padding: 12px 20px;
@@ -82,8 +82,9 @@
 }
 
   .add-btn:hover {
+    background: #2563eb;
     transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 12px 24px rgba(59, 130, 246, 0.3);
   }
 
 /* Error Alert */
@@ -130,8 +131,8 @@
 }
 
 .loading-spinner {
-  border: 3px solid rgba(102, 126, 234, 0.2);
-  border-top: 3px solid #667eea;
+  border: 3px solid rgba(59, 130, 246, 0.2);
+  border-top: 3px solid #3b82f6;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 24px;
@@ -195,7 +196,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3b82f6;
   color: white;
   padding: 12px 24px;
   border-radius: 12px;
@@ -207,8 +208,9 @@
 }
 
   .cta-button:hover {
+    background: #2563eb;
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
     color: white;
     text-decoration: none;
   }
@@ -225,7 +227,7 @@
 
 .card-header {
   padding: 24px 32px;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  background: rgba(59, 130, 246, 0.05);
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   display: flex;
   align-items: center;
@@ -235,7 +237,7 @@
 .card-icon {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3b82f6;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -262,7 +264,11 @@
 
 /* Table */
 .table-container {
+  background: #f8fafc;
+  border-radius: 16px;
   overflow: hidden;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .table-wrapper {
@@ -272,21 +278,19 @@
 .maintenance-table {
   width: 100%;
   border-collapse: collapse;
+  background: white;
   margin: 0;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
   .maintenance-table thead th {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: #f8fafc;
+    color: #1e293b;
     padding: 18px 16px;
     text-align: left;
     font-weight: 600;
     font-size: 14px;
     white-space: nowrap;
-    border: none;
+    border-bottom: 2px solid #e2e8f0;
     position: relative;
     vertical-align: middle;
     height: 56px;
@@ -295,12 +299,20 @@
 
     .maintenance-table thead th:first-child {
       padding-left: 24px;
-      border-top-left-radius: 12px;
     }
 
     .maintenance-table thead th:last-child {
       padding-right: 24px;
-      border-top-right-radius: 12px;
+    }
+
+    .maintenance-table thead th::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #3b82f6;
     }
 
 .header-content {
@@ -317,15 +329,18 @@
   }
 
 .maintenance-row {
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #f1f5f9;
   transition: all 0.3s ease;
   cursor: pointer;
 }
 
   .maintenance-row:hover {
     background: #f8fafc;
-    transform: scale(1.01);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateX(2px);
+  }
+
+  .maintenance-row:last-child {
+    border-bottom: none;
   }
 
 .maintenance-table td {
@@ -404,9 +419,11 @@
 }
 
 .type-badge {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 12px;
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
@@ -414,23 +431,27 @@
 }
 
   .type-badge.type-maintenance {
-    background: #dbeafe;
-    color: #1e40af;
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
   }
 
   .type-badge.type-repair {
-    background: #fee2e2;
+    background: #fef2f2;
     color: #dc2626;
+    border: 1px solid #fecaca;
   }
 
   .type-badge.type-custom {
-    background: #f3e8ff;
+    background: #faf5ff;
     color: #7c3aed;
+    border: 1px solid #e9d5ff;
   }
 
   .type-badge.type-self {
-    background: #d1fae5;
+    background: #f0fdf4;
     color: #059669;
+    border: 1px solid #bbf7d0;
   }
 
 .bike-cell {
@@ -477,7 +498,7 @@
 
 .amount-value {
   font-weight: 700;
-  color: #059669;
+  color: #1d4ed8;
   font-size: 15px;
 }
 
@@ -500,7 +521,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3b82f6;
   color: white;
   border: none;
   padding: 8px 12px;
@@ -509,11 +530,13 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
 }
 
   .view-btn:hover {
+    background: #2563eb;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
   }
 
 /* Responsive Design */
@@ -657,7 +680,7 @@
   }
 
   .card-header {
-    background: rgba(102, 126, 234, 0.1);
+    background: rgba(59, 130, 246, 0.1);
     border-bottom-color: #374151;
   }
 
@@ -728,12 +751,12 @@
 .add-btn:focus-visible,
 .cta-button:focus-visible,
 .view-btn:focus-visible {
-  outline: 2px solid #667eea;
+  outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
 
 .maintenance-row:focus-visible {
-  outline: 2px solid #667eea;
+  outline: 2px solid #3b82f6;
   outline-offset: -2px;
 }
 

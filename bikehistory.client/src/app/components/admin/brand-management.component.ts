@@ -6,7 +6,7 @@ import { CatalogService } from '../../services/catalog.service';
 @Component({
   selector: 'app-brand-management',
   templateUrl: './brand-management.component.html',
-  styles: []
+  styleUrls: ['./brand-management.component.css']
 })
 export class BrandManagementComponent implements OnInit {
   brandForm!: FormGroup;

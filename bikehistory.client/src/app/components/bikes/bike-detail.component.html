@@ -5,8 +5,8 @@
       <div class="loading-spinner"></div>
     </div>
     <div class="status-content">
-      <h3>Loading bike details...</h3>
-      <p>Please wait while we fetch the bike information</p>
+      <h3>자전거 정보를 불러오는 중...</h3>
+      <p>잠시만 기다려 주세요</p>
     </div>
   </div>
 
@@ -19,7 +19,7 @@
       </svg>
     </div>
     <div class="status-content">
-      <h3>Failed to load bike details</h3>
+      <h3>자전거 정보를 불러오는데 실패했습니다</h3>
       <p>{{error}}</p>
     </div>
   </div>
@@ -38,8 +38,8 @@
             </svg>
           </div>
           <div class="title-text">
-            <h1 class="page-title">{{bike.brand?.name || 'Unknown Brand'}} {{bike.model || 'Bike'}} Details</h1>
-            <p class="page-subtitle">Frame Number: {{bike.frameNumber}}</p>
+            <h1 class="page-title">{{bike.brand?.name || '브랜드 미상'}} {{bike.model || '자전거'}} 상세 정보</h1>
+            <p class="page-subtitle">프레임 번호: {{bike.frameNumber}}</p>
           </div>
         </div>
 
@@ -51,14 +51,14 @@
               <path d="M7 23L3 19L7 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
               <path d="M21 13V15A4 4 0 0 1 17 19H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
-            Transfer Ownership
+            소유권 이전
           </a>
           <a [routerLink]="['/bikes', bike.id, 'edit']" class="action-btn secondary-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" />
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" />
             </svg>
-            Edit
+            편집
           </a>
         </div>
       </div>
@@ -74,7 +74,7 @@
               <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </div>
-          <h2 class="card-title">Bike Information</h2>
+          <h2 class="card-title">자전거 정보</h2>
         </div>
         <div class="card-body">
           <div class="info-grid">
@@ -87,7 +87,7 @@
                 </svg>
               </div>
               <div class="info-content">
-                <span class="info-label">Frame Number</span>
+                <span class="info-label">프레임 번호</span>
                 <span class="info-value">{{bike.frameNumber}}</span>
               </div>
             </div>
@@ -100,8 +100,8 @@
                 </svg>
               </div>
               <div class="info-content">
-                <span class="info-label">Type</span>
-                <span class="info-value">{{bike.bikeType?.name || 'Unknown Type'}}</span>
+                <span class="info-label">자전거 종류</span>
+                <span class="info-value">{{bike.bikeType?.name || '종류 미상'}}</span>
               </div>
             </div>
 
@@ -112,8 +112,8 @@
                 </svg>
               </div>
               <div class="info-content">
-                <span class="info-label">Manufacturer</span>
-                <span class="info-value">{{bike.manufacturer?.name || 'Unknown Manufacturer'}}</span>
+                <span class="info-label">제조사</span>
+                <span class="info-value">{{bike.manufacturer?.name || '제조사 미상'}}</span>
               </div>
             </div>
 
@@ -124,8 +124,8 @@
                 </svg>
               </div>
               <div class="info-content">
-                <span class="info-label">Brand</span>
-                <span class="info-value">{{bike.brand?.name || 'Unknown Brand'}}</span>
+                <span class="info-label">브랜드</span>
+                <span class="info-value">{{bike.brand?.name || '브랜드 미상'}}</span>
               </div>
             </div>
 
@@ -137,7 +137,7 @@
                 </svg>
               </div>
               <div class="info-content">
-                <span class="info-label">Model</span>
+                <span class="info-label">모델명</span>
                 <span class="info-value">{{bike.model}}</span>
               </div>
             </div>
@@ -152,7 +152,7 @@
                 </svg>
               </div>
               <div class="info-content">
-                <span class="info-label">Year</span>
+                <span class="info-label">제조연도</span>
                 <span class="info-value">{{bike.manufactureYear}}</span>
               </div>
             </div>
@@ -165,7 +165,7 @@
                 </svg>
               </div>
               <div class="info-content">
-                <span class="info-label">Color</span>
+                <span class="info-label">색상</span>
                 <span class="info-value">{{bike.color}}</span>
               </div>
             </div>
@@ -178,7 +178,7 @@
                 </svg>
               </div>
               <div class="info-content">
-                <span class="info-label">Registered Date</span>
+                <span class="info-label">등록일</span>
                 <span class="info-value">{{bike.registeredDate | date}}</span>
               </div>
             </div>
@@ -193,8 +193,8 @@
                 </svg>
               </div>
               <div class="info-content">
-                <span class="info-label">Current Owner</span>
-                <span class="info-value">{{bike.currentOwner?.firstName || 'You'}}</span>
+                <span class="info-label">현재 소유자</span>
+                <span class="info-value">{{bike.currentOwner?.firstName || '본인'}}</span>
               </div>
             </div>
           </div>
@@ -211,12 +211,12 @@
               <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" />
             </svg>
           </div>
-          <h2 class="card-title">Ownership History</h2>
+          <h2 class="card-title">소유권 이력</h2>
         </div>
         <div class="card-body">
           <div class="loading-state" *ngIf="loadingHistory">
             <div class="loading-spinner small"></div>
-            <span>Loading ownership history...</span>
+            <span>소유권 이력을 불러오는 중...</span>
           </div>
 
           <div class="error-state" *ngIf="historyError">
@@ -233,7 +233,7 @@
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" opacity="0.5" />
               </svg>
-              <p>No ownership transfers have been recorded yet.</p>
+              <p>아직 소유권 이전 기록이 없습니다.</p>
             </div>
 
             <div class="history-list" *ngIf="ownershipHistory.length > 0">
@@ -259,7 +259,7 @@
                     </div>
                   </div>
                   <div class="history-notes" *ngIf="record.notes">
-                    <span class="notes-label">Notes:</span>
+                    <span class="notes-label">메모:</span>
                     <span class="notes-text">{{record.notes}}</span>
                   </div>
                 </div>
@@ -279,7 +279,7 @@
               <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" stroke="currentColor" stroke-width="2" />
             </svg>
           </div>
-          <h2 class="card-title">Maintenance Records</h2>
+          <h2 class="card-title">정비 기록</h2>
         </div>
         <div class="header-right" *ngIf="isCurrentOwner || isStoreOwner">
           <button class="add-btn" (click)="createNewMaintenance()">
@@ -287,7 +287,7 @@
               <line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-width="2" />
               <line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2" />
             </svg>
-            Add New Record
+            새 기록 추가
           </button>
         </div>
       </div>
@@ -295,7 +295,7 @@
       <div class="card-body">
         <div class="loading-state" *ngIf="loadingMaintenances">
           <div class="loading-spinner small"></div>
-          <span>Loading maintenance records...</span>
+          <span>정비 기록을 불러오는 중...</span>
         </div>
 
         <div class="error-state" *ngIf="maintenanceError">
@@ -312,7 +312,7 @@
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" stroke="currentColor" stroke-width="2" opacity="0.5" />
             </svg>
-            <p>No maintenance records available.</p>
+            <p>사용 가능한 정비 기록이 없습니다.</p>
           </div>
 
           <div class="maintenance-table-container" *ngIf="maintenances.length > 0">
@@ -320,12 +320,12 @@
               <table class="maintenance-table">
                 <thead>
                   <tr>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Shop</th>
-                    <th>Amount</th>
-                    <th>Payment</th>
-                    <th>Action</th>
+                    <th>날짜</th>
+                    <th>유형</th>
+                    <th>정비소</th>
+                    <th>금액</th>
+                    <th>결제</th>
+                    <th>작업</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -345,7 +345,7 @@
                           <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" />
                           <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
                         </svg>
-                        View
+                        보기
                       </a>
                     </td>
                   </tr>
@@ -363,7 +363,7 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
-        Back to My Bikes
+        내 자전거 목록으로
       </a>
     </div>
   </div>

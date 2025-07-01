@@ -4,16 +4,8 @@
       <!-- Header Section -->
       <div class="register-header">
         <div class="logo-section">
-          <div class="logo-icon">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M16 21V19A4 4 0 0 0 12 15H5A4 4 0 0 0 1 19V21" stroke="currentColor" stroke-width="2" />
-              <circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2" />
-              <path d="M20 8V6A4 4 0 0 0 16 2H15" stroke="currentColor" stroke-width="2" />
-              <line x1="17" y1="11" x2="23" y2="11" stroke="currentColor" stroke-width="2" />
-            </svg>
-          </div>
-          <h1 class="register-title">Create Account</h1>
-          <p class="register-subtitle">Join us to get started</p>
+          <h1 class="register-title">계정 만들기</h1>
+          <p class="register-subtitle">새 계정으로 시작하세요</p>
         </div>
       </div>
 
@@ -36,121 +28,88 @@
           <div class="form-row">
             <!-- First Name Field -->
             <div class="form-group">
-              <label for="firstName" class="form-label">First Name</label>
-              <div class="input-wrapper">
-                <div class="input-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 21V19A4 4 0 0 0 16 15H8A4 4 0 0 0 4 19V21" stroke="currentColor" stroke-width="2" />
-                    <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" />
-                  </svg>
-                </div>
-                <input type="text"
-                       id="firstName"
-                       formControlName="firstName"
-                       class="form-input"
-                       [ngClass]="{ 'error': submitted && f['firstName'].errors }"
-                       placeholder="Enter your first name" />
-              </div>
+              <label for="firstName" class="form-label">이름</label>
+              <input type="text"
+                     id="firstName"
+                     formControlName="firstName"
+                     class="form-input"
+                     [ngClass]="{ 'error': submitted && f['firstName'].errors }"
+                     placeholder="이름을 입력하세요" />
               <div *ngIf="submitted && f['firstName'].errors" class="field-error">
-                <div *ngIf="f['firstName'].errors['required']">First Name is required</div>
+                <div *ngIf="f['firstName'].errors['required']">이름을 입력해주세요</div>
               </div>
             </div>
 
             <!-- Last Name Field -->
             <div class="form-group">
-              <label for="lastName" class="form-label">Last Name</label>
-              <div class="input-wrapper">
-                <div class="input-icon">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 21V19A4 4 0 0 0 16 15H8A4 4 0 0 0 4 19V21" stroke="currentColor" stroke-width="2" />
-                    <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" />
-                  </svg>
-                </div>
-                <input type="text"
-                       id="lastName"
-                       formControlName="lastName"
-                       class="form-input"
-                       [ngClass]="{ 'error': submitted && f['lastName'].errors }"
-                       placeholder="Enter your last name" />
-              </div>
+              <label for="lastName" class="form-label">성</label>
+              <input type="text"
+                     id="lastName"
+                     formControlName="lastName"
+                     class="form-input"
+                     [ngClass]="{ 'error': submitted && f['lastName'].errors }"
+                     placeholder="성을 입력하세요" />
               <div *ngIf="submitted && f['lastName'].errors" class="field-error">
-                <div *ngIf="f['lastName'].errors['required']">Last Name is required</div>
+                <div *ngIf="f['lastName'].errors['required']">성을 입력해주세요</div>
               </div>
             </div>
           </div>
 
           <!-- Email Field -->
           <div class="form-group">
-            <label for="email" class="form-label">Email Address</label>
-            <div class="input-wrapper">
-              <div class="input-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2" />
-                  <polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="2" />
-                </svg>
-              </div>
-              <input type="email"
-                     id="email"
-                     formControlName="email"
-                     class="form-input"
-                     [ngClass]="{ 'error': submitted && f['email'].errors }"
-                     placeholder="Enter your email address" />
-            </div>
+            <label for="email" class="form-label">이메일</label>
+            <input type="email"
+                   id="email"
+                   formControlName="email"
+                   class="form-input"
+                   [ngClass]="{ 'error': submitted && f['email'].errors }"
+                   placeholder="example@email.com" />
             <div *ngIf="submitted && f['email'].errors" class="field-error">
-              <div *ngIf="f['email'].errors['required']">Email is required</div>
-              <div *ngIf="f['email'].errors['email']">Enter a valid email address</div>
+              <div *ngIf="f['email'].errors['required']">이메일을 입력해주세요</div>
+              <div *ngIf="f['email'].errors['email']">올바른 이메일 주소를 입력해주세요</div>
             </div>
           </div>
 
           <!-- Password Field -->
           <div class="form-group">
-            <label for="password" class="form-label">Password</label>
-            <div class="input-wrapper">
-              <div class="input-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
-                  <circle cx="12" cy="16" r="1" stroke="currentColor" stroke-width="2" />
-                  <path d="M7 11V7A5 5 0 0 1 17 7V11" stroke="currentColor" stroke-width="2" />
-                </svg>
-              </div>
-              <input type="password"
-                     id="password"
-                     formControlName="password"
-                     class="form-input"
-                     [ngClass]="{ 'error': submitted && f['password'].errors }"
-                     placeholder="Create a strong password" />
-            </div>
+            <label for="password" class="form-label">비밀번호</label>
+            <input type="password"
+                   id="password"
+                   formControlName="password"
+                   class="form-input"
+                   [ngClass]="{ 'error': submitted && f['password'].errors }"
+                   placeholder="강력한 비밀번호를 만드세요" />
             <div *ngIf="submitted && f['password'].errors" class="field-error">
-              <div *ngIf="f['password'].errors['required']">Password is required</div>
-              <div *ngIf="f['password'].errors['minlength']">Password must be at least 8 characters</div>
-              <div *ngIf="f['password'].errors['pattern']">Password must contain uppercase, lowercase, and number</div>
+              <div *ngIf="f['password'].errors['required']">비밀번호를 입력해주세요</div>
+              <div *ngIf="f['password'].errors['minlength']">비밀번호는 최소 8자 이상이어야 합니다</div>
+              <div *ngIf="f['password'].errors['pattern']">비밀번호는 대문자, 소문자, 숫자를 포함해야 합니다</div>
             </div>
             <div class="password-requirements">
-              <p class="requirements-title">Password must contain:</p>
+              <p class="requirements-title">비밀번호 요구사항:</p>
               <ul class="requirements-list">
                 <li class="requirement-item">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <polyline points="20,6 9,17 4,12" stroke="currentColor" stroke-width="2" />
                   </svg>
-                  At least 8 characters
+                  최소 8자 이상
                 </li>
                 <li class="requirement-item">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <polyline points="20,6 9,17 4,12" stroke="currentColor" stroke-width="2" />
                   </svg>
-                  One uppercase letter
+                  대문자 1개 이상
                 </li>
                 <li class="requirement-item">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <polyline points="20,6 9,17 4,12" stroke="currentColor" stroke-width="2" />
                   </svg>
-                  One lowercase letter
+                  소문자 1개 이상
                 </li>
                 <li class="requirement-item">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <polyline points="20,6 9,17 4,12" stroke="currentColor" stroke-width="2" />
                   </svg>
-                  One number
+                  숫자 1개 이상
                 </li>
               </ul>
             </div>
@@ -158,25 +117,16 @@
 
           <!-- Confirm Password Field -->
           <div class="form-group">
-            <label for="confirmPassword" class="form-label">Confirm Password</label>
-            <div class="input-wrapper">
-              <div class="input-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
-                  <circle cx="12" cy="16" r="1" stroke="currentColor" stroke-width="2" />
-                  <path d="M7 11V7A5 5 0 0 1 17 7V11" stroke="currentColor" stroke-width="2" />
-                </svg>
-              </div>
-              <input type="password"
-                     id="confirmPassword"
-                     formControlName="confirmPassword"
-                     class="form-input"
-                     [ngClass]="{ 'error': submitted && f['confirmPassword'].errors }"
-                     placeholder="Confirm your password" />
-            </div>
+            <label for="confirmPassword" class="form-label">비밀번호 확인</label>
+            <input type="password"
+                   id="confirmPassword"
+                   formControlName="confirmPassword"
+                   class="form-input"
+                   [ngClass]="{ 'error': submitted && f['confirmPassword'].errors }"
+                   placeholder="비밀번호를 다시 입력하세요" />
             <div *ngIf="submitted && f['confirmPassword'].errors" class="field-error">
-              <div *ngIf="f['confirmPassword'].errors['required']">Confirm Password is required</div>
-              <div *ngIf="f['confirmPassword'].errors['mustMatch']">Passwords must match</div>
+              <div *ngIf="f['confirmPassword'].errors['required']">비밀번호 확인을 입력해주세요</div>
+              <div *ngIf="f['confirmPassword'].errors['mustMatch']">비밀번호가 일치하지 않습니다</div>
             </div>
           </div>
 
@@ -184,8 +134,8 @@
           <div class="form-actions">
             <button [disabled]="loading" class="register-btn" type="submit">
               <span *ngIf="loading" class="loading-spinner"></span>
-              <span *ngIf="!loading">Create Account</span>
-              <span *ngIf="loading">Creating Account...</span>
+              <span *ngIf="!loading">계정 만들기</span>
+              <span *ngIf="loading">계정 생성 중...</span>
             </button>
           </div>
         </form>
@@ -193,8 +143,8 @@
         <!-- Login Link -->
         <div class="login-section">
           <p class="login-text">
-            Already have an account?
-            <a routerLink="/login" class="login-link">Sign In</a>
+            이미 계정이 있으신가요?
+            <a routerLink="/login" class="login-link">로그인</a>
           </p>
         </div>
       </div>

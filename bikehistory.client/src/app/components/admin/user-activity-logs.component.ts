@@ -8,7 +8,7 @@ import { ActivityLogFilter, UserActivityLogResponse, PaginatedResponse } from '.
 @Component({
   selector: 'app-user-activity-logs',
   templateUrl: './user-activity-logs.component.html',
-  styles: []
+  styleUrls: ['./user-activity-logs.component.css']
 })
 export class UserActivityLogsComponent implements OnInit {
   logs: UserActivityLogResponse[] = [];

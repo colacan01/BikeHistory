@@ -5,7 +5,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-user-management',
   templateUrl: './user-management.component.html',
-  styles: []
+  styleUrls: ['./user-management.component.css']
 })
 export class UserManagementComponent implements OnInit {
   userForm!: FormGroup;
@@ -253,7 +253,8 @@ export class UserManagementComponent implements OnInit {
   // 역할 체크박스 변경 시 호출되는 메서드
   updateRole(role: string, event: any): void {
     const checked = event.target.checked;
-    const roles = [...this.f['roles'].value] || [];
+    const currentRoles = this.f['roles'].value || [];
+    const roles = [...currentRoles];
 
     if (checked && !roles.includes(role)) {
       // 역할 추가
@@ -267,5 +268,18 @@ export class UserManagementComponent implements OnInit {
     }
 
     this.f['roles'].setValue(roles);
+  }
+
+  // 사용자 이니셜을 생성하는 메서드
+  getUserInitials(user: any): string {
+    if (!user) return '';
+    
+    const firstName = user.firstName || '';
+    const lastName = user.lastName || '';
+    
+    const firstInitial = firstName.charAt(0).toUpperCase();
+    const lastInitial = lastName.charAt(0).toUpperCase();
+    
+    return firstInitial + lastInitial;
   }
 }

@@ -1,87 +1,159 @@
-<div class="container mt-4">
-  <h2>Brand Management</h2>
-  
-  <!-- Form for adding/editing brand -->
-  <div class="card mb-4">
-    <div class="card-header">
-      <h4>{{ isEditing ? 'Edit Brand' : 'Add Brand' }}</h4>
+<div class="main-container">
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1 class="main-title">
+          <i class="fas fa-tags"></i>
+          브랜드 관리
+        </h1>
+        <p class="main-subtitle">자전거 브랜드 정보를 등록하고 관리합니다</p>
+      </div>
     </div>
-    <div class="card-body">
-      <form [formGroup]="brandForm" (ngSubmit)="onSubmit()">
-        <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
-        <div class="alert alert-success" *ngIf="success">{{ success }}</div>
+  </div>
 
-        <div class="mb-3">
-          <label for="name" class="form-label">Name *</label>
-          <input type="text" class="form-control" id="name" formControlName="name"
-            [ngClass]="{ 'is-invalid': submitted && f['name'].errors }">
-          <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
-            <div *ngIf="f['name'].errors['required']">Name is required</div>
+  <!-- Form Section -->
+  <div class="dashboard-card mb-6">
+    <div class="card-header">
+      <h3 class="section-title">
+        <i class="fas fa-plus-circle"></i>
+        {{ isEditing ? '브랜드 수정' : '브랜드 추가' }}
+      </h3>
+    </div>
+    <div class="card-content">
+      <form [formGroup]="brandForm" (ngSubmit)="onSubmit()">
+        <!-- Status Messages -->
+        <div class="status-message error" *ngIf="error">
+          <i class="fas fa-exclamation-triangle"></i>
+          {{ error }}
+        </div>
+        <div class="status-message success" *ngIf="success">
+          <i class="fas fa-check-circle"></i>
+          {{ success }}
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="name" class="form-label">
+              <i class="fas fa-tag"></i>
+              브랜드명 *
+            </label>
+            <input type="text" 
+                   class="form-input" 
+                   id="name" 
+                   formControlName="name"
+                   placeholder="브랜드명을 입력하세요"
+                   [ngClass]="{ 'error': submitted && f['name'].errors }">
+            <div *ngIf="submitted && f['name'].errors" class="error-message">
+              <div *ngIf="f['name'].errors['required']">브랜드명은 필수입니다</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="manufacturerId" class="form-label">
+              <i class="fas fa-industry"></i>
+              제조사
+            </label>
+            <select class="form-input" id="manufacturerId" formControlName="manufacturerId">
+              <option value="">-- 제조사 선택 --</option>
+              <option *ngFor="let manufacturer of manufacturers" [value]="manufacturer.id">
+                {{ manufacturer.name }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="description" class="form-label">
+              <i class="fas fa-file-alt"></i>
+              설명
+            </label>
+            <textarea class="form-input" 
+                      id="description" 
+                      formControlName="description" 
+                      rows="3"
+                      placeholder="브랜드에 대한 설명을 입력하세요"></textarea>
           </div>
         </div>
 
-        <div class="mb-3">
-          <label for="manufacturerId" class="form-label">Manufacturer</label>
-          <select class="form-select" id="manufacturerId" formControlName="manufacturerId">
-            <option value="">-- Select Manufacturer --</option>
-            <option *ngFor="let manufacturer of manufacturers" [value]="manufacturer.id">
-              {{ manufacturer.name }}
-            </option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label for="description" class="form-label">Description</label>
-          <textarea class="form-control" id="description" formControlName="description" rows="3"></textarea>
-        </div>
-
-        <div class="d-flex justify-content-between">
-          <button type="button" class="btn btn-secondary" (click)="resetForm()">
-            {{ isEditing ? 'Cancel' : 'Clear' }}
+        <div class="button-group">
+          <button type="button" class="btn-secondary" (click)="resetForm()">
+            <i class="fas fa-times"></i>
+            {{ isEditing ? '취소' : '지우기' }}
           </button>
-          <button type="submit" class="btn btn-primary" [disabled]="loading">
-            <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
-            {{ isEditing ? 'Update' : 'Add' }} Brand
+          <button type="submit" class="btn-primary" [disabled]="loading">
+            <i *ngIf="loading" class="fas fa-spinner fa-spin"></i>
+            <i *ngIf="!loading && isEditing" class="fas fa-save"></i>
+            <i *ngIf="!loading && !isEditing" class="fas fa-plus"></i>
+            {{ isEditing ? '수정' : '추가' }}
           </button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Brands list -->
-  <div class="card">
+  <!-- Brands List -->
+  <div class="dashboard-card">
     <div class="card-header">
-      <h4>Brands</h4>
+      <h3 class="section-title">
+        <i class="fas fa-list"></i>
+        브랜드 목록
+      </h3>
     </div>
-    <div class="card-body">
-      <div class="alert alert-info" *ngIf="loadingList">Loading brands...</div>
-      <div class="alert alert-danger" *ngIf="listError">{{ listError }}</div>
+    <div class="card-content">
+      <!-- Loading State -->
+      <div class="status-message info" *ngIf="loadingList">
+        <i class="fas fa-spinner fa-spin"></i>
+        브랜드 목록을 불러오는 중입니다...
+      </div>
 
-      <div class="table-responsive" *ngIf="!loadingList && !listError">
-        <table class="table table-striped">
+      <!-- Error State -->
+      <div class="status-message error" *ngIf="listError">
+        <i class="fas fa-exclamation-triangle"></i>
+        {{ listError }}
+      </div>
+
+      <!-- Data Table -->
+      <div class="table-container" *ngIf="!loadingList && !listError">
+        <table class="data-table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Manufacturer</th>
-              <th>Description</th>
-              <th>Actions</th>
+              <th><i class="fas fa-tag"></i> 브랜드명</th>
+              <th><i class="fas fa-industry"></i> 제조사</th>
+              <th><i class="fas fa-file-alt"></i> 설명</th>
+              <th><i class="fas fa-cog"></i> 작업</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngIf="brands.length === 0">
-              <td colspan="4" class="text-center">No brands found</td>
+              <td colspan="4" class="no-data">
+                <i class="fas fa-inbox"></i>
+                등록된 브랜드가 없습니다.
+              </td>
             </tr>
             <tr *ngFor="let brand of brands">
-              <td>{{ brand.name }}</td>
-              <td>{{ brand.manufacturer?.name || 'None' }}</td>
-              <td>{{ brand.description || '-' }}</td>
+              <td class="font-medium">{{ brand.name }}</td>
               <td>
-                <button class="btn btn-sm btn-outline-primary me-2" (click)="editBrand(brand)">
-                  Edit
-                </button>
-                <button class="btn btn-sm btn-outline-danger" (click)="deleteBrand(brand.id)">
-                  Delete
-                </button>
+                <span *ngIf="brand.manufacturer" class="status-badge secondary">
+                  {{ brand.manufacturer.name }}
+                </span>
+                <span *ngIf="!brand.manufacturer" class="text-muted">미지정</span>
+              </td>
+              <td class="description-cell">{{ brand.description || '-' }}</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-info btn-sm" 
+                          (click)="editBrand(brand)"
+                          title="수정">
+                    <i class="fas fa-edit"></i>
+                    수정
+                  </button>
+                  <button class="btn-danger btn-sm" 
+                          (click)="deleteBrand(brand.id)"
+                          title="삭제">
+                    <i class="fas fa-trash"></i>
+                    삭제
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>

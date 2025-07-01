@@ -1,0 +1,24 @@
+/* Bike Type Management Component Styles */
+@import './user-management.component.css';
+
+/* Additional styles specific to bike type management */
+.description-cell {
+  max-width: 400px;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+/* Bike type specific styles */
+.main-title i {
+  color: #10b981; /* Green color for bicycle icon */
+}
+
+.section-title i {
+  color: #10b981;
+}
+
+@media (max-width: 768px) {
+  .description-cell {
+    max-width: 200px;
+  }
+}

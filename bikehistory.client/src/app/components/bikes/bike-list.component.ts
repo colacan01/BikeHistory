@@ -7,7 +7,7 @@ import { ActivityLoggerService } from '../../services/activity-logger.service';
 @Component({
   selector: 'app-bike-list',
   templateUrl: './bike-list.component.html',
-  styles: []
+  styleUrl: './bike-list.component.css'
 })
 export class BikeListComponent implements OnInit {
   bikes: BikeFrame[] = [];
