@@ -442,7 +442,7 @@
 }
 
 .table-wrapper {
-  overflow-x: auto;
+/*  overflow-x: auto;*/
 }
 
 .maintenance-table {
@@ -489,7 +489,7 @@
 
   .maintenance-row:hover {
     background: #f8fafc;
-    transform: translateX(2px);
+/*    transform: translateX(2px);*/
   }
 
   .maintenance-row:last-child {
