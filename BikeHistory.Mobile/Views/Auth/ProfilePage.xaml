@@ -7,9 +7,14 @@
              Title="내 프로필">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="로그아웃" 
-                     Command="{Binding LogoutCommand}" 
-                     IconImageSource="logout.png" />
+        <ToolbarItem Text="로그아웃" Command="{Binding LogoutCommand}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="FontAwesome" 
+                                Glyph="&#xf2f5;" 
+                                Size="16" 
+                                Color="{StaticResource Secondary}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <Grid RowDefinitions="Auto,*,Auto" 

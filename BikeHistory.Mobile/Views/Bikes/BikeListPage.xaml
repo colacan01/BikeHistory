@@ -8,12 +8,28 @@
              Title="내 자전거 목록">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="추가" 
+        <!--<ToolbarItem Text="추가" 
                      Command="{Binding AddNewBikeCommand}" 
                      IconImageSource="plus.png" />
         <ToolbarItem Text="로그아웃" 
                      Command="{Binding LogoutCommand}" 
-                     IconImageSource="logout.png" />
+                     IconImageSource="logout.png" />-->
+        <ToolbarItem Text="추가" Command="{Binding AddNewBikeCommand}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="FontAwesome" 
+                    Glyph="&#xf067;" 
+                    Size="16" 
+                    Color="{StaticResource Secondary}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+        <ToolbarItem Text="로그아웃" Command="{Binding LogoutCommand}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="FontAwesome" 
+                    Glyph="&#xf2f5;" 
+                    Size="16" 
+                    Color="{StaticResource Secondary}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
     </ContentPage.ToolbarItems>
 
     <Grid RowDefinitions="*,Auto" 
