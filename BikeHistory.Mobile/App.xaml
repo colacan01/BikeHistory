@@ -15,6 +15,7 @@
             <converters:StringToBoolConverter x:Key="StringToBoolConverter" />
             <converters:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
             <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <converters:BoolToExpandCollapseIconConverter x:Key="BoolToExpandCollapseIconConverter" />
             
             <!-- Styles -->
             <Style x:Key="TextButton" TargetType="Button">

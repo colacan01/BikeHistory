@@ -36,6 +36,32 @@ namespace BikeHistory.Mobile.ViewModels
             private set => SetProperty(ref maintenancHistory, value);
         }
 
+        public ObservableCollection<OwnershipRecord> RecentOwnershipHistory
+        {
+            get
+            {
+                if (OwnershipHistory == null || OwnershipHistory.Count == 0)
+                    return new ObservableCollection<OwnershipRecord>();
+
+                return new ObservableCollection<OwnershipRecord>(
+                    OwnershipHistory.OrderByDescending(x => x.TransferDate).Take(2)
+                );
+            }
+        }
+
+        public ObservableCollection<Maintenance> RecentMaintenanceHistory
+        {
+            get
+            {
+                if (MaintenancHistory == null || MaintenancHistory.Count == 0)
+                    return new ObservableCollection<Maintenance>();
+
+                return new ObservableCollection<Maintenance>(
+                    MaintenancHistory.OrderByDescending(x => x.MaintenanceDate).Take(2)
+                );
+            }
+        }
+
         private bool isBusy;
         public bool IsBusy
         {
@@ -118,7 +144,7 @@ namespace BikeHistory.Mobile.ViewModels
                 Debug.WriteLine($"로그인한 사용자: {_authService.CurrentUser?.Id}");
                 
                 // 현재 사용자가 자전거 소유자인지 확인
-                IsOwner = Bike.CurrentOwnerId == _authService.CurrentUser?.Id;
+                IsOwner = Bike?.CurrentOwnerId == _authService.CurrentUser?.Id;
                 
                 Debug.WriteLine($"소유자 여부: {IsOwner}");
 
@@ -136,7 +162,7 @@ namespace BikeHistory.Mobile.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"자전거 상세 정보 로드 오류: {ex.Message}");
+                Debug.WriteLine($"자전거 상세 정보 로드 실패: {ex.Message}");
                 Debug.WriteLine($"StackTrace: {ex.StackTrace}");
                 ErrorMessage = "자전거 정보를 불러오는데 실패했습니다.";
             }
@@ -165,6 +191,9 @@ namespace BikeHistory.Mobile.ViewModels
                     MaintenancHistory.Add(record);
                 }
 
+                // Recent 프로퍼티 업데이트 알림
+                OnPropertyChanged(nameof(RecentMaintenanceHistory));
+
                 // 자전거 유지보수 내역 조회 로깅
                 await _activityLogger.LogActionAsync("ViewMaintenanceHistoryAll", new Dictionary<string, string>
                 {
@@ -173,7 +202,7 @@ namespace BikeHistory.Mobile.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"유지보수 이력 로드 오류: {ex.Message}");
+                Debug.WriteLine($"유지보수 이력 로드 실패: {ex.Message}");
                 ErrorMessage = "자전거 유지보수 이력을 불러오는데 실패했습니다.";
             }
             finally
@@ -200,6 +229,10 @@ namespace BikeHistory.Mobile.ViewModels
                 {
                     OwnershipHistory.Add(record);
                 }
+
+                // Recent 프로퍼티 업데이트 알림
+                OnPropertyChanged(nameof(RecentOwnershipHistory));
+
                 // 자전거 소유 내역 조회 로깅
                 await _activityLogger.LogActionAsync("ViewOwnershipHistoryAll", new Dictionary<string, string>
                 {
@@ -208,7 +241,7 @@ namespace BikeHistory.Mobile.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"소유권 이력 로드 오류: {ex.Message}");
+                Debug.WriteLine($"소유권 이력 로드 실패: {ex.Message}");
                 ErrorMessage = "자전거 소유권 이력을 불러오는데 실패했습니다.";
             }
             finally
@@ -244,7 +277,7 @@ namespace BikeHistory.Mobile.ViewModels
                 if (!IsOwner)
                 {
                     Debug.WriteLine("소유자가 아닙니다.");
-                    ErrorMessage = "자신의 자전거만 양도할 수 있습니다.";
+                    ErrorMessage = "자신의 자전거만 이전할 수 있습니다.";
                     return;
                 }
 
@@ -259,13 +292,99 @@ namespace BikeHistory.Mobile.ViewModels
                 // 절대 경로로 네비게이션 (다른 곳과 일치하도록)
                 await Shell.Current.GoToAsync($"///bikes/transfer?id={BikeId}");
                 
-                Debug.WriteLine("네비게이션 성공");
+                Debug.WriteLine("네비게이션 완료");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"TransferOwnership 오류: {ex.Message}");
+                Debug.WriteLine($"TransferOwnership 실패: {ex.Message}");
                 Debug.WriteLine($"StackTrace: {ex.StackTrace}");
                 ErrorMessage = $"소유권 이전 페이지로 이동 중 오류가 발생했습니다: {ex.Message}";
+            }
+        }
+
+        [RelayCommand]
+        private async Task ViewAllOwnershipHistory()
+        {
+            try
+            {
+                Debug.WriteLine($"ViewAllOwnershipHistory 호출됨 - BikeId: {BikeId}");
+                
+                if (BikeId <= 0)
+                {
+                    ErrorMessage = "자전거 정보가 올바르지 않습니다.";
+                    return;
+                }
+
+                await _activityLogger.LogActionAsync("NavigateToOwnershipHistoryPage", new Dictionary<string, string>
+                {
+                    { "bikeId", BikeId.ToString() }
+                });
+
+                // 현재 페이지에서 상대 경로로 네비게이션 
+                Debug.WriteLine($"네비게이션 시도: bikes/ownershiphistory?id={BikeId}");
+                await Shell.Current.GoToAsync($"bikes/ownershiphistory?id={BikeId}");
+                Debug.WriteLine("소유권 이력 페이지 네비게이션 완료");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"ViewAllOwnershipHistory 실패: {ex.Message}");
+                Debug.WriteLine($"StackTrace: {ex.StackTrace}");
+                
+                // 다른 방법으로 시도
+                try
+                {
+                    Debug.WriteLine("절대 경로로 재시도");
+                    await Shell.Current.GoToAsync($"///bikes/ownershiphistory?id={BikeId}");
+                    Debug.WriteLine("절대 경로 네비게이션 성공");
+                }
+                catch (Exception ex2)
+                {
+                    Debug.WriteLine($"절대 경로도 실패: {ex2.Message}");
+                    ErrorMessage = $"소유권 이력 페이지로 이동하는데 실패했습니다: {ex.Message}";
+                }
+            }
+        }
+
+        [RelayCommand]
+        private async Task ViewAllMaintenanceHistory()
+        {
+            try
+            {
+                Debug.WriteLine($"ViewAllMaintenanceHistory 호출됨 - BikeId: {BikeId}");
+                
+                if (BikeId <= 0)
+                {
+                    ErrorMessage = "자전거 정보가 올바르지 않습니다.";
+                    return;
+                }
+
+                await _activityLogger.LogActionAsync("NavigateToMaintenanceHistoryPage", new Dictionary<string, string>
+                {
+                    { "bikeId", BikeId.ToString() }
+                });
+
+                // 현재 페이지에서 상대 경로로 네비게이션
+                Debug.WriteLine($"네비게이션 시도: bikes/maintenancehistory?id={BikeId}");
+                await Shell.Current.GoToAsync($"bikes/maintenancehistory?id={BikeId}");
+                Debug.WriteLine("정비 이력 페이지 네비게이션 완료");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"ViewAllMaintenanceHistory 실패: {ex.Message}");
+                Debug.WriteLine($"StackTrace: {ex.StackTrace}");
+                
+                // 다른 방법으로 시도
+                try
+                {
+                    Debug.WriteLine("절대 경로로 재시도");
+                    await Shell.Current.GoToAsync($"///bikes/maintenancehistory?id={BikeId}");
+                    Debug.WriteLine("절대 경로 네비게이션 성공");
+                }
+                catch (Exception ex2)
+                {
+                    Debug.WriteLine($"절대 경로도 실패: {ex2.Message}");
+                    ErrorMessage = $"정비 이력 페이지로 이동하는데 실패했습니다: {ex.Message}";
+                }
             }
         }
 
@@ -276,7 +395,7 @@ namespace BikeHistory.Mobile.ViewModels
             {
                 Debug.WriteLine("테스트 네비게이션 시작");
                 await Shell.Current.GoToAsync("///bikes");
-                Debug.WriteLine("테스트 네비게이션 성공");
+                Debug.WriteLine("테스트 네비게이션 완료");
             }
             catch (Exception ex)
             {
@@ -289,15 +408,6 @@ namespace BikeHistory.Mobile.ViewModels
         private static async Task GoBack()
         {
             await Shell.Current.GoToAsync("..");
-        }
-
-        [RelayCommand]
-        private static async Task ViewMaintenanceDetail(object selectedItem)
-        {
-            if (selectedItem is Maintenance maintenance)
-            {
-                await Shell.Current.GoToAsync($"///bikes/maintenance?id={maintenance.Id}");
-            }
         }
     }
 }

@@ -34,8 +34,10 @@ namespace BikeHistory.Mobile
             builder.Services.AddTransient<BikeDetailViewModel>();
             builder.Services.AddTransient<BikeRegisterViewModel>();
             builder.Services.AddTransient<ProfileViewModel>();
-            builder.Services.AddTransient<BikeTransferViewModel>(); // 추가
+            builder.Services.AddTransient<BikeTransferViewModel>();
             builder.Services.AddTransient<MaintenanceDetailViewModel>();
+            builder.Services.AddTransient<OwnershipHistoryViewModel>();
+            builder.Services.AddTransient<MaintenanceHistoryViewModel>();
 
             // 페이지 등록
             builder.Services.AddTransient<LoginPage>();
@@ -44,8 +46,10 @@ namespace BikeHistory.Mobile
             builder.Services.AddTransient<BikeDetailPage>();
             builder.Services.AddTransient<BikeRegisterPage>();
             builder.Services.AddTransient<ProfilePage>();
-            builder.Services.AddTransient<BikeTransferPage>(); // 추가
+            builder.Services.AddTransient<BikeTransferPage>();
             builder.Services.AddTransient<MaintenanceDetailPage>();
+            builder.Services.AddTransient<OwnershipHistoryPage>();
+            builder.Services.AddTransient<MaintenanceHistoryPage>();
             
             return builder.Build();
         }

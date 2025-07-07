@@ -56,10 +56,18 @@ namespace BikeHistory.Mobile.ViewModels
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
+            Debug.WriteLine($"MaintenanceDetailViewModel - ApplyQueryAttributes 호출됨");
+            
             if (query.TryGetValue("id", out var idValue))
             {
                 MaintenanceId = Uri.UnescapeDataString(idValue.ToString() ?? string.Empty);
+                Debug.WriteLine($"MaintenanceDetailViewModel - MaintenanceId 설정됨: {MaintenanceId}");
                 LoadMaintenanceCommand.Execute(null);
+            }
+            else
+            {
+                Debug.WriteLine("MaintenanceDetailViewModel - id 파라미터를 찾을 수 없음");
+                ErrorMessage = "유지보수 ID가 제공되지 않았습니다.";
             }
         }
 
@@ -71,6 +79,7 @@ namespace BikeHistory.Mobile.ViewModels
 
             try
             {
+                Debug.WriteLine($"MaintenanceDetailViewModel - LoadMaintenance 시작: {MaintenanceId}");
                 IsBusy = true;
                 ErrorMessage = string.Empty;
 
@@ -78,6 +87,8 @@ namespace BikeHistory.Mobile.ViewModels
                 
                 if (Maintenance != null)
                 {
+                    Debug.WriteLine($"MaintenanceDetailViewModel - 정비 정보 로드 완료: {Maintenance.Id}");
+                    
                     // 유지보수 상세 조회 로그
                     await _activityLogger.LogActionAsync("ViewMaintenanceDetail", new Dictionary<string, string>
                     {
@@ -87,17 +98,20 @@ namespace BikeHistory.Mobile.ViewModels
                 }
                 else
                 {
+                    Debug.WriteLine("MaintenanceDetailViewModel - 정비 정보를 찾을 수 없음");
                     ErrorMessage = "유지보수 정보를 찾을 수 없습니다.";
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"유지보수 상세 로드 오류: {ex.Message}");
+                Debug.WriteLine($"MaintenanceDetailViewModel - 정비 상세 로드 실패: {ex.Message}");
+                Debug.WriteLine($"StackTrace: {ex.StackTrace}");
                 ErrorMessage = "유지보수 정보를 불러오는데 실패했습니다.";
             }
             finally
             {
                 IsBusy = false;
+                Debug.WriteLine($"MaintenanceDetailViewModel - LoadMaintenance 완료");
             }
         }
 
@@ -112,22 +126,35 @@ namespace BikeHistory.Mobile.ViewModels
         {
             try
             {
+                Debug.WriteLine("MaintenanceDetailViewModel - GoBack 호출됨");
+                
                 if (Maintenance != null)
                 {
-                    // 유지보수 항목이 속한 자전거 상세 페이지로 직접 이동
-                    await Shell.Current.GoToAsync($"///bikes/detail?id={Maintenance.BikeFrameId}");
+                    Debug.WriteLine($"MaintenanceDetailViewModel - 자전거 상세 페이지로 이동: {Maintenance.BikeFrameId}");
+                    // 유지보수가 있으면 해당 자전거의 정비 이력 페이지로 이동
+                    await Shell.Current.GoToAsync($"bikes/maintenancehistory?id={Maintenance.BikeFrameId}");
                 }
                 else
                 {
-                    // 유지보수 정보가 없는 경우 일반적인 뒤로 가기
+                    Debug.WriteLine("MaintenanceDetailViewModel - 일반적인 뒤로 가기");
+                    // 유지보수 정보가 없을 경우 일반적인 뒤로 가기
                     await Shell.Current.GoToAsync("..");
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"이전 페이지로 이동 중 오류 발생: {ex.Message}");
+                Debug.WriteLine($"MaintenanceDetailViewModel - 뒤로 가기 실패: {ex.Message}");
+                Debug.WriteLine($"StackTrace: {ex.StackTrace}");
+                
                 // 오류 발생 시 홈으로 이동
-                await Shell.Current.GoToAsync("//bikes");
+                try
+                {
+                    await Shell.Current.GoToAsync("///bikes");
+                }
+                catch (Exception ex2)
+                {
+                    Debug.WriteLine($"MaintenanceDetailViewModel - 홈으로 이동도 실패: {ex2.Message}");
+                }
             }
         }
     }

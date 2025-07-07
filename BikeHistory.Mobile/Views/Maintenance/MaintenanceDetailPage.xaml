@@ -5,178 +5,508 @@
              xmlns:viewmodel="clr-namespace:BikeHistory.Mobile.ViewModels"
              xmlns:model="clr-namespace:BikeHistory.Mobile.Models"
              x:DataType="viewmodel:MaintenanceDetailViewModel"
-             Title="유지보수 상세정보">
+             Title="정비 상세정보"
+             BackgroundColor="{StaticResource Gray100}">
 
-	<Grid RowDefinitions="Auto,*,Auto"
-          Padding="20">
+    <Grid RowDefinitions="*,Auto" 
+          Padding="16">
 
-		<Grid.Resources>
-			<Style TargetType="Label" x:Key="FieldLabel">
-				<Setter Property="FontSize" Value="14" />
-				<Setter Property="TextColor" Value="Gray" />
-				<Setter Property="Margin" Value="0,15,0,0" />
-			</Style>
+        <!-- Loading Indicator -->
+        <Frame Grid.Row="0"
+               IsVisible="{Binding IsBusy}"
+               BackgroundColor="White"
+               CornerRadius="12"
+               HasShadow="True"
+               Padding="40"
+               VerticalOptions="Center"
+               HorizontalOptions="Center">
+            <StackLayout Orientation="Horizontal" Spacing="16">
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                 Color="{StaticResource Primary}"
+                                 Scale="1.2" />
+                <Label Text="정비 정보 로딩 중..."
+                       VerticalOptions="Center"
+                       FontSize="16"
+                       TextColor="{StaticResource Gray600}" />
+            </StackLayout>
+        </Frame>
 
-			<Style TargetType="Label" x:Key="FieldValue">
-				<Setter Property="FontSize" Value="16" />
-				<Setter Property="FontAttributes" Value="Bold" />
-				<Setter Property="Margin" Value="0,5,0,0" />
-			</Style>
-		</Grid.Resources>
+        <!-- Error Message -->
+        <Frame Grid.Row="0"
+               IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+               BackgroundColor="#FFEBEE"
+               BorderColor="#F44336"
+               CornerRadius="12"
+               Margin="16"
+               Padding="20"
+               VerticalOptions="Center"
+               HorizontalOptions="FillAndExpand">
+            <StackLayout Orientation="Horizontal" Spacing="16">
+                <Frame BackgroundColor="#F44336"
+                       CornerRadius="20"
+                       HeightRequest="40"
+                       WidthRequest="40"
+                       HasShadow="False"
+                       Padding="0">
+                    <Label FontFamily="FontAwesome"
+                           Text="&#xf071;"
+                           FontSize="18"
+                           TextColor="White"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Frame>
+                <Label Text="{Binding ErrorMessage}"
+                       TextColor="#C62828"
+                       VerticalOptions="Center"
+                       HorizontalOptions="FillAndExpand"
+                       LineBreakMode="WordWrap"
+                       FontSize="16" />
+            </StackLayout>
+        </Frame>
 
-		<ActivityIndicator Grid.Row="0"
-                         IsRunning="{Binding IsBusy}"
-                         IsVisible="{Binding IsBusy}"
-                         VerticalOptions="Center"
-                         HorizontalOptions="Center" />
-
-		<Label Grid.Row="0"
-             Text="{Binding ErrorMessage}"
-             TextColor="Red"
-             IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
-             VerticalOptions="Center"
-             HorizontalOptions="Center" />
-
-		<ScrollView Grid.Row="1"
+        <!-- Content -->
+        <ScrollView Grid.Row="0"
                    IsVisible="{Binding Maintenance, Converter={StaticResource ObjectToBoolConverter}}">
-			<VerticalStackLayout>
-				<!-- 유지보수 기본 정보 섹션 -->
-				<Frame BorderColor="LightGray"
-                      Margin="0,10,0,20"
-                      Padding="15">
-					<Grid RowDefinitions="Auto,Auto,Auto,Auto"
-                         ColumnDefinitions="*,*">
-						<Image Grid.Row="0"
-                             Grid.Column="1"
-                             Source="tools.png"
-                             HeightRequest="80"
-                             WidthRequest="80"
-                             HorizontalOptions="End"
-                             VerticalOptions="Start" />
+            <VerticalStackLayout Spacing="16">
+                
+                <!-- Header Card -->
+                <Frame BackgroundColor="White"
+                       CornerRadius="16"
+                       HasShadow="True"
+                       Padding="24"
+                       Margin="0,8">
+                    <StackLayout Orientation="Horizontal" Spacing="16">
+                        <Frame BackgroundColor="{StaticResource Warning}"
+                               CornerRadius="30"
+                               HeightRequest="60"
+                               WidthRequest="60"
+                               HasShadow="False"
+                               Padding="0">
+                            <Label HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   FontFamily="FontAwesome"
+                                   Text="&#xf0ad;"
+                                   FontSize="24"
+                                   TextColor="White" />
+                        </Frame>
+                        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+                            <Label Text="정비 상세정보"
+                                   FontSize="24"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Gray900}" />
+                            <Label Text="{Binding Maintenance.MaintenanceDate, StringFormat='{0:yyyy년 MM월 dd일} 정비 내역'}"
+                                   FontSize="16"
+                                   TextColor="{StaticResource Gray600}" />
+                        </VerticalStackLayout>
+                    </StackLayout>
+                </Frame>
 
-						<VerticalStackLayout Grid.Row="0"
-                                          Grid.Column="0">
-							<Label Text="유지보수 일자"
-                                 Style="{StaticResource FieldLabel}" />
-							<Label Text="{Binding Maintenance.MaintenanceDate, StringFormat='{0:yyyy년 MM월 dd일}'}"
-                                 Style="{StaticResource FieldValue}" />
-						</VerticalStackLayout>
+                <!-- Basic Information Card -->
+                <Frame BackgroundColor="White"
+                       CornerRadius="16"
+                       HasShadow="True"
+                       Padding="24">
+                    <VerticalStackLayout Spacing="20">
+                        <!-- Header -->
+                        <StackLayout Orientation="Horizontal" Spacing="12">
+                            <Frame BackgroundColor="{StaticResource Info}"
+                                   CornerRadius="24"
+                                   HeightRequest="48"
+                                   WidthRequest="48"
+                                   HasShadow="False"
+                                   Padding="0">
+                                <Label HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       FontFamily="FontAwesome"
+                                       Text="&#xf2bb;"
+                                       FontSize="20"
+                                       TextColor="White" />
+                            </Frame>
+                            <VerticalStackLayout VerticalOptions="Center">
+                                <Label Text="기본 정보"
+                                       FontSize="20"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Gray900}" />
+                                <Label Text="정비 개요 및 주요 정보"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </StackLayout>
 
-						<VerticalStackLayout Grid.Row="1"
-                                          Grid.Column="0">
-							<Label Text="유지보수 유형"
-                                 Style="{StaticResource FieldLabel}" />
-							<Label Text="{Binding Maintenance.MaintenanceTypeName}"
-                                 Style="{StaticResource FieldValue}" />
-						</VerticalStackLayout>
+                        <!-- Information Grid -->
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto" 
+                              ColumnDefinitions="*,*" 
+                              RowSpacing="16" 
+                              ColumnSpacing="16">
+                            
+                            <!-- Maintenance Date -->
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="0">
+                                <StackLayout Orientation="Horizontal" Spacing="8">
+                                    <Label FontFamily="FontAwesome"
+                                           Text="&#xf073;"
+                                           FontSize="14"
+                                           TextColor="{StaticResource Primary}"
+                                           VerticalOptions="Center" />
+                                    <Label Text="정비 일자"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource Gray700}"
+                                           VerticalOptions="Center" />
+                                </StackLayout>
+                                <Label Text="{Binding Maintenance.MaintenanceDate, StringFormat='{0:yyyy년 MM월 dd일}'}"
+                                       FontSize="16"
+                                       TextColor="{StaticResource Gray900}"
+                                       Margin="22,4,0,0" />
+                            </VerticalStackLayout>
 
-						<VerticalStackLayout Grid.Row="1"
-                                          Grid.Column="1">
-							<Label Text="정비샵"
-                                 Style="{StaticResource FieldLabel}" />
-							<Label Text="{Binding Maintenance.StoreName}"
-                                 Style="{StaticResource FieldValue}" />
-						</VerticalStackLayout>
+                            <!-- Maintenance Type -->
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="1">
+                                <StackLayout Orientation="Horizontal" Spacing="8">
+                                    <Label FontFamily="FontAwesome"
+                                           Text="&#xf02c;"
+                                           FontSize="14"
+                                           TextColor="{StaticResource Primary}"
+                                           VerticalOptions="Center" />
+                                    <Label Text="정비 유형"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource Gray700}"
+                                           VerticalOptions="Center" />
+                                </StackLayout>
+                                <Label Text="{Binding Maintenance.MaintenanceTypeName}"
+                                       FontSize="16"
+                                       TextColor="{StaticResource Gray900}"
+                                       Margin="22,4,0,0" />
+                            </VerticalStackLayout>
 
-						<VerticalStackLayout Grid.Row="2"
-                                          Grid.Column="0">
-							<Label Text="결제 방법"
-                                 Style="{StaticResource FieldLabel}" />
-							<Label Text="{Binding Maintenance.PaymentMethodName}"
-                                 Style="{StaticResource FieldValue}" />
-						</VerticalStackLayout>
+                            <!-- Store Name -->
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="0">
+                                <StackLayout Orientation="Horizontal" Spacing="8">
+                                    <Label FontFamily="FontAwesome"
+                                           Text="&#xf015;"
+                                           FontSize="14"
+                                           TextColor="{StaticResource Primary}"
+                                           VerticalOptions="Center" />
+                                    <Label Text="정비샵"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource Gray700}"
+                                           VerticalOptions="Center" />
+                                </StackLayout>
+                                <Label Text="{Binding Maintenance.StoreName}"
+                                       FontSize="16"
+                                       TextColor="{StaticResource Gray900}"
+                                       Margin="22,4,0,0" />
+                            </VerticalStackLayout>
 
-						<VerticalStackLayout Grid.Row="2"
-                                          Grid.Column="1">
-							<Label Text="총 금액"
-                                 Style="{StaticResource FieldLabel}" />
-							<Label Text="{Binding Maintenance.FormattedTotalAmount}"
-                                 Style="{StaticResource FieldValue}" />
-						</VerticalStackLayout>
+                            <!-- Payment Method -->
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="1">
+                                <StackLayout Orientation="Horizontal" Spacing="8">
+                                    <Label FontFamily="FontAwesome"
+                                           Text="&#xf09d;"
+                                           FontSize="14"
+                                           TextColor="{StaticResource Primary}"
+                                           VerticalOptions="Center" />
+                                    <Label Text="결제 방법"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource Gray700}"
+                                           VerticalOptions="Center" />
+                                </StackLayout>
+                                <Label Text="{Binding Maintenance.PaymentMethodName}"
+                                       FontSize="16"
+                                       TextColor="{StaticResource Gray900}"
+                                       Margin="22,4,0,0" />
+                            </VerticalStackLayout>
 
-						<VerticalStackLayout Grid.Row="3"
-                                          Grid.ColumnSpan="2">
-							<Label Text="비고"
-                                 Style="{StaticResource FieldLabel}" />
-							<Label Text="{Binding Maintenance.Notes}"
-                                 Style="{StaticResource FieldValue}"
-                                 IsVisible="{Binding Maintenance.Notes, Converter={StaticResource StringToBoolConverter}}"/>
-							<Label Text="없음"
-                                 TextColor="Gray"
-                                 IsVisible="{Binding Maintenance.Notes, Converter={StaticResource InverseStringToBoolConverter}}"/>
-						</VerticalStackLayout>
-					</Grid>
-				</Frame>
+                            <!-- Total Amount -->
+                            <VerticalStackLayout Grid.Row="2" Grid.ColumnSpan="2">
+                                <StackLayout Orientation="Horizontal" Spacing="8">
+                                    <Label FontFamily="FontAwesome"
+                                           Text="&#xf155;"
+                                           FontSize="14"
+                                           TextColor="{StaticResource Success}"
+                                           VerticalOptions="Center" />
+                                    <Label Text="총 금액"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource Gray700}"
+                                           VerticalOptions="Center" />
+                                </StackLayout>
+                                <Frame BackgroundColor="{StaticResource Success}"
+                                       CornerRadius="8"
+                                       HasShadow="False"
+                                       Padding="12"
+                                       Margin="22,4,0,0">
+                                    <Label Text="{Binding Maintenance.FormattedTotalAmount}"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           HorizontalOptions="Center" />
+                                </Frame>
+                            </VerticalStackLayout>
 
-				<!-- 유지보수 상세 항목 섹션 -->
-				<Label Text="유지보수 상세 내역"
-                     FontSize="18"
-                     FontAttributes="Bold"
-                     Margin="0,10,0,10" />
+                            <!-- Notes -->
+                            <VerticalStackLayout Grid.Row="3" Grid.ColumnSpan="2"
+                                               IsVisible="{Binding Maintenance.Notes, Converter={StaticResource StringToBoolConverter}}">
+                                <StackLayout Orientation="Horizontal" Spacing="8">
+                                    <Label FontFamily="FontAwesome"
+                                           Text="&#xf249;"
+                                           FontSize="14"
+                                           TextColor="{StaticResource Info}"
+                                           VerticalOptions="Center" />
+                                    <Label Text="비고"
+                                           FontSize="14"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource Gray700}"
+                                           VerticalOptions="Center" />
+                                </StackLayout>
+                                <Frame BackgroundColor="{StaticResource Gray50}"
+                                       BorderColor="{StaticResource Gray200}"
+                                       CornerRadius="8"
+                                       HasShadow="False"
+                                       Padding="12"
+                                       Margin="22,4,0,0">
+                                    <Label Text="{Binding Maintenance.Notes}"
+                                           FontSize="14"
+                                           TextColor="{StaticResource Gray700}"
+                                           LineBreakMode="WordWrap" />
+                                </Frame>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
 
-				<CollectionView ItemsSource="{Binding Maintenance.MaintenanceDetails}"
-                              HeightRequest="300"
-                              SelectionMode="None">
-					<CollectionView.EmptyView>
-						<Label Text="상세 내역이 없습니다"
-                             HorizontalOptions="Center"
-                             VerticalOptions="Center"
-                             TextColor="Gray" />
-					</CollectionView.EmptyView>
+                <!-- Maintenance Details Card -->
+                <Frame BackgroundColor="White"
+                       CornerRadius="16"
+                       HasShadow="True"
+                       Padding="24">
+                    <VerticalStackLayout Spacing="20">
+                        <!-- Header -->
+                        <StackLayout Orientation="Horizontal" Spacing="12">
+                            <Frame BackgroundColor="{StaticResource Warning}"
+                                   CornerRadius="24"
+                                   HeightRequest="48"
+                                   WidthRequest="48"
+                                   HasShadow="False"
+                                   Padding="0">
+                                <Label HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       FontFamily="FontAwesome"
+                                       Text="&#xf0ca;"
+                                       FontSize="20"
+                                       TextColor="White" />
+                            </Frame>
+                            <VerticalStackLayout VerticalOptions="Center">
+                                <Label Text="상세 내역"
+                                       FontSize="20"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Gray900}" />
+                                <Label Text="부품별 정비 내역 및 비용"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </StackLayout>
 
-					<CollectionView.ItemTemplate>
-						<DataTemplate x:DataType="model:MaintenanceDetail">
-							<Frame Margin="0,5"
-                                 Padding="10"
-                                 BorderColor="LightGray">
-								<Grid RowDefinitions="Auto,Auto,Auto,Auto"
-                                    ColumnDefinitions="Auto,*,Auto">
-									<Label Grid.Row="0"
-                                         Grid.Column="0"
-                                         Text="{Binding Seq, StringFormat='#{0}'}"
-                                         FontAttributes="Bold"
-                                         VerticalOptions="Center"
-                                         Margin="0,0,10,0" />
+                        <!-- Details List -->
+                        <CollectionView ItemsSource="{Binding Maintenance.MaintenanceDetails}"
+                                      SelectionMode="None">
+                            <CollectionView.EmptyView>
+                                <Frame BackgroundColor="{StaticResource Gray50}"
+                                       BorderColor="{StaticResource Gray200}"
+                                       CornerRadius="12"
+                                       HasShadow="False"
+                                       Padding="40">
+                                    <StackLayout Spacing="16">
+                                        <Frame BackgroundColor="{StaticResource Gray200}"
+                                               CornerRadius="30"
+                                               HeightRequest="60"
+                                               WidthRequest="60"
+                                               HasShadow="False"
+                                               HorizontalOptions="Center"
+                                               Padding="0">
+                                            <Label HorizontalOptions="Center"
+                                                   VerticalOptions="Center"
+                                                   FontFamily="FontAwesome"
+                                                   Text="&#xf05a;"
+                                                   FontSize="24"
+                                                   TextColor="{StaticResource Gray400}" />
+                                        </Frame>
+                                        <Label Text="상세 내역이 없습니다"
+                                               HorizontalOptions="Center"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource Gray600}" />
+                                        <Label Text="이 정비에 대한 상세 내역이 등록되지 않았습니다"
+                                               HorizontalOptions="Center"
+                                               HorizontalTextAlignment="Center"
+                                               FontSize="14"
+                                               TextColor="{StaticResource Gray500}" />
+                                    </StackLayout>
+                                </Frame>
+                            </CollectionView.EmptyView>
 
-									<Label Grid.Row="0"
-                                         Grid.Column="1"
-                                         Text="{Binding PartName}"
-                                         FontAttributes="Bold"
-                                         VerticalOptions="Center" />
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="model:MaintenanceDetail">
+                                    <Frame BackgroundColor="{StaticResource Gray50}"
+                                           BorderColor="{StaticResource Gray200}"
+                                           CornerRadius="12"
+                                           Margin="0,4"
+                                           Padding="20"
+                                           HasShadow="False">
+                                        <Grid RowDefinitions="Auto,Auto,Auto,Auto" 
+                                              ColumnDefinitions="Auto,*">
+                                            
+                                            <!-- Item Number Badge -->
+                                            <Frame Grid.Row="0" 
+                                                   Grid.RowSpan="4"
+                                                   Grid.Column="0"
+                                                   BackgroundColor="{StaticResource Primary}"
+                                                   CornerRadius="20"
+                                                   HeightRequest="40"
+                                                   WidthRequest="40"
+                                                   HasShadow="False"
+                                                   Padding="0"
+                                                   VerticalOptions="Start"
+                                                   Margin="0,0,16,0">
+                                                <Label HorizontalOptions="Center"
+                                                       VerticalOptions="Center"
+                                                       Text="{Binding Seq}"
+                                                       FontSize="16"
+                                                       FontAttributes="Bold"
+                                                       TextColor="White" />
+                                            </Frame>
+                                            
+                                            <!-- Part Name -->
+                                            <Label Grid.Row="0" 
+                                                   Grid.Column="1"
+                                                   Text="{Binding PartName}"
+                                                   FontAttributes="Bold"
+                                                   FontSize="18"
+                                                   TextColor="{StaticResource Gray900}" />
+                                            
+                                            <!-- Part Specification -->
+                                            <Label Grid.Row="1" 
+                                                   Grid.Column="1"
+                                                   Text="{Binding PartSpecification}"
+                                                   FontSize="14"
+                                                   TextColor="{StaticResource Gray600}"
+                                                   Margin="0,4,0,12"
+                                                   IsVisible="{Binding PartSpecification, Converter={StaticResource StringToBoolConverter}}" />
+                                            
+                                            <!-- Cost Details -->
+                                            <VerticalStackLayout Grid.Row="2" 
+                                                               Grid.Column="1"
+                                                               Spacing="8">
+                                                <Frame BackgroundColor="White"
+                                                       BorderColor="{StaticResource Gray300}"
+                                                       CornerRadius="8"
+                                                       HasShadow="False"
+                                                       Padding="12">
+                                                    <Grid ColumnDefinitions="*,Auto">
+                                                        <StackLayout Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                                                            <Label FontFamily="FontAwesome"
+                                                                   Text="&#xf0ad;"
+                                                                   FontSize="14"
+                                                                   TextColor="{StaticResource Info}"
+                                                                   VerticalOptions="Center" />
+                                                            <Label Text="공임비"
+                                                                   FontSize="14"
+                                                                   TextColor="{StaticResource Gray700}"
+                                                                   VerticalOptions="Center" />
+                                                        </StackLayout>
+                                                        <Label Grid.Column="1"
+                                                               Text="{Binding LaborCost, StringFormat='{0:N0}원'}"
+                                                               FontSize="14"
+                                                               FontAttributes="Bold"
+                                                               TextColor="{StaticResource Gray900}"
+                                                               VerticalOptions="Center" />
+                                                    </Grid>
+                                                </Frame>
 
-									<Label Grid.Row="1"
-                                         Grid.Column="1"
-                                         Text="{Binding PartSpecification}"
-                                         TextColor="Gray"
-                                         FontSize="14"
-                                         Margin="0,5,0,5"
-                                         IsVisible="{Binding PartSpecification, Converter={StaticResource StringToBoolConverter}}" />
+                                                <Frame BackgroundColor="White"
+                                                       BorderColor="{StaticResource Gray300}"
+                                                       CornerRadius="8"
+                                                       HasShadow="False"
+                                                       Padding="12">
+                                                    <Grid ColumnDefinitions="*,Auto">
+                                                        <StackLayout Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                                                            <Label FontFamily="FontAwesome"
+                                                                   Text="&#xf1b2;"
+                                                                   FontSize="14"
+                                                                   TextColor="{StaticResource Warning}"
+                                                                   VerticalOptions="Center" />
+                                                            <Label Text="부품비"
+                                                                   FontSize="14"
+                                                                   TextColor="{StaticResource Gray700}"
+                                                                   VerticalOptions="Center" />
+                                                        </StackLayout>
+                                                        <Label Grid.Column="1"
+                                                               Text="{Binding PartPrice, StringFormat='{0:N0}원'}"
+                                                               FontSize="14"
+                                                               FontAttributes="Bold"
+                                                               TextColor="{StaticResource Gray900}"
+                                                               VerticalOptions="Center" />
+                                                    </Grid>
+                                                </Frame>
+                                            </VerticalStackLayout>
+                                            
+                                            <!-- Subtotal -->
+                                            <Frame Grid.Row="3" 
+                                                   Grid.Column="1"
+                                                   BackgroundColor="{StaticResource Success}"
+                                                   CornerRadius="8"
+                                                   HasShadow="False"
+                                                   Padding="12"
+                                                   Margin="0,12,0,0">
+                                                <Grid ColumnDefinitions="*,Auto">
+                                                    <StackLayout Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                                                        <Label FontFamily="FontAwesome"
+                                                               Text="&#xf155;"
+                                                               FontSize="14"
+                                                               TextColor="White"
+                                                               VerticalOptions="Center" />
+                                                        <Label Text="소계"
+                                                               FontSize="14"
+                                                               FontAttributes="Bold"
+                                                               TextColor="White"
+                                                               VerticalOptions="Center" />
+                                                    </StackLayout>
+                                                    <Label Grid.Column="1"
+                                                           Text="{Binding TotalCost, StringFormat='{0:N0}원'}"
+                                                           FontSize="16"
+                                                           FontAttributes="Bold"
+                                                           TextColor="White"
+                                                           VerticalOptions="Center" />
+                                                </Grid>
+                                            </Frame>
+                                        </Grid>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
 
-									<VerticalStackLayout Grid.Row="2"
-                                                      Grid.Column="1">
-										<Label Text="{Binding LaborCost, StringFormat='공임비: {0:N0}원'}"
-                                             Margin="0,5,0,0" />
-
-										<Label Text="{Binding PartPrice, StringFormat='부품비: {0:N0}원'}"
-                                             Margin="0,5,0,0" />
-									</VerticalStackLayout>
-
-									<Label Grid.Row="3"
-                                         Grid.Column="1"
-                                         Text="{Binding TotalCost, StringFormat='소계: {0:N0}원'}"
-                                         FontAttributes="Bold"
-                                         Margin="0,10,0,0" />
-								</Grid>
-							</Frame>
-						</DataTemplate>
-					</CollectionView.ItemTemplate>
-				</CollectionView>
-			</VerticalStackLayout>
-		</ScrollView>
-
-		<Button Grid.Row="2"
-              Text="뒤로"
-              Command="{Binding GoBackCommand}"
-              Margin="0,20,0,0" />
-	</Grid>
+        <!-- Back Button -->
+        <Button Grid.Row="1"
+                Text="뒤로"
+                Command="{Binding GoBackCommand}"
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="White"
+                FontAttributes="Bold"
+                CornerRadius="12"
+                HeightRequest="48"
+                Margin="0,16,0,0">
+            <Button.ImageSource>
+                <FontImageSource FontFamily="FontAwesome" 
+                    Glyph="&#xf060;" 
+                    Size="16" 
+                    Color="White" />
+            </Button.ImageSource>
+        </Button>
+    </Grid>
 </ContentPage>

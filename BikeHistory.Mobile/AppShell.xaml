@@ -6,6 +6,7 @@
     xmlns:local="clr-namespace:BikeHistory.Mobile"
     xmlns:auth="clr-namespace:BikeHistory.Mobile.Views.Auth"
     xmlns:bikes="clr-namespace:BikeHistory.Mobile.Views.Bikes"
+    xmlns:maintenance="clr-namespace:BikeHistory.Mobile.Views.Maintenance"
     Shell.FlyoutBehavior="Disabled">
 
     <Shell.Resources>
@@ -53,15 +54,26 @@
     <TabBar>
         <ShellContent
             Title="자전거"
-            Icon="bike.png"
             ContentTemplate="{DataTemplate bikes:BikeListPage}"
-            Route="bikes" />
-        
+            Route="bikes" >
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="FontAwesome" 
+                    Glyph="&#xf206;" 
+                    Size="16" 
+                    Color="{StaticResource Primary}" />
+            </ShellContent.Icon>
+        </ShellContent>
         <ShellContent
             Title="프로필"
-            Icon="profile.png"
             ContentTemplate="{DataTemplate auth:ProfilePage}"
-            Route="profile" />
+            Route="profile" >
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="FontAwesome" 
+                    Glyph="&#xf007;" 
+                    Size="16" 
+                    Color="{StaticResource Primary}" />     
+            </ShellContent.Icon>
+        </ShellContent>
     </TabBar>
 
 </Shell>

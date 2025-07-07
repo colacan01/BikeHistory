@@ -5,130 +5,299 @@
              xmlns:viewmodel="clr-namespace:BikeHistory.Mobile.ViewModels"
              xmlns:model="clr-namespace:BikeHistory.Mobile.Models"
              x:DataType="viewmodel:BikeDetailViewModel"
-             Title="자전거 상세정보">
+             Title="자전거 상세정보"
+             BackgroundColor="{StaticResource Gray100}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="소유권 이전" 
-                     Command="{Binding TransferOwnershipCommand}" />
+                     Command="{Binding TransferOwnershipCommand}">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="FontAwesome" 
+                    Glyph="&#xf362;" 
+                    Size="18" 
+                    Color="{StaticResource Primary}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
     </ContentPage.ToolbarItems>
 
-    <Grid RowDefinitions="Auto,*,Auto" 
-          Padding="20">
-        
-        <Grid.Resources>
-            <Style TargetType="Label" x:Key="FieldLabel">
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="TextColor" Value="Gray" />
-                <Setter Property="Margin" Value="0,15,0,0" />
-            </Style>
-            
-            <Style TargetType="Label" x:Key="FieldValue">
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="Margin" Value="0,5,0,0" />
-            </Style>
-        </Grid.Resources>
+    <Grid RowDefinitions="*,Auto" 
+          Padding="16">
 
-        <ActivityIndicator Grid.Row="0"
-                         IsRunning="{Binding IsBusy}"
-                         IsVisible="{Binding IsBusy}"
-                         VerticalOptions="Center"
-                         HorizontalOptions="Center" />
+        <!-- Loading Indicator -->
+        <Frame Grid.Row="0"
+               IsVisible="{Binding IsBusy}"
+               BackgroundColor="White"
+               CornerRadius="12"
+               HasShadow="True"
+               Padding="40"
+               VerticalOptions="Center"
+               HorizontalOptions="Center">
+            <StackLayout Orientation="Horizontal" Spacing="16">
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                 Color="{StaticResource Primary}"
+                                 Scale="1.2" />
+                <Label Text="로딩 중..."
+                       VerticalOptions="Center"
+                       FontSize="16"
+                       TextColor="{StaticResource Gray600}" />
+            </StackLayout>
+        </Frame>
         
-        <Label Grid.Row="0"
-             Text="{Binding ErrorMessage}"
-             TextColor="Red"
-             IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
-             VerticalOptions="Center"
-             HorizontalOptions="Center" />
+        <!-- Error Message -->
+        <Frame Grid.Row="0"
+               IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+               BackgroundColor="#FFEBEE"
+               BorderColor="#F44336"
+               CornerRadius="12"
+               Margin="16"
+               Padding="20"
+               VerticalOptions="Center"
+               HorizontalOptions="FillAndExpand">
+            <StackLayout Orientation="Horizontal" Spacing="16">
+                <Frame BackgroundColor="#F44336"
+                       CornerRadius="20"
+                       HeightRequest="40"
+                       WidthRequest="40"
+                       HasShadow="False"
+                       Padding="0">
+                    <Label FontFamily="FontAwesome"
+                           Text="&#xf071;"
+                           FontSize="18"
+                           TextColor="White"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Frame>
+                <Label Text="{Binding ErrorMessage}"
+                       TextColor="#C62828"
+                       VerticalOptions="Center"
+                       HorizontalOptions="FillAndExpand"
+                       LineBreakMode="WordWrap"
+                       FontSize="16" />
+            </StackLayout>
+        </Frame>
         
-        <ScrollView Grid.Row="1"
+        <ScrollView Grid.Row="0"
                    IsVisible="{Binding Bike, Converter={StaticResource ObjectToBoolConverter}}">
-            <VerticalStackLayout>
+            <VerticalStackLayout Spacing="16">
+                
                 <!-- 자전거 기본 정보 섹션 -->
-                <Frame BorderColor="LightGray"
-                      Margin="0,10,0,20"
-                      Padding="15">
-                    <Grid RowDefinitions="Auto,Auto,Auto,Auto"
-                         ColumnDefinitions="*,*">
-                        <Image Grid.Row="0"
-                             Grid.Column="1"
-                             Source="bike.png"
-                             HeightRequest="80"
-                             WidthRequest="80"
-                             HorizontalOptions="End"
-                             VerticalOptions="Start" />
+                <Frame BackgroundColor="White"
+                       CornerRadius="16"
+                       HasShadow="True"
+                       Padding="24"
+                       Margin="0,8">
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                          ColumnDefinitions="*,*">
                         
-                        <VerticalStackLayout Grid.Row="0"
-                                          Grid.Column="0">
-                            <Label Text="프레임 번호" 
-                                 Style="{StaticResource FieldLabel}" />
+                        <!-- Header with Icon -->
+                        <StackLayout Grid.Row="0" 
+                                   Grid.ColumnSpan="2" 
+                                   Orientation="Horizontal" 
+                                   Spacing="12"
+                                   Margin="0,0,0,20">
+                            <Frame BackgroundColor="{StaticResource Primary}"
+                                   CornerRadius="24"
+                                   HeightRequest="48"
+                                   WidthRequest="48"
+                                   HasShadow="False"
+                                   Padding="0">
+                                <Label HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       FontFamily="FontAwesome"
+                                       Text="&#xf206;"
+                                       FontSize="20"
+                                       TextColor="White" />
+                            </Frame>
+                            <VerticalStackLayout VerticalOptions="Center">
+                                <Label Text="자전거 정보"
+                                       FontSize="20"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Gray900}" />
+                                <Label Text="상세 사양 및 정보"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </StackLayout>
+                        
+                        <!-- Frame Number -->
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="0" Margin="0,8">
+                            <StackLayout Orientation="Horizontal" Spacing="8">
+                                <Label FontFamily="FontAwesome"
+                                       Text="&#xf02d;"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Primary}"
+                                       VerticalOptions="Center" />
+                                <Label Text="프레임 번호" 
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray500}"
+                                       VerticalOptions="Center" />
+                            </StackLayout>
                             <Label Text="{Binding Bike.FrameNumber}" 
-                                 Style="{StaticResource FieldValue}" />
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Gray900}"
+                                   Margin="22,4,0,0" />
                         </VerticalStackLayout>
                         
-                        <VerticalStackLayout Grid.Row="1"
-                                          Grid.Column="0">
-                            <Label Text="브랜드" 
-                                 Style="{StaticResource FieldLabel}" />
+                        <!-- Brand -->
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="1" Margin="0,8">
+                            <StackLayout Orientation="Horizontal" Spacing="8">
+                                <Label FontFamily="FontAwesome"
+                                       Text="&#xf02c;"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Primary}"
+                                       VerticalOptions="Center" />
+                                <Label Text="브랜드" 
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray500}"
+                                       VerticalOptions="Center" />
+                            </StackLayout>
                             <Label Text="{Binding Bike.Brand.Name}" 
-                                 Style="{StaticResource FieldValue}" />
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Gray900}"
+                                   Margin="22,4,0,0" />
                         </VerticalStackLayout>
                         
-                        <VerticalStackLayout Grid.Row="1"
-                                          Grid.Column="1">
-                            <Label Text="모델" 
-                                 Style="{StaticResource FieldLabel}" />
+                        <!-- Model -->
+                        <VerticalStackLayout Grid.Row="2" Grid.Column="0" Margin="0,8">
+                            <StackLayout Orientation="Horizontal" Spacing="8">
+                                <Label FontFamily="FontAwesome"
+                                       Text="&#xf1b9;"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Primary}"
+                                       VerticalOptions="Center" />
+                                <Label Text="모델" 
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray500}"
+                                       VerticalOptions="Center" />
+                            </StackLayout>
                             <Label Text="{Binding Bike.Model}" 
-                                 Style="{StaticResource FieldValue}" />
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Gray900}"
+                                   Margin="22,4,0,0" />
                         </VerticalStackLayout>
                         
-                        <VerticalStackLayout Grid.Row="2"
-                                          Grid.Column="0">
-                            <Label Text="제조사" 
-                                 Style="{StaticResource FieldLabel}" />
+                        <!-- Manufacturer -->
+                        <VerticalStackLayout Grid.Row="2" Grid.Column="1" Margin="0,8">
+                            <StackLayout Orientation="Horizontal" Spacing="8">
+                                <Label FontFamily="FontAwesome"
+                                       Text="&#xf275;"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Primary}"
+                                       VerticalOptions="Center" />
+                                <Label Text="제조사" 
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray500}"
+                                       VerticalOptions="Center" />
+                            </StackLayout>
                             <Label Text="{Binding Bike.Manufacturer.Name}" 
-                                 Style="{StaticResource FieldValue}" />
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Gray900}"
+                                   Margin="22,4,0,0" />
                         </VerticalStackLayout>
                         
-                        <VerticalStackLayout Grid.Row="2"
-                                          Grid.Column="1">
-                            <Label Text="자전거 타입" 
-                                 Style="{StaticResource FieldLabel}" />
+                        <!-- Bike Type -->
+                        <VerticalStackLayout Grid.Row="3" Grid.Column="0" Margin="0,8">
+                            <StackLayout Orientation="Horizontal" Spacing="8">
+                                <Label FontFamily="FontAwesome"
+                                       Text="&#xf02c;"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Primary}"
+                                       VerticalOptions="Center" />
+                                <Label Text="자전거 타입" 
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray500}"
+                                       VerticalOptions="Center" />
+                            </StackLayout>
                             <Label Text="{Binding Bike.BikeType.Name}" 
-                                 Style="{StaticResource FieldValue}" />
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Gray900}"
+                                   Margin="22,4,0,0" />
                         </VerticalStackLayout>
                         
-                        <VerticalStackLayout Grid.Row="3"
-                                          Grid.Column="0">
-                            <Label Text="제조연도" 
-                                 Style="{StaticResource FieldLabel}" />
+                        <!-- Manufacture Year -->
+                        <VerticalStackLayout Grid.Row="3" Grid.Column="1" Margin="0,8">
+                            <StackLayout Orientation="Horizontal" Spacing="8">
+                                <Label FontFamily="FontAwesome"
+                                       Text="&#xf073;"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Primary}"
+                                       VerticalOptions="Center" />
+                                <Label Text="제조연도" 
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray500}"
+                                       VerticalOptions="Center" />
+                            </StackLayout>
                             <Label Text="{Binding Bike.ManufactureYear}" 
-                                 Style="{StaticResource FieldValue}" />
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Gray900}"
+                                   Margin="22,4,0,0" />
                         </VerticalStackLayout>
                         
-                        <VerticalStackLayout Grid.Row="3"
-                                          Grid.Column="1">
-                            <Label Text="색상" 
-                                 Style="{StaticResource FieldLabel}" />
+                        <!-- Color -->
+                        <VerticalStackLayout Grid.Row="4" Grid.Column="0" Margin="0,8">
+                            <StackLayout Orientation="Horizontal" Spacing="8">
+                                <Label FontFamily="FontAwesome"
+                                       Text="&#xf53f;"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Primary}"
+                                       VerticalOptions="Center" />
+                                <Label Text="색상" 
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray500}"
+                                       VerticalOptions="Center" />
+                            </StackLayout>
                             <Label Text="{Binding Bike.Color}" 
-                                 Style="{StaticResource FieldValue}" />
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Gray900}"
+                                   Margin="22,4,0,0" />
                         </VerticalStackLayout>
                     </Grid>
                 </Frame>
                 
                 <!-- 현재 소유자 정보 섹션 -->
-                <Label Text="현재 소유자" 
-                     FontSize="18"
-                     FontAttributes="Bold"
-                     Margin="0,10,0,10" />
-                
-                <Frame BorderColor="LightGray"
-                      Margin="0,0,0,20"
-                      Padding="15">
-                    <Grid ColumnDefinitions="*,Auto">
-                        <VerticalStackLayout Grid.Column="0">
-                            <Label>
+                <Frame BackgroundColor="White"
+                       CornerRadius="16"
+                       HasShadow="True"
+                       Padding="24">
+                    <VerticalStackLayout Spacing="16">
+                        <!-- Header -->
+                        <StackLayout Orientation="Horizontal" Spacing="12">
+                            <Frame BackgroundColor="{StaticResource Success}"
+                                   CornerRadius="24"
+                                   HeightRequest="48"
+                                   WidthRequest="48"
+                                   HasShadow="False"
+                                   Padding="0">
+                                <Label HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       FontFamily="FontAwesome"
+                                       Text="&#xf007;"
+                                       FontSize="20"
+                                       TextColor="White" />
+                            </Frame>
+                            <VerticalStackLayout VerticalOptions="Center">
+                                <Label Text="현재 소유자"
+                                       FontSize="20"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Gray900}" />
+                                <Label Text="자전거 소유 정보"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Gray500}" />
+                            </VerticalStackLayout>
+                        </StackLayout>
+                        
+                        <!-- Owner Details -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label FontSize="18"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource Gray900}">
                                 <Label.FormattedText>
                                     <FormattedString>
                                         <Span Text="{Binding Bike.CurrentOwner.FirstName}" />
@@ -138,190 +307,382 @@
                                 </Label.FormattedText>
                             </Label>
                             
-                            <Label Text="{Binding Bike.CurrentOwner.Email}"
-                                 TextColor="Gray"
-                                 FontSize="14" />
+                            <StackLayout Orientation="Horizontal" Spacing="8">
+                                <Label FontFamily="FontAwesome"
+                                       Text="&#xf0e0;"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Gray400}"
+                                       VerticalOptions="Center" />
+                                <Label Text="{Binding Bike.CurrentOwner.Email}"
+                                       TextColor="{StaticResource Gray600}"
+                                       FontSize="16"
+                                       VerticalOptions="Center" />
+                            </StackLayout>
                             
-                            <Label Text="{Binding Bike.RegisteredDate, StringFormat='{0:yyyy년 MM월 dd일부터 소유}'}"
-                                 FontSize="12"
-                                 TextColor="Gray"
-                                 Margin="0,5,0,0" />
+                            <StackLayout Orientation="Horizontal" Spacing="8">
+                                <Label FontFamily="FontAwesome"
+                                       Text="&#xf073;"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Gray400}"
+                                       VerticalOptions="Center" />
+                                <Label Text="{Binding Bike.RegisteredDate, StringFormat='{0:yyyy년 MM월 dd일부터 소유}'}"
+                                       FontSize="14"
+                                       TextColor="{StaticResource Gray500}"
+                                       VerticalOptions="Center" />
+                            </StackLayout>
                         </VerticalStackLayout>
-                        
-                        <Image Grid.Column="1"
-                             Source="user.png"
-                             HeightRequest="40"
-                             WidthRequest="40"
-                             VerticalOptions="Center" />
-                    </Grid>
+                    </VerticalStackLayout>
                 </Frame>
                 
-                <!-- 소유권 이력 섹션 -->
-                <Label Text="소유권 이력" 
-                     FontSize="18"
-                     FontAttributes="Bold"
-                     Margin="0,10,0,10" />
-                
-                <ActivityIndicator IsRunning="{Binding IsHistoryBusy}"
-                                IsVisible="{Binding IsHistoryBusy}"
-                                Margin="0,10" />
-                
-                <CollectionView ItemsSource="{Binding OwnershipHistory}"
-                              HeightRequest="300"
-                              SelectionMode="None">
-                    <CollectionView.EmptyView>
-                        <Label Text="소유권 이력이 없습니다"
-                             HorizontalOptions="Center"
-                             VerticalOptions="Center"
-                             TextColor="Gray" />
-                    </CollectionView.EmptyView>
-                    
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="model:OwnershipRecord">
-                            <Frame Margin="0,5"
-                                 Padding="10"
-                                 BorderColor="LightGray">
-                                <Grid RowDefinitions="Auto,Auto,Auto" 
-                                    ColumnDefinitions="*,Auto">
-                                    <Label Grid.Row="0" 
-                                         Grid.Column="0"
-                                         Text="{Binding TransferDate, StringFormat='{0:yyyy년 MM월 dd일}'}"
-                                         FontAttributes="Bold" />
-                                    
-                                    <VerticalStackLayout Grid.Row="1" 
-                                                       Grid.Column="0"
-                                                       Margin="0,5,0,0">
-                                        <Label>
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span Text="이전 소유자: " />
-                                                    <Span Text="{Binding PreviousOwnerName.FirstName}" />
-                                                    <Span Text=" " />
-                                                    <Span Text="{Binding PreviousOwnerName.LastName}" />
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
+                <!-- 소유권 이력 섹션 (최근 2개만) -->
+                <Frame BackgroundColor="White"
+                       CornerRadius="16"
+                       HasShadow="True"
+                       Padding="24">
+                    <VerticalStackLayout Spacing="16">
+                        <!-- Header with View All Button -->
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackLayout Grid.Column="0" Orientation="Horizontal" Spacing="12">
+                                <Frame BackgroundColor="{StaticResource Info}"
+                                       CornerRadius="24"
+                                       HeightRequest="48"
+                                       WidthRequest="48"
+                                       HasShadow="False"
+                                       Padding="0">
+                                    <Label HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           FontFamily="FontAwesome"
+                                           Text="&#xf362;"
+                                           FontSize="20"
+                                           TextColor="White" />
+                                </Frame>
+                                <VerticalStackLayout VerticalOptions="Center">
+                                    <Label Text="소유권 이력"
+                                           FontSize="20"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource Gray900}" />
+                                    <Label Text="최근 소유권 변경 내역"
+                                           FontSize="14"
+                                           TextColor="{StaticResource Gray500}" />
+                                </VerticalStackLayout>
+                            </StackLayout>
+                            
+                            <!-- View All Button -->
+                            <Button Grid.Column="1"
+                                    Text="전체보기"
+                                    Command="{Binding ViewAllOwnershipHistoryCommand}"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource Primary}"
+                                    FontSize="14"
+                                    FontAttributes="Bold"
+                                    Padding="8"
+                                    VerticalOptions="Center">
+                                <Button.ImageSource>
+                                    <FontImageSource FontFamily="FontAwesome" 
+                                        Glyph="&#xf054;" 
+                                        Size="12" 
+                                        Color="{StaticResource Primary}" />
+                                </Button.ImageSource>
+                            </Button>
+                        </Grid>
+                        
+                        <!-- Loading -->
+                        <ActivityIndicator IsRunning="{Binding IsHistoryBusy}"
+                                         IsVisible="{Binding IsHistoryBusy}"
+                                         Color="{StaticResource Primary}"
+                                         Margin="0,16" />
+                        
+                        <!-- Recent History List (최근 2개) -->
+                        <CollectionView ItemsSource="{Binding RecentOwnershipHistory}"
+                                      SelectionMode="None">
+                            <CollectionView.EmptyView>
+                                <StackLayout Padding="40" Spacing="16">
+                                    <Frame BackgroundColor="{StaticResource Gray200}"
+                                           CornerRadius="30"
+                                           HeightRequest="60"
+                                           WidthRequest="60"
+                                           HasShadow="False"
+                                           HorizontalOptions="Center"
+                                           Padding="0">
+                                        <Label HorizontalOptions="Center"
+                                               VerticalOptions="Center"
+                                               FontFamily="FontAwesome"
+                                               Text="&#xf05a;"
+                                               FontSize="24"
+                                               TextColor="{StaticResource Gray400}" />
+                                    </Frame>
+                                    <Label Text="소유권 이력이 없습니다"
+                                           HorizontalOptions="Center"
+                                           FontSize="16"
+                                           TextColor="{StaticResource Gray500}" />
+                                </StackLayout>
+                            </CollectionView.EmptyView>
+                            
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="model:OwnershipRecord">
+                                    <Frame BackgroundColor="{StaticResource Gray50}"
+                                           BorderColor="{StaticResource Gray200}"
+                                           CornerRadius="12"
+                                           Margin="0,4"
+                                           Padding="16"
+                                           HasShadow="False">
+                                        <Grid RowDefinitions="Auto,Auto,Auto" 
+                                              ColumnDefinitions="Auto,*">
+                                            
+                                            <!-- Transfer Icon -->
+                                            <Frame Grid.Row="0" 
+                                                   Grid.RowSpan="3"
+                                                   Grid.Column="0"
+                                                   BackgroundColor="{StaticResource Warning}"
+                                                   CornerRadius="20"
+                                                   HeightRequest="40"
+                                                   WidthRequest="40"
+                                                   HasShadow="False"
+                                                   Padding="0"
+                                                   VerticalOptions="Center"
+                                                   Margin="0,0,12,0">
+                                                <Label HorizontalOptions="Center"
+                                                       VerticalOptions="Center"
+                                                       FontFamily="FontAwesome"
+                                                       Text="&#xf362;"
+                                                       FontSize="16"
+                                                       TextColor="White" />
+                                            </Frame>
+                                            
+                                            <!-- Date -->
+                                            <Label Grid.Row="0" 
+                                                   Grid.Column="1"
+                                                   Text="{Binding TransferDate, StringFormat='{0:yyyy년 MM월 dd일}'}"
+                                                   FontAttributes="Bold"
+                                                   FontSize="16"
+                                                   TextColor="{StaticResource Gray900}" />
+                                            
+                                            <!-- Transfer Details -->
+                                            <VerticalStackLayout Grid.Row="1" 
+                                                               Grid.Column="1"
+                                                               Spacing="4"
+                                                               Margin="0,8,0,0">
+                                                <Label FontSize="14" TextColor="{StaticResource Gray600}">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="이전 소유자: " />
+                                                            <Span Text="{Binding PreviousOwnerName.FirstName}" FontAttributes="Bold" />
+                                                            <Span Text=" " />
+                                                            <Span Text="{Binding PreviousOwnerName.LastName}" FontAttributes="Bold" />
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                                
+                                                <Label FontSize="14" TextColor="{StaticResource Gray600}">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="새 소유자: " />
+                                                            <Span Text="{Binding NewOwnerName.FirstName}" FontAttributes="Bold" />
+                                                            <Span Text=" " />
+                                                            <Span Text="{Binding NewOwnerName.LastName}" FontAttributes="Bold" />
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                            </VerticalStackLayout>
+                                            
+                                            <!-- Notes -->
+                                            <Label Grid.Row="2" 
+                                                   Grid.Column="1"
+                                                   Text="{Binding Notes}"
+                                                   TextColor="{StaticResource Gray500}"
+                                                   FontSize="12"
+                                                   Margin="0,8,0,0"
+                                                   IsVisible="{Binding Notes, Converter={StaticResource StringToBoolConverter}}" />
+                                        </Grid>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- 유지보수 이력 섹션 (최근 2개만) -->
+                <Frame BackgroundColor="White"
+                       CornerRadius="16"
+                       HasShadow="True"
+                       Padding="24">
+                    <VerticalStackLayout Spacing="16">
+                        <!-- Header with View All Button -->
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackLayout Grid.Column="0" Orientation="Horizontal" Spacing="12">
+                                <Frame BackgroundColor="{StaticResource Warning}"
+                                       CornerRadius="24"
+                                       HeightRequest="48"
+                                       WidthRequest="48"
+                                       HasShadow="False"
+                                       Padding="0">
+                                    <Label HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           FontFamily="FontAwesome"
+                                           Text="&#xf0ad;"
+                                           FontSize="20"
+                                           TextColor="White" />
+                                </Frame>
+                                <VerticalStackLayout VerticalOptions="Center">
+                                    <Label Text="유지보수 이력"
+                                           FontSize="20"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource Gray900}" />
+                                    <Label Text="최근 정비 및 수리 내역"
+                                           FontSize="14"
+                                           TextColor="{StaticResource Gray500}" />
+                                </VerticalStackLayout>
+                            </StackLayout>
+                            
+                            <!-- View All Button -->
+                            <Button Grid.Column="1"
+                                    Text="전체보기"
+                                    Command="{Binding ViewAllMaintenanceHistoryCommand}"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource Primary}"
+                                    FontSize="14"
+                                    FontAttributes="Bold"
+                                    Padding="8"
+                                    VerticalOptions="Center">
+                                <Button.ImageSource>
+                                    <FontImageSource FontFamily="FontAwesome" 
+                                        Glyph="&#xf054;" 
+                                        Size="12" 
+                                        Color="{StaticResource Primary}" />
+                                </Button.ImageSource>
+                            </Button>
+                        </Grid>
+                        
+                        <!-- Loading -->
+                        <ActivityIndicator IsRunning="{Binding IsMaintenanceBusy}"
+                                         IsVisible="{Binding IsMaintenanceBusy}"
+                                         Color="{StaticResource Primary}"
+                                         Margin="0,16" />
+
+                        <!-- Recent Maintenance List (최근 2개) -->
+                        <CollectionView ItemsSource="{Binding RecentMaintenanceHistory}"
+                                      SelectionMode="None">
+                            <CollectionView.EmptyView>
+                                <StackLayout Padding="40" Spacing="16">
+                                    <Frame BackgroundColor="{StaticResource Gray200}"
+                                           CornerRadius="30"
+                                           HeightRequest="60"
+                                           WidthRequest="60"
+                                           HasShadow="False"
+                                           HorizontalOptions="Center"
+                                           Padding="0">
+                                        <Label HorizontalOptions="Center"
+                                               VerticalOptions="Center"
+                                               FontFamily="FontAwesome"
+                                               Text="&#xf05a;"
+                                               FontSize="24"
+                                               TextColor="{StaticResource Gray400}" />
+                                    </Frame>
+                                    <Label Text="유지보수 이력이 없습니다"
+                                           HorizontalOptions="Center"
+                                           FontSize="16"
+                                           TextColor="{StaticResource Gray500}" />
+                                </StackLayout>
+                            </CollectionView.EmptyView>
+
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="model:Maintenance">
+                                    <Frame BackgroundColor="{StaticResource Gray50}"
+                                           BorderColor="{StaticResource Gray200}"
+                                           CornerRadius="12"
+                                           Margin="0,4"
+                                           Padding="16"
+                                           HasShadow="False">
                                         
-                                        <Label>
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span Text="새 소유자: " />
-                                                    <Span Text="{Binding NewOwnerName.FirstName}" />
-                                                    <Span Text=" " />
-                                                    <Span Text="{Binding NewOwnerName.LastName}" />
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
-                                    </VerticalStackLayout>
-                                    
-                                    <Label Grid.Row="2" 
-                                         Grid.Column="0"
-                                         Text="{Binding Notes}"
-                                         TextColor="Gray"
-                                         FontSize="12"
-                                         Margin="0,5,0,0"
-                                         IsVisible="{Binding Notes, Converter={StaticResource StringToBoolConverter}}" />
-                                    
-                                    <Image Grid.Row="0" 
-                                         Grid.RowSpan="3"
-                                         Grid.Column="1"
-                                         Source="transfer.png"
-                                         HeightRequest="30"
-                                         WidthRequest="30"
-                                         VerticalOptions="Center" />
-                                </Grid>
-                            </Frame>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                                        <Grid RowDefinitions="Auto,Auto,Auto" 
+                                              ColumnDefinitions="Auto,*">
+                                            
+                                            <!-- Maintenance Icon -->
+                                            <Frame Grid.Row="0" 
+                                                   Grid.RowSpan="3"
+                                                   Grid.Column="0"
+                                                   BackgroundColor="{StaticResource Warning}"
+                                                   CornerRadius="20"
+                                                   HeightRequest="40"
+                                                   WidthRequest="40"
+                                                   HasShadow="False"
+                                                   Padding="0"
+                                                   VerticalOptions="Center"
+                                                   Margin="0,0,12,0">
+                                                <Label HorizontalOptions="Center"
+                                                       VerticalOptions="Center"
+                                                       FontFamily="FontAwesome"
+                                                       Text="&#xf0ad;"
+                                                       FontSize="16"
+                                                       TextColor="White" />
+                                            </Frame>
+                                            
+                                            <!-- Date -->
+                                            <Label Grid.Row="0" 
+                                                   Grid.Column="1"
+                                                   Text="{Binding MaintenanceDate, StringFormat='{0:yyyy년 MM월 dd일}'}"
+                                                   FontAttributes="Bold"
+                                                   FontSize="16"
+                                                   TextColor="{StaticResource Gray900}" />   
 
-                <!-- 유지보수 이력 섹션 -->
-                <Label Text="유지보수 이력"
-                     FontSize="18"
-                     FontAttributes="Bold"
-                     Margin="0,10,0,10" />
+                                            <!-- Maintenance Details -->
+                                            <VerticalStackLayout Grid.Row="1" 
+                                                               Grid.Column="1"
+                                                               Spacing="4"
+                                                               Margin="0,8,0,0">
+                                                <Label FontSize="14" TextColor="{StaticResource Gray600}">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="정비샵: " />
+                                                            <Span Text="{Binding StoreName}" FontAttributes="Bold" />
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
 
-                <ActivityIndicator IsRunning="{Binding IsMaintenanceBusy}"
-                    IsVisible="{Binding IsMaintenanceBusy}"
-                    Margin="0,10" />
+                                                <Label FontSize="14" TextColor="{StaticResource Gray600}">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="정비 유형: " />
+                                                            <Span Text="{Binding MaintenanceTypeName}" FontAttributes="Bold" />
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                            </VerticalStackLayout>
 
-                <CollectionView ItemsSource="{Binding MaintenancHistory}"
-                    HeightRequest="300"
-                    SelectionMode="None">
-                    <CollectionView.EmptyView>
-                        <Label Text="유지보수 이력이 없습니다"
-                             HorizontalOptions="Center"
-                             VerticalOptions="Center"
-                             TextColor="Gray" />        
-                    </CollectionView.EmptyView>
-
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="model:Maintenance">
-                            <Frame Margin="0,5"
-                                 Padding="10"
-                                 BorderColor="LightGray">
-                                <Grid RowDefinitions="Auto,Auto,Auto" 
-                                    ColumnDefinitions="*,Auto">
-                                    <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer 
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BikeDetailViewModel}}, Path=ViewMaintenanceDetailCommand}"
-                                            CommandParameter="{Binding .}" />
-                                    </Grid.GestureRecognizers>
-                                    
-                                    <Label Grid.Row="0" 
-                                         Grid.Column="0"
-                                         Text="{Binding MaintenanceDate, StringFormat='{0:yyyy년 MM월 dd일}'}"
-                                         FontAttributes="Bold" />   
-
-                                    <VerticalStackLayout Grid.Row="1" 
-                                       Grid.Column="0"
-                                       Margin="0,5,0,0">
-                                        <Label>
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span Text="정비샵: " />
-                                                    <Span Text="{Binding StoreName}" />                                                    
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
-
-                                        <Label>
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span Text="정비 유형: " />
-                                                    <Span Text="{Binding MaintenanceTypeName}" />                                                    
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
-                                    </VerticalStackLayout>
-
-                                    <Label Grid.Row="2" 
-                                         Grid.Column="0"
-                                         Text="{Binding Notes}"
-                                         TextColor="Gray"
-                                         FontSize="12"
-                                         Margin="0,5,0,0"
-                                         IsVisible="{Binding Notes, Converter={StaticResource StringToBoolConverter}}" />
-
-                                    <Image Grid.Row="0" 
-                                         Grid.RowSpan="3"
-                                         Grid.Column="1"
-                                         Source="transfer.png"
-                                         HeightRequest="30"
-                                         WidthRequest="30"
-                                         VerticalOptions="Center" />        
-                                </Grid>
-                            </Frame>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-
+                                            <!-- Notes -->
+                                            <Label Grid.Row="2" 
+                                                   Grid.Column="1"
+                                                   Text="{Binding Notes}"
+                                                   TextColor="{StaticResource Gray500}"
+                                                   FontSize="12"
+                                                   Margin="0,8,0,0"
+                                                   IsVisible="{Binding Notes, Converter={StaticResource StringToBoolConverter}}" />
+                                        </Grid>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Frame>
             </VerticalStackLayout>
         </ScrollView>
         
-        <Button Grid.Row="2"
-              Text="뒤로"
-              Command="{Binding GoBackCommand}"
-              Margin="0,20,0,0" />
+        <!-- Back Button -->
+        <Button Grid.Row="1"
+                Text="뒤로"
+                Command="{Binding GoBackCommand}"
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="White"
+                FontAttributes="Bold"
+                CornerRadius="12"
+                HeightRequest="48"
+                Margin="0,16,0,0">
+            <Button.ImageSource>
+                <FontImageSource FontFamily="FontAwesome" 
+                    Glyph="&#xf060;" 
+                    Size="16" 
+                    Color="White" />
+            </Button.ImageSource>
+        </Button>
     </Grid>
 </ContentPage>

@@ -47,6 +47,8 @@ namespace BikeHistory.Mobile
             Routing.RegisterRoute("bikes/detail", typeof(BikeDetailPage));
             Routing.RegisterRoute("bikes/transfer", typeof(BikeTransferPage));
             Routing.RegisterRoute("bikes/maintenance", typeof(MaintenanceDetailPage));
+            Routing.RegisterRoute("bikes/ownershiphistory", typeof(OwnershipHistoryPage));
+            Routing.RegisterRoute("bikes/maintenancehistory", typeof(MaintenanceHistoryPage));
             Routing.RegisterRoute("login", typeof(LoginPage));
             Routing.RegisterRoute("register", typeof(RegisterPage));
             Routing.RegisterRoute("profile", typeof(ProfilePage));
