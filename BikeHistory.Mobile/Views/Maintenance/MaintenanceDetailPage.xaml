@@ -149,12 +149,12 @@
                                            VerticalOptions="Center" />
                                     <Label Text="정비 일자"
                                            FontSize="14"
-                                           FontAttributes="Bold"
-                                           TextColor="{StaticResource Gray700}"
+                                           TextColor="{StaticResource Gray600}"
                                            VerticalOptions="Center" />
                                 </StackLayout>
                                 <Label Text="{Binding Maintenance.MaintenanceDate, StringFormat='{0:yyyy년 MM월 dd일}'}"
                                        FontSize="16"
+                                       FontAttributes="Bold"
                                        TextColor="{StaticResource Gray900}"
                                        Margin="22,4,0,0" />
                             </VerticalStackLayout>
@@ -169,12 +169,12 @@
                                            VerticalOptions="Center" />
                                     <Label Text="정비 유형"
                                            FontSize="14"
-                                           FontAttributes="Bold"
-                                           TextColor="{StaticResource Gray700}"
+                                           TextColor="{StaticResource Gray600}"
                                            VerticalOptions="Center" />
                                 </StackLayout>
                                 <Label Text="{Binding Maintenance.MaintenanceTypeName}"
                                        FontSize="16"
+                                       FontAttributes="Bold"
                                        TextColor="{StaticResource Gray900}"
                                        Margin="22,4,0,0" />
                             </VerticalStackLayout>
@@ -189,12 +189,12 @@
                                            VerticalOptions="Center" />
                                     <Label Text="정비샵"
                                            FontSize="14"
-                                           FontAttributes="Bold"
-                                           TextColor="{StaticResource Gray700}"
+                                           TextColor="{StaticResource Gray600}"
                                            VerticalOptions="Center" />
                                 </StackLayout>
                                 <Label Text="{Binding Maintenance.StoreName}"
                                        FontSize="16"
+                                       FontAttributes="Bold"
                                        TextColor="{StaticResource Gray900}"
                                        Margin="22,4,0,0" />
                             </VerticalStackLayout>
@@ -209,12 +209,12 @@
                                            VerticalOptions="Center" />
                                     <Label Text="결제 방법"
                                            FontSize="14"
-                                           FontAttributes="Bold"
-                                           TextColor="{StaticResource Gray700}"
+                                           TextColor="{StaticResource Gray600}"
                                            VerticalOptions="Center" />
                                 </StackLayout>
                                 <Label Text="{Binding Maintenance.PaymentMethodName}"
                                        FontSize="16"
+                                       FontAttributes="Bold"
                                        TextColor="{StaticResource Gray900}"
                                        Margin="22,4,0,0" />
                             </VerticalStackLayout>
@@ -229,21 +229,14 @@
                                            VerticalOptions="Center" />
                                     <Label Text="총 금액"
                                            FontSize="14"
-                                           FontAttributes="Bold"
-                                           TextColor="{StaticResource Gray700}"
+                                           TextColor="{StaticResource Gray600}"
                                            VerticalOptions="Center" />
                                 </StackLayout>
-                                <Frame BackgroundColor="{StaticResource Success}"
-                                       CornerRadius="8"
-                                       HasShadow="False"
-                                       Padding="12"
-                                       Margin="22,4,0,0">
-                                    <Label Text="{Binding Maintenance.FormattedTotalAmount}"
-                                           FontSize="18"
-                                           FontAttributes="Bold"
-                                           TextColor="White"
-                                           HorizontalOptions="Center" />
-                                </Frame>
+                                <Label Text="{Binding Maintenance.FormattedTotalAmount}"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Gray900}"
+                                       Margin="22,4,0,0" />
                             </VerticalStackLayout>
 
                             <!-- Notes -->
@@ -257,8 +250,7 @@
                                            VerticalOptions="Center" />
                                     <Label Text="비고"
                                            FontSize="14"
-                                           FontAttributes="Bold"
-                                           TextColor="{StaticResource Gray700}"
+                                           TextColor="{StaticResource Gray600}"
                                            VerticalOptions="Center" />
                                 </StackLayout>
                                 <Frame BackgroundColor="{StaticResource Gray50}"
@@ -269,6 +261,7 @@
                                        Margin="22,4,0,0">
                                     <Label Text="{Binding Maintenance.Notes}"
                                            FontSize="14"
+                                           FontAttributes="Bold"
                                            TextColor="{StaticResource Gray700}"
                                            LineBreakMode="WordWrap" />
                                 </Frame>

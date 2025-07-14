@@ -77,6 +77,20 @@ namespace BikeHistory.Mobile
             }
         }
 
+        private void OnBackButtonTapped(object sender, EventArgs e)
+        {
+            Shell.Current.SendBackButtonPressed();
+        }
+
+        private void OnProfileImageTapped(object sender, EventArgs e)
+        {
+            // Get the current page's BindingContext (BikeListViewModel)
+            if (CurrentPage?.BindingContext is ViewModels.BikeListViewModel viewModel)
+            {
+                viewModel.ShowProfileMenuCommand.Execute(null);
+            }
+        }
+
         protected override void OnAppearing()
         {
             base.OnAppearing();

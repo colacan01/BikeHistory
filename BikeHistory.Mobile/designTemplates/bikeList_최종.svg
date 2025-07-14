@@ -1,0 +1,127 @@
+<svg width="390" height="844" viewBox="0 0 390 844" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <style>
+            /* IBM Plex Sans KR 폰트 적용 */
+            .title { font-family: 'IBM Plex Sans KR', 'system-ui', 'sans-serif'; font-size: 24px; font-weight: 600; fill: #1A1C1E; }
+            .card-title { font-family: 'IBM Plex Sans KR', 'system-ui', 'sans-serif'; font-size: 18px; font-weight: 600; fill: #1A1C1E; }
+            .card-text { font-family: 'IBM Plex Sans KR', 'system-ui', 'sans-serif'; font-size: 14px; fill: #44474F; }
+        </style>
+        <!-- Clipping Path for Cards -->
+        <clipPath id="cardClip">
+            <rect width="358" height="120" rx="16"/>
+        </clipPath>
+        <!-- Clipping Path for Circular Profile Image -->
+        <clipPath id="profileClip">
+            <circle cx="18" cy="18" r="18"/>
+        </clipPath>
+        <!-- Gradient Overlay for Text Readability -->
+        <linearGradient id="text-protection-gradient" x1="0" y1="0.5" x2="1" y2="0.5">
+            <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95"/>
+            <stop offset="45%" stop-color="#FFFFFF" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.2"/>
+        </linearGradient>
+    </defs>
+    
+    <!-- Background -->
+    <rect width="390" height="844" fill="#F0F4FA"/>
+    
+    <!-- Status Bar -->
+    <text x="20" y="32" font-family="sans-serif" font-size="16" font-weight="bold" fill="#1A1C1E">08:31</text>
+    <path d="M350 24 Q 352 22 354 24 L 366 32 L 350 32 Z" fill="#1A1C1E" />
+    <rect x="330" y="24" width="16" height="8" rx="2" stroke="#1A1C1E" stroke-width="1.5"/>
+    
+    <!-- Top App Bar (Modified) -->
+    <rect y="48" width="390" height="64" fill="#F0F4FA"/>
+    <path d="M28 84 L18 84 M22 78 L16 84 L22 90" stroke="#1A1C1E" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="56" y="91" class="title">내 자전거</text>
+    <!-- Profile Image (Replaced from shape to image) -->
+    <g transform="translate(332, 66)" clip-path="url(#profileClip)">
+       <image xlink:href="file://C:/Users/colac/Pictures/20231027_202741.jpg" width="52" height="52"  x="-4" y="-2"/>
+    </g>
+
+    <!-- Card 1: Giant (Road Bike) -->
+    <g transform="translate(16, 128)" clip-path="url(#cardClip)">
+        <rect width="358" height="120" fill="#FFFFFF"/>
+        <image xlink:href="https://www.scott-korea.com/data/item/1740545486/4233028086.jpg" x="140" y="-35" width="260" height="260" opacity="0.6"/>
+        <rect width="358" height="120" fill="url(#text-protection-gradient)"/>
+        <circle cx="40" cy="40" r="24" fill="#D8E2FF"/>
+        <g transform="translate(26, 28) scale(0.8)">
+            <path d="M6 10C8.20914 10 10 8.20914 10 6C10 3.79086 8.20914 2 6 2C3.79086 2 2 3.79086 2 6C2 8.20914 3.79086 10 6 10ZM24 10C26.2091 10 28 8.20914 28 6C28 3.79086 26.2091 2 24 2C21.7909 2 20 3.79086 20 6C20 8.20914 21.7909 10 24 10Z" stroke="#005AC1" stroke-width="2"/>
+            <path d="M10 6H20" stroke="#005AC1" stroke-width="2"/>
+            <path d="M7 6L13 18H17L23 6" stroke="#005AC1" stroke-width="2"/>
+            <path d="M15 11H20" stroke="#005AC1" stroke-width="2"/>
+        </g>
+        <text x="88" y="32" class="card-title">Giant 프로펠</text>
+	<!-- More Options Icon -->
+        <g class="menu-icon">
+            <circle cx="334" cy="22" r="2" fill="#44474F"/>
+            <circle cx="334" cy="28" r="2" fill="#44474F"/>
+            <circle cx="334" cy="34" r="2" fill="#44474F"/>
+        </g>
+        <text x="106" y="60" class="card-text">12345 • Giant</text>
+        <text x="106" y="84" class="card-text">Road Bike</text>
+        <text x="106" y="108" class="card-text" fill="#777">2025년 05월 26일 등록</text>
+        <path d="M90 54h10v6h-10z M90 54v-2h10v2 M92 56h6" stroke="#44474F" stroke-width="1"/>
+        <path d="M90 78 l5 5 l-5 5 Z M90 78 h 10" stroke="#44474F" stroke-width="1.5" fill="none"/>
+        <rect x="89" y="99" width="12" height="12" rx="2" stroke="#777" stroke-width="1.5" fill="none"/>
+    </g>
+
+    <!-- Card 2: Cannondale (Mountain Bike) -->
+    <g transform="translate(16, 264)" clip-path="url(#cardClip)">
+        <rect width="358" height="120" fill="#FFFFFF"/>
+        <image xlink:href="https://www.scott-korea.com/data/item/1740546302/4231328085.jpg" x="150" y="-20" width="240" height="240" opacity="0.5"/>
+        <rect width="358" height="120" fill="url(#text-protection-gradient)"/>
+        <circle cx="40" cy="40" r="24" fill="#D8E2FF"/>
+        <g transform="translate(26, 28) scale(0.8)">
+            <path d="M6 10C8.20914 10 10 8.20914 10 6C10 3.79086 8.20914 2 6 2C3.79086 2 2 3.79086 2 6C2 8.20914 3.79086 10 6 10ZM24 10C26.2091 10 28 8.20914 28 6C28 3.79086 26.2091 2 24 2C21.7909 2 20 3.79086 20 6C20 8.20914 21.7909 10 24 10Z" stroke="#005AC1" stroke-width="2"/>
+            <path d="M10 6H20" stroke="#005AC1" stroke-width="2"/>
+            <path d="M7 6L13 18H17L23 6" stroke="#005AC1" stroke-width="2"/>
+            <path d="M15 11H20" stroke="#005AC1" stroke-width="2"/>
+        </g>
+        <text x="88" y="32" class="card-title">Cannondale 스케펠</text>
+	<!-- More Options Icon -->
+        <g class="menu-icon">
+            <circle cx="334" cy="22" r="2" fill="#44474F"/>
+            <circle cx="334" cy="28" r="2" fill="#44474F"/>
+            <circle cx="334" cy="34" r="2" fill="#44474F"/>
+        </g>
+        <text x="106" y="60" class="card-text">991223 • Cannondale</text>
+        <text x="106" y="84" class="card-text">Mountain Bike</text>
+        <text x="106" y="108" class="card-text" fill="#777">2025년 05월 28일 등록</text>
+        <path d="M90 54h10v6h-10z M90 54v-2h10v2 M92 56h6" stroke="#44474F" stroke-width="1"/>
+        <path d="M90 78 l5 5 l-5 5 Z M90 78 h 10" stroke="#44474F" stroke-width="1.5" fill="none"/>
+        <rect x="89" y="99" width="12" height="12" rx="2" stroke="#777" stroke-width="1.5" fill="none"/>
+    </g>
+    
+    <!-- Card 3: Specialized (Electric Bike) -->
+    <g transform="translate(16, 400)" clip-path="url(#cardClip)">
+        <rect width="358" height="120" fill="#FFFFFF"/>
+        <image xlink:href="https://www.scott-korea.com/data/item/1693552534/420864.jpg" x="150" y="-15" width="240" height="240" opacity="0.6"/>
+        <rect width="358" height="120" fill="url(#text-protection-gradient)"/>
+        <circle cx="40" cy="40" r="24" fill="#D8E2FF"/>
+        <g transform="translate(26, 28) scale(0.8)">
+            <path d="M6 10C8.20914 10 10 8.20914 10 6C10 3.79086 8.20914 2 6 2C3.79086 2 2 3.79086 2 6C2 8.20914 3.79086 10 6 10ZM24 10C26.2091 10 28 8.20914 28 6C28 3.79086 26.2091 2 24 2C21.7909 2 20 3.79086 20 6C20 8.20914 21.7909 10 24 10Z" stroke="#005AC1" stroke-width="2"/>
+            <path d="M10 6H20" stroke="#005AC1" stroke-width="2"/>
+            <path d="M7 6L13 18H17L23 6" stroke="#005AC1" stroke-width="2"/>
+            <path d="M15 11H20" stroke="#005AC1" stroke-width="2"/>
+        </g>
+        <text x="88" y="32" class="card-title">Specialized test1234</text>
+	<!-- More Options Icon -->
+        <g class="menu-icon">
+            <circle cx="334" cy="22" r="2" fill="#44474F"/>
+            <circle cx="334" cy="28" r="2" fill="#44474F"/>
+            <circle cx="334" cy="34" r="2" fill="#44474F"/>
+        </g>
+        <text x="106" y="60" class="card-text">test123456789 • Specialized</text>
+        <text x="106" y="84" class="card-text">Electric Bike</text>
+        <text x="106" y="108" class="card-text" fill="#777">2025년 06월 01일 등록</text>
+        <path d="M90 54h10v6h-10z M90 54v-2h10v2 M92 56h6" stroke="#44474F" stroke-width="1"/>
+        <path d="M90 78 l5 5 l-5 5 Z M90 78 h 10" stroke="#44474F" stroke-width="1.5" fill="none"/>
+        <rect x="89" y="99" width="12" height="12" rx="2" stroke="#777" stroke-width="1.5" fill="none"/>
+    </g>
+    
+    <!-- Floating Action Button (FAB) -->
+    <rect x="310" y="764" width="64" height="64" rx="20" fill="#D8E2FF"/>
+    <path d="M342 786 L342 806 M332 796 L352 796" stroke="#001A41" stroke-width="3"/>
+
+</svg>

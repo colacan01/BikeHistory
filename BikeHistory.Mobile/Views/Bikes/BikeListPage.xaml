@@ -6,33 +6,246 @@
              xmlns:model="clr-namespace:BikeHistory.Mobile.Models"
              x:DataType="viewmodel:BikeListViewModel"
              Title="내 자전거 목록"
-             BackgroundColor="{StaticResource Gray100}">
+             BackgroundColor="{StaticResource BackgroundLight}">
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="추가" Command="{Binding AddNewBikeCommand}">
-            <ToolbarItem.IconImageSource>
-                <FontImageSource FontFamily="FontAwesome" 
-                    Glyph="&#xf067;" 
-                    Size="18" 
-                    Color="{StaticResource Primary}" />
-            </ToolbarItem.IconImageSource>
-        </ToolbarItem>
-        <ToolbarItem Text="로그아웃" Command="{Binding LogoutCommand}">
-            <ToolbarItem.IconImageSource>
-                <FontImageSource FontFamily="FontAwesome" 
-                    Glyph="&#xf2f5;" 
-                    Size="18" 
-                    Color="{StaticResource Primary}" />
-            </ToolbarItem.IconImageSource>
-        </ToolbarItem>
-    </ContentPage.ToolbarItems>
+    <!-- Remove Toolbar Items as per requirements -->
 
     <Grid RowDefinitions="*,Auto" 
-          Padding="16">
+          Padding="0">
         
+        <!-- Profile Menu Overlay -->
+        <Frame Grid.Row="0"
+               Grid.RowSpan="2"
+               IsVisible="{Binding IsProfileMenuVisible}"
+               BackgroundColor="Transparent"
+               BorderColor="Transparent"
+               HasShadow="False"
+               Padding="0"
+               ZIndex="1000">
+            <Frame.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding HideMenusCommand}" />
+            </Frame.GestureRecognizers>
+            
+            <!-- Profile Menu -->
+            <Frame BackgroundColor="White"
+                   CornerRadius="12"
+                   HasShadow="True"
+                   Padding="0"
+                   WidthRequest="160"
+                   HorizontalOptions="End"
+                   VerticalOptions="Start"
+                   Margin="16,0,16,0">
+                
+                <StackLayout Spacing="0">
+                    <!-- Profile Menu Item -->
+                    <Grid Padding="16,12" BackgroundColor="Transparent">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding NavigateToProfileCommand}" />
+                        </Grid.GestureRecognizers>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="24" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Profile Icon -->
+                        <Ellipse Grid.Column="0"
+                                 Stroke="{StaticResource TextSecondary}"
+                                 StrokeThickness="1.5"
+                                 WidthRequest="16"
+                                 HeightRequest="16"
+                                 VerticalOptions="Center" />
+                        <Path Grid.Column="0"
+                              Data="M8 12 C 8 10, 12 10, 12 12 Z"
+                              Stroke="{StaticResource TextSecondary}"
+                              StrokeThickness="1.5"
+                              VerticalOptions="Center"
+                              HorizontalOptions="Center" />
+                        
+                        <Label Grid.Column="1"
+                               Text="프로파일"
+                               FontSize="14"
+                               TextColor="{StaticResource TextPrimary}"
+                               VerticalOptions="Center"
+                               Margin="8,0,0,0" />
+                    </Grid>
+                    
+                    <!-- Logout Menu Item -->
+                    <Grid Padding="16,12" BackgroundColor="Transparent">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding LogoutCommand}" />
+                        </Grid.GestureRecognizers>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="24" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Logout Icon -->
+                        <Label Grid.Column="0"
+                               FontFamily="FontAwesome"
+                               Text="&#xf2f5;"
+                               FontSize="16"
+                               TextColor="{StaticResource TextSecondary}"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center" />
+                        
+                        <Label Grid.Column="1"
+                               Text="로그아웃"
+                               FontSize="14"
+                               TextColor="{StaticResource TextPrimary}"
+                               VerticalOptions="Center"
+                               Margin="8,0,0,0" />
+                    </Grid>
+                </StackLayout>
+            </Frame>
+        </Frame>
+
+        <!-- Bike Menu Bottom Sheet -->
+        <Grid Grid.Row="0"
+              Grid.RowSpan="2"
+              x:Name="BikeMenuBottomSheet"
+              IsVisible="{Binding IsBikeMenuVisible}"
+              BackgroundColor="{StaticResource ScrimTrans}"
+              ZIndex="999">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding HideMenusCommand}" />
+            </Grid.GestureRecognizers>
+            
+            <!-- Bottom Sheet -->
+            <Frame BackgroundColor="{StaticResource MenuBackground}"
+                   BorderColor="{StaticResource MenuBackground}"
+                   CornerRadius="0"
+                   HasShadow="True"
+                   Padding="0"
+                   VerticalOptions="End"
+                   HorizontalOptions="FillAndExpand"                   
+                   Margin="0">
+                
+                <StackLayout Spacing="0">
+                    <!-- Drag Handle -->
+                    <BoxView BackgroundColor="{StaticResource MenuSeparator}"
+                             CornerRadius="2.5"
+                             WidthRequest="40"
+                             HeightRequest="5"
+                             HorizontalOptions="Center"
+                             Margin="0,12,0,24" />
+                    
+                    <!-- Menu Items -->
+                    <StackLayout Spacing="0" Padding="32,0">
+                        <!-- QR Code -->
+                        <Grid Padding="0,12" BackgroundColor="Transparent">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding GenerateQRCodeCommand}" />
+                            </Grid.GestureRecognizers>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="24" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <Label Grid.Column="0"
+                                   FontFamily="FontAwesome"
+                                   Text="&#xf029;"
+                                   FontSize="16"
+                                   TextColor="{StaticResource TextOnDark}"
+                                   VerticalOptions="Center" />
+                            
+                            <Label Grid.Column="1"
+                                   Text="QR 코드 생성"
+                                   FontSize="14"
+                                   TextColor="{StaticResource TextOnDark}"
+                                   VerticalOptions="Center"
+                                   Margin="16,0,0,0" />
+                        </Grid>
+                        
+                        <!-- Edit Info -->
+                        <Grid Padding="0,12" BackgroundColor="Transparent" Margin="0,12,0,0">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding EditBikeInfoCommand}" />
+                            </Grid.GestureRecognizers>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="24" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <Label Grid.Column="0"
+                                   FontFamily="FontAwesome"
+                                   Text="&#xf044;"
+                                   FontSize="16"
+                                   TextColor="{StaticResource TextOnDark}"
+                                   VerticalOptions="Center" />
+                            
+                            <Label Grid.Column="1"
+                                   Text="정보수정"
+                                   FontSize="14"
+                                   TextColor="{StaticResource TextOnDark}"
+                                   VerticalOptions="Center"
+                                   Margin="16,0,0,0" />
+                        </Grid>
+                        
+                        <!-- Maintenance History -->
+                        <Grid Padding="0,12" BackgroundColor="Transparent" Margin="0,12,0,0">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding AddMaintenanceRecordCommand}" />
+                            </Grid.GestureRecognizers>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="24" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <Label Grid.Column="0"
+                                   FontFamily="FontAwesome"
+                                   Text="&#xf0ad;"
+                                   FontSize="16"
+                                   TextColor="{StaticResource TextOnDark}"
+                                   VerticalOptions="Center" />
+                            
+                            <Label Grid.Column="1"
+                                   Text="정비이력 입력"
+                                   FontSize="14"
+                                   TextColor="{StaticResource TextOnDark}"
+                                   VerticalOptions="Center"
+                                   Margin="16,0,0,0" />
+                        </Grid>
+                        
+                        <!-- Separator -->
+                        <BoxView BackgroundColor="{StaticResource MenuSeparator}"
+                                 HeightRequest="1"
+                                 HorizontalOptions="FillAndExpand"
+                                 Margin="0,12,0,0" />
+                        
+                        <!-- Transfer Ownership -->
+                        <Grid Padding="0,12" BackgroundColor="Transparent" Margin="0,12,0,20">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding TransferOwnershipCommand}" />
+                            </Grid.GestureRecognizers>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="24" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <Label Grid.Column="0"
+                                   FontFamily="FontAwesome"
+                                   Text="&#xf0ec;"
+                                   FontSize="16"
+                                   TextColor="{StaticResource TextOnDark}"
+                                   VerticalOptions="Center" />
+                            
+                            <Label Grid.Column="1"
+                                   Text="소유권 이전"
+                                   FontSize="14"
+                                   TextColor="{StaticResource TextOnDark}"
+                                   VerticalOptions="Center"
+                                   Margin="16,0,0,0" />
+                        </Grid>
+                    </StackLayout>
+                </StackLayout>
+            </Frame>
+        </Grid>
+
+        <!-- Main Content -->
         <RefreshView Grid.Row="0"
                      IsRefreshing="{Binding IsRefreshing}"
-                     Command="{Binding RefreshCommand}">
+                     Command="{Binding RefreshCommand}"
+                     Margin="16,0">
             
             <CollectionView ItemsSource="{Binding Bikes}"
                           SelectionMode="None"
@@ -101,9 +314,9 @@
                                 </SwipeItems>
                             </SwipeView.RightItems>
                             
-                            <!-- Material Design Card -->
-                            <Frame BackgroundColor="White"
-                                   CornerRadius="12"
+                            <!-- Enhanced Material Design Card -->
+                            <Frame BackgroundColor="{StaticResource CardBackground}"
+                                   CornerRadius="16"
                                    HasShadow="True"
                                    Padding="0"
                                    Margin="0">
@@ -114,12 +327,12 @@
                                 </Frame.GestureRecognizers>
                                 
                                 <Grid ColumnDefinitions="Auto,*,Auto" 
-                                      RowDefinitions="*"
+                                      RowDefinitions="120"
                                       Padding="20">
                                     
                                     <!-- Bike Type Icon -->
                                     <Frame Grid.Column="0"
-                                           BackgroundColor="{StaticResource Primary}"
+                                           BackgroundColor="{StaticResource PrimaryLight}"
                                            CornerRadius="24"
                                            HeightRequest="48"
                                            WidthRequest="48"
@@ -132,17 +345,16 @@
                                                FontFamily="FontAwesome"
                                                Text="&#xf206;"
                                                FontSize="20"
-                                               TextColor="White" />
+                                               TextColor="{StaticResource Primary}" />
                                     </Frame>
                                     
                                     <!-- Bike Details -->
-                                    <VerticalStackLayout Grid.Column="1"
-                                                       Spacing="4">
+                                    <VerticalStackLayout Grid.Column="1" Spacing="4">
                                         <!-- Manufacturer and Model -->
                                         <Label FontSize="18" 
                                                FontAttributes="Bold"
                                                LineBreakMode="TailTruncation"
-                                               TextColor="{StaticResource Gray900}">
+                                               TextColor="{StaticResource TextPrimary}">
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="{Binding Manufacturer.Name}" />
@@ -157,10 +369,10 @@
                                             <Label FontFamily="FontAwesome"
                                                    Text="&#xf02d;"
                                                    FontSize="12"
-                                                   TextColor="{StaticResource Gray500}"
+                                                   TextColor="{StaticResource TextSecondary}"
                                                    VerticalOptions="Center" />
                                             <Label FontSize="14"
-                                                   TextColor="{StaticResource Gray600}"
+                                                   TextColor="{StaticResource TextSecondary}"
                                                    VerticalOptions="Center"
                                                    LineBreakMode="TailTruncation">
                                                 <Label.FormattedText>
@@ -178,11 +390,11 @@
                                             <Label FontFamily="FontAwesome"
                                                    Text="&#xf02c;"
                                                    FontSize="12"
-                                                   TextColor="{StaticResource Gray500}"
+                                                   TextColor="{StaticResource TextSecondary}"
                                                    VerticalOptions="Center" />
                                             <Label Text="{Binding BikeType.Name}"
                                                    FontSize="14"
-                                                   TextColor="{StaticResource Gray600}"
+                                                   TextColor="{StaticResource TextSecondary}"
                                                    VerticalOptions="Center" />
                                         </StackLayout>
                                         
@@ -191,23 +403,36 @@
                                             <Label FontFamily="FontAwesome"
                                                    Text="&#xf073;"
                                                    FontSize="12"
-                                                   TextColor="{StaticResource Gray400}"
+                                                   TextColor="{StaticResource TextTertiary}"
                                                    VerticalOptions="Center" />
                                             <Label Text="{Binding RegisteredDate, StringFormat='{0:yyyy년 MM월 dd일 등록}'}"
                                                    FontSize="12"
-                                                   TextColor="{StaticResource Gray400}"
+                                                   TextColor="{StaticResource TextTertiary}"
                                                    VerticalOptions="Center" />
                                         </StackLayout>
                                     </VerticalStackLayout>
                                     
-                                    <!-- Action Arrow -->
-                                    <Label Grid.Column="2"
-                                           FontFamily="FontAwesome"
-                                           Text="&#xf054;"
-                                           FontSize="16"
-                                           TextColor="{StaticResource Gray400}"
-                                           VerticalOptions="Center"
-                                           HorizontalOptions="Center" />
+                                    <!-- More Options Menu Button -->
+                                    <StackLayout Grid.Column="2"
+                                               VerticalOptions="Start"
+                                               HorizontalOptions="Center"
+                                               Spacing="2"
+                                               Padding="8">
+                                        <StackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer 
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BikeListViewModel}}, Path=ShowBikeMenuCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </StackLayout.GestureRecognizers>
+                                        <Ellipse Fill="{StaticResource TextSecondary}"
+                                                 WidthRequest="4"
+                                                 HeightRequest="4" />
+                                        <Ellipse Fill="{StaticResource TextSecondary}"
+                                                 WidthRequest="4"
+                                                 HeightRequest="4" />
+                                        <Ellipse Fill="{StaticResource TextSecondary}"
+                                                 WidthRequest="4"
+                                                 HeightRequest="4" />
+                                    </StackLayout>
                                 </Grid>
                             </Frame>
                         </SwipeView>
@@ -249,9 +474,9 @@
             </StackLayout>
         </Frame>
         
-        <!-- Floating Action Button -->
+        <!-- Enhanced Floating Action Button -->
         <Frame Grid.Row="1"
-               BackgroundColor="{StaticResource Primary}"
+               BackgroundColor="{StaticResource PrimaryLight}"
                CornerRadius="28"
                HeightRequest="56"
                WidthRequest="56"
@@ -259,7 +484,7 @@
                Padding="0"
                HorizontalOptions="End"
                VerticalOptions="End"
-               Margin="0,16,0,0">
+               Margin="16">
             <Frame.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding AddNewBikeCommand}" />
             </Frame.GestureRecognizers>
@@ -268,7 +493,7 @@
                    FontFamily="FontAwesome"
                    Text="&#xf067;"
                    FontSize="24"
-                   TextColor="White" />
+                   TextColor="{StaticResource PrimaryDark}" />
         </Frame>
     </Grid>
 </ContentPage>

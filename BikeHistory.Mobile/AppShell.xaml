@@ -12,68 +12,90 @@
     <Shell.Resources>
         <ResourceDictionary>
             <Style x:Key="BaseStyle" TargetType="Element">
-                <Setter Property="Shell.BackgroundColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource Gray950}}" />
-                <Setter Property="Shell.ForegroundColor" Value="{OnPlatform WinUI={StaticResource Primary}, Default={StaticResource White}}" />
-                <Setter Property="Shell.TitleColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
-                <Setter Property="Shell.DisabledColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray950}}" />
-                <Setter Property="Shell.UnselectedColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray950}}" />
+                <Setter Property="Shell.BackgroundColor" Value="{StaticResource BackgroundLight}" />
+                <Setter Property="Shell.ForegroundColor" Value="{StaticResource TextPrimary}" />
+                <Setter Property="Shell.TitleColor" Value="{StaticResource TextPrimary}" />
+                <Setter Property="Shell.DisabledColor" Value="{StaticResource Gray400}" />
+                <Setter Property="Shell.UnselectedColor" Value="{StaticResource Gray500}" />
             </Style>
             <Style TargetType="ShellContent" BasedOn="{StaticResource BaseStyle}" />
         </ResourceDictionary>
     </Shell.Resources>
 
     <Shell.TitleView>
-        <Grid ColumnDefinitions="Auto,*" VerticalOptions="Center" Margin="0,5,0,5">
-            <Image Grid.Column="0" 
-               Source="default_profile.jpg" 
-               HeightRequest="40" 
-               WidthRequest="40"
-               Aspect="AspectFill" 
-               VerticalOptions="Center"
-               HorizontalOptions="Start"
-               Margin="10,0">
-                <Image.Clip>
-                    <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20" />
-                </Image.Clip>
-            </Image>
+        <Grid ColumnDefinitions="Auto,*,Auto" 
+              VerticalOptions="Center" 
+              Padding="16,8" 
+              BackgroundColor="{StaticResource BackgroundLight}">
+            
+            <!-- Back Button (only visible when not on main page) -->
+            <Label Grid.Column="0"
+                   FontFamily="FontAwesome"
+                   Text="&#xf060;"
+                   FontSize="18"
+                   TextColor="{StaticResource TextPrimary}"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start"
+                   IsVisible="False"
+                   x:Name="BackButton"
+                   Margin="0,0,16,0">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBackButtonTapped" />
+                </Label.GestureRecognizers>
+            </Label>
+            
+            <!-- Page Title -->
             <Label Grid.Column="1" 
-               x:Name="UserFullName"
-               Text="{Binding FullName, Source={RelativeSource AncestorType={x:Type local:AppShell}}}"
-               FontAttributes="Bold"
-               FontSize="16"
-               VerticalOptions="Center"
-               HorizontalOptions="Start" />
+                   Text="내 자전거"
+                   FontFamily="IBM Plex Sans KR"
+                   FontSize="24" 
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource TextPrimary}"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start" />
+            
+            <!-- Profile Image Button -->
+            <Frame Grid.Column="2"
+                   BackgroundColor="Transparent"
+                   BorderColor="Transparent"
+                   HeightRequest="36"
+                   WidthRequest="36"
+                   CornerRadius="18"
+                   Padding="0"
+                   HasShadow="False"
+                   VerticalOptions="Center"
+                   HorizontalOptions="End">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnProfileImageTapped" />
+                </Frame.GestureRecognizers>
+                <Image Source="default_profile.jpg" 
+                       Aspect="AspectFill"
+                       VerticalOptions="FillAndExpand"
+                       HorizontalOptions="FillAndExpand">
+                    <Image.Clip>
+                        <EllipseGeometry Center="18,18" RadiusX="18" RadiusY="18" />
+                    </Image.Clip>
+                </Image>
+            </Frame>
         </Grid>
     </Shell.TitleView>
     
     <ShellContent
-    Title="로그인"
-    ContentTemplate="{DataTemplate auth:LoginPage}"
-    Route="login" />
+        Title="로그인"
+        ContentTemplate="{DataTemplate auth:LoginPage}"
+        Route="login" />
     
-    <TabBar>
-        <ShellContent
-            Title="자전거"
-            ContentTemplate="{DataTemplate bikes:BikeListPage}"
-            Route="bikes" >
-            <ShellContent.Icon>
-                <FontImageSource FontFamily="FontAwesome" 
-                    Glyph="&#xf206;" 
-                    Size="16" 
-                    Color="{StaticResource Primary}" />
-            </ShellContent.Icon>
-        </ShellContent>
-        <ShellContent
-            Title="프로필"
-            ContentTemplate="{DataTemplate auth:ProfilePage}"
-            Route="profile" >
-            <ShellContent.Icon>
-                <FontImageSource FontFamily="FontAwesome" 
-                    Glyph="&#xf007;" 
-                    Size="16" 
-                    Color="{StaticResource Primary}" />     
-            </ShellContent.Icon>
-        </ShellContent>
-    </TabBar>
+    <!-- Main Content without TabBar -->
+    <ShellContent
+        Title="자전거"
+        ContentTemplate="{DataTemplate bikes:BikeListPage}"
+        Route="bikes">
+        <ShellContent.Icon>
+            <FontImageSource FontFamily="FontAwesome" 
+                Glyph="&#xf206;" 
+                Size="16" 
+                Color="{StaticResource Primary}" />
+        </ShellContent.Icon>
+    </ShellContent>
 
 </Shell>

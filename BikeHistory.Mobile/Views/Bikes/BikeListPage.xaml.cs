@@ -16,6 +16,11 @@ namespace BikeHistory.Mobile.Views.Bikes
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+            
+            // Set the bottom sheet container after the page is loaded
+            await Task.Delay(100); // Ensure layout is complete
+            _viewModel.SetBottomSheetContainer(BikeMenuBottomSheet);
+            
             await _viewModel.OnAppearing();
         }
     }
