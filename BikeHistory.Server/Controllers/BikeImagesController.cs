@@ -3,11 +3,11 @@ using BikeHistory.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Net;
 using System.Security.Claims;
 using System.Text.Json;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats.Jpeg;
 
 namespace BikeHistory.Server.Controllers
 {
@@ -460,19 +460,22 @@ namespace BikeHistory.Server.Controllers
         {
             try
             {
-                using var originalImage = Image.FromFile(filePath);
+                using var image = await Image.LoadAsync(filePath);
                 
                 // 이미지 크기가 너무 크면 리사이즈 (최대 1920x1920)
-                if (originalImage.Width > 1920 || originalImage.Height > 1920)
+                if (image.Width > 1920 || image.Height > 1920)
                 {
-                    using var resizedImage = ResizeImage(originalImage, 1920, 1920);
-                    resizedImage.Save(filePath, ImageFormat.Jpeg);
+                    var size = ResizeKeepAspectRatio(image.Width, image.Height, 1920, 1920);
+                    image.Mutate(x => x.Resize(size.Width, size.Height));
                 }
-                else
+
+                // JPG 형식으로 저장 (고품질)
+                var encoder = new JpegEncoder
                 {
-                    // 크기는 적절하지만 JPG로 변환 (품질 최적화)
-                    originalImage.Save(filePath, ImageFormat.Jpeg);
-                }
+                    Quality = 85
+                };
+                
+                await image.SaveAsync(filePath, encoder);
             }
             catch (Exception ex)
             {
@@ -483,33 +486,37 @@ namespace BikeHistory.Server.Controllers
 
         private static async Task GenerateThumbnailAsync(string originalPath, string thumbnailPath, int width, int height)
         {
-            await Task.Run(() =>
+            try
             {
-                using var originalImage = Image.FromFile(originalPath);
-                using var thumbnail = ResizeImage(originalImage, width, height);
-                thumbnail.Save(thumbnailPath, ImageFormat.Jpeg);
-            });
+                using var image = await Image.LoadAsync(originalPath);
+                var size = ResizeKeepAspectRatio(image.Width, image.Height, width, height);
+                
+                image.Mutate(x => x.Resize(size.Width, size.Height));
+                
+                var encoder = new JpegEncoder
+                {
+                    Quality = 80
+                };
+                
+                await image.SaveAsync(thumbnailPath, encoder);
+            }
+            catch (Exception ex)
+            {
+                // 썸네일 생성 실패 시 로그만 기록하고 예외는 다시 던져서 상위에서 처리
+                throw new InvalidOperationException($"썸네일 생성 실패: {originalPath}", ex);
+            }
         }
 
-        private static Image ResizeImage(Image originalImage, int maxWidth, int maxHeight)
+        private static (int Width, int Height) ResizeKeepAspectRatio(int originalWidth, int originalHeight, int maxWidth, int maxHeight)
         {
-            var ratioX = (double)maxWidth / originalImage.Width;
-            var ratioY = (double)maxHeight / originalImage.Height;
+            var ratioX = (double)maxWidth / originalWidth;
+            var ratioY = (double)maxHeight / originalHeight;
             var ratio = Math.Min(ratioX, ratioY);
 
-            var newWidth = (int)(originalImage.Width * ratio);
-            var newHeight = (int)(originalImage.Height * ratio);
+            var newWidth = (int)(originalWidth * ratio);
+            var newHeight = (int)(originalHeight * ratio);
 
-            var newImage = new Bitmap(newWidth, newHeight);
-            using (var graphics = Graphics.FromImage(newImage))
-            {
-                graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-                graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-                graphics.DrawImage(originalImage, 0, 0, newWidth, newHeight);
-            }
-
-            return newImage;
+            return (newWidth, newHeight);
         }
     }
 }

@@ -3,9 +3,10 @@ using BikeHistory.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Security.Claims;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats.Jpeg;
 
 namespace BikeHistory.Server.Controllers
 {
@@ -377,63 +378,67 @@ namespace BikeHistory.Server.Controllers
             return (true, string.Empty);
         }
 
-        private Task OptimizeImageAsync(string filePath)
+        private async Task OptimizeImageAsync(string filePath)
         {
-            return Task.Run(() =>
+            try
             {
-                try
+                using var image = await Image.LoadAsync(filePath);
+                
+                // 이미지 크기가 너무 크면 리사이즈 (최대 800x800)
+                if (image.Width > 800 || image.Height > 800)
                 {
-                    using var originalImage = Image.FromFile(filePath);
-                    
-                    // 이미지 크기가 너무 크면 리사이즈 (최대 800x800)
-                    if (originalImage.Width > 800 || originalImage.Height > 800)
-                    {
-                        using var resizedImage = ResizeImage(originalImage, 800, 800);
-                        resizedImage.Save(filePath, ImageFormat.Jpeg);
-                    }
-                    else
-                    {
-                        // 크기는 적절하지만 JPG로 변환 (품질 최적화)
-                        originalImage.Save(filePath, ImageFormat.Jpeg);
-                    }
+                    var size = ResizeKeepAspectRatio(image.Width, image.Height, 800, 800);
+                    image.Mutate(x => x.Resize(size.Width, size.Height));
                 }
-                catch (Exception ex)
+
+                // JPG 형식으로 저장 (고품질)
+                var encoder = new JpegEncoder
                 {
-                    _logger.LogWarning(ex, "이미지 최적화 실패: {FilePath}", filePath);
-                    // 최적화 실패해도 원본 파일은 유지
-                }
-            });
+                    Quality = 85
+                };
+                
+                await image.SaveAsync(filePath, encoder);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "이미지 최적화 실패: {FilePath}", filePath);
+                // 최적화 실패해도 원본 파일은 유지
+            }
         }
 
-        private static Task GenerateThumbnailAsync(string originalPath, string thumbnailPath, int width, int height)
+        private static async Task GenerateThumbnailAsync(string originalPath, string thumbnailPath, int width, int height)
         {
-            return Task.Run(() =>
+            try
             {
-                using var originalImage = Image.FromFile(originalPath);
-                using var thumbnail = ResizeImage(originalImage, width, height);
-                thumbnail.Save(thumbnailPath, ImageFormat.Jpeg);
-            });
+                using var image = await Image.LoadAsync(originalPath);
+                var size = ResizeKeepAspectRatio(image.Width, image.Height, width, height);
+                
+                image.Mutate(x => x.Resize(size.Width, size.Height));
+                
+                var encoder = new JpegEncoder
+                {
+                    Quality = 80
+                };
+                
+                await image.SaveAsync(thumbnailPath, encoder);
+            }
+            catch (Exception ex)
+            {
+                // 썸네일 생성 실패 시 로그만 기록하고 예외는 다시 던져서 상위에서 처리
+                throw new InvalidOperationException($"썸네일 생성 실패: {originalPath}", ex);
+            }
         }
 
-        private static Image ResizeImage(Image originalImage, int maxWidth, int maxHeight)
+        private static (int Width, int Height) ResizeKeepAspectRatio(int originalWidth, int originalHeight, int maxWidth, int maxHeight)
         {
-            var ratioX = (double)maxWidth / originalImage.Width;
-            var ratioY = (double)maxHeight / originalImage.Height;
+            var ratioX = (double)maxWidth / originalWidth;
+            var ratioY = (double)maxHeight / originalHeight;
             var ratio = Math.Min(ratioX, ratioY);
 
-            var newWidth = (int)(originalImage.Width * ratio);
-            var newHeight = (int)(originalImage.Height * ratio);
+            var newWidth = (int)(originalWidth * ratio);
+            var newHeight = (int)(originalHeight * ratio);
 
-            var newImage = new Bitmap(newWidth, newHeight);
-            using (var graphics = Graphics.FromImage(newImage))
-            {
-                graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-                graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-                graphics.DrawImage(originalImage, 0, 0, newWidth, newHeight);
-            }
-
-            return newImage;
+            return (newWidth, newHeight);
         }
     }
 }
