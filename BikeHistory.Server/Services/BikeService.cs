@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-
-
 namespace BikeHistory.Server.Services
 {
     public class BikeService
@@ -32,6 +30,7 @@ namespace BikeHistory.Server.Services
                 .Include(b => b.Brand)
                 .Include(b => b.BikeType)
                 .Include(b => b.CurrentOwner)
+                .Include(b => b.Images.Where(i => !i.IsDeleted))
                 .ToListAsync();
         }
 
@@ -47,6 +46,7 @@ namespace BikeHistory.Server.Services
                 .Include(b => b.Manufacturer)
                 .Include(b => b.Brand)
                 .Include(b => b.BikeType)
+                .Include(b => b.Images.Where(i => !i.IsDeleted))
                 .Where(b => b.CurrentOwnerId == ownerId)
                 .ToListAsync();
         }
@@ -59,6 +59,7 @@ namespace BikeHistory.Server.Services
                 .Include(b => b.Brand)
                 .Include(b => b.BikeType)
                 .Include(b => b.CurrentOwner)
+                .Include(b => b.Images.Where(i => !i.IsDeleted))
                 .FirstOrDefaultAsync(b => b.Id == id);
         }
 
@@ -75,6 +76,7 @@ namespace BikeHistory.Server.Services
                 .Include(b => b.Brand)
                 .Include(b => b.BikeType)
                 .Include(b => b.CurrentOwner)
+                .Include(b => b.Images.Where(i => !i.IsDeleted))
                 .FirstOrDefaultAsync(b => b.FrameNumber == frameNumber);
         }
 
@@ -114,7 +116,7 @@ namespace BikeHistory.Server.Services
             var newOwner = await _userManager.FindByEmailAsync(newOwnerId);
             if (newOwner == null)
             {
-                throw new InvalidOperationException($"»ç¿ëÀÚ ID '{newOwnerId}'¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+                throw new InvalidOperationException($"ì‚¬ìš©ìž ID '{newOwnerId}'ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
             }
 
             var bikeFrame = await _context.BikeFrames
@@ -156,6 +158,23 @@ namespace BikeHistory.Server.Services
                 .Include(o => o.NewOwner)
                 .Where(o => o.BikeFrameId == bikeFrameId)
                 .OrderByDescending(o => o.TransferDate)
+                .ToListAsync();
+        }
+
+        // Get primary image for a bike frame
+        public async Task<BikeImage?> GetPrimaryImageAsync(int bikeFrameId)
+        {
+            return await _context.BikeImages
+                .FirstOrDefaultAsync(i => i.BikeFrameId == bikeFrameId && i.IsPrimary && !i.IsDeleted);
+        }
+
+        // Get all images for a bike frame
+        public async Task<List<BikeImage>> GetBikeImagesAsync(int bikeFrameId)
+        {
+            return await _context.BikeImages
+                .Where(i => i.BikeFrameId == bikeFrameId && !i.IsDeleted)
+                .OrderByDescending(i => i.IsPrimary)
+                .ThenByDescending(i => i.UploadedDate)
                 .ToListAsync();
         }
     }

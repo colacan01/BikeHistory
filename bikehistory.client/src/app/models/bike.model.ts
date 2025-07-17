@@ -30,6 +30,31 @@ export interface BikeFrame {
   currentOwnerId: string;
   currentOwner?: User;
   registeredDate: Date;
+  images?: BikeImage[];
+  primaryImage?: BikeImage;
+}
+
+export interface BikeImage {
+  id: number;
+  bikeFrameId: number;
+  fileName: string;
+  originalFileName: string;
+  filePath: string;
+  contentType: string;
+  fileSize: number;
+  isPrimary: boolean;
+  uploadedDate: Date;
+  uploadedBy: string;
+  description?: string;
+  isDeleted: boolean;
+  deletedDate?: Date;
+}
+
+export interface ImageUploadResult {
+  uploadedImages: BikeImage[];
+  errors: string[];
+  totalUploaded: number;
+  totalErrors: number;
 }
 
 export interface BikeFrameRegisterRequest {

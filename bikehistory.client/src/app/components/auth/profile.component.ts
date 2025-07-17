@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ProfileResponse, UpdateProfileRequest } from '../../models/auth.model';
+import { ProfileResponse, UpdateProfileRequest, UserImage, ImageUploadResult } from '../../models/auth.model';
 import { AuthService } from '../../services/auth.service';
+import { UserImageService } from '../../services/user-image.service';
 import { ActivityLoggerService } from '../../services/activity-logger.service';
 
 @Component({
@@ -13,6 +14,7 @@ export class ProfileComponent implements OnInit {
   profileForm!: FormGroup;
   passwordForm!: FormGroup;
   profile: ProfileResponse | null = null;
+  userImages: UserImage[] = [];
   submitted = false;
   passwordSubmitted = false;
   loading = false;
@@ -22,16 +24,28 @@ export class ProfileComponent implements OnInit {
   passwordError = '';
   passwordSuccess = '';
   showPasswordChange = false;
+  
+  // 이미지 관련 속성
+  showImageUpload = false;
+  selectedFiles: FileList | null = null;
+  uploading = false;
+  uploadProgress = 0;
+  imageError = '';
+  imageSuccess = '';
+  isDragOver = false;
+  loadingImages = false;
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
+    private userImageService: UserImageService,
     private activityLogger: ActivityLoggerService
   ) { }
 
   ngOnInit(): void {
     this.initForms();
     this.loadProfile();
+    this.loadUserImages();
     // 자전거 상세 페이지 조회 로깅
     this.activityLogger.logAction('ViewUserProfile');
   }
@@ -80,6 +94,7 @@ export class ProfileComponent implements OnInit {
     this.authService.getProfile().subscribe({
       next: (data) => {
         this.profile = data;
+        this.userImages = data.images || [];
         this.profileForm.patchValue({
           firstName: data.firstName,
           lastName: data.lastName,
@@ -91,6 +106,21 @@ export class ProfileComponent implements OnInit {
         this.error = error.error?.message || 'Failed to load profile. Please try again.';
         this.loading = false;
         console.error('Error loading profile:', error);
+      }
+    });
+  }
+
+  loadUserImages(): void {
+    this.loadingImages = true;
+    this.userImageService.getUserImages().subscribe({
+      next: (images) => {
+        this.userImages = images;
+        this.loadingImages = false;
+      },
+      error: (error) => {
+        this.imageError = '이미지를 불러오는데 실패했습니다.';
+        this.loadingImages = false;
+        console.error('Error loading user images:', error);
       }
     });
   }
@@ -191,5 +221,128 @@ export class ProfileComponent implements OnInit {
       this.passwordError = '';
       this.passwordSuccess = '';
     }
+  }
+
+  // 이미지 업로드 관련 메서드
+  toggleImageUpload(): void {
+    this.showImageUpload = !this.showImageUpload;
+    if (!this.showImageUpload) {
+      this.selectedFiles = null;
+      this.imageError = '';
+      this.imageSuccess = '';
+    }
+  }
+
+  onFileSelected(event: any): void {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      this.selectedFiles = files;
+      this.imageError = '';
+    }
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    this.isDragOver = true;
+  }
+
+  onDragLeave(event: DragEvent): void {
+    event.preventDefault();
+    this.isDragOver = false;
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    this.isDragOver = false;
+    
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      this.selectedFiles = files;
+      this.imageError = '';
+    }
+  }
+
+  uploadImages(): void {
+    if (!this.selectedFiles || this.selectedFiles.length === 0) {
+      this.imageError = '업로드할 파일을 선택해주세요.';
+      return;
+    }
+
+    this.uploading = true;
+    this.uploadProgress = 0;
+    this.imageError = '';
+
+    this.userImageService.uploadUserImages(this.selectedFiles).subscribe({
+      next: (result: ImageUploadResult) => {
+        this.uploading = false;
+        this.uploadProgress = 100;
+        
+        if (result.errors && result.errors.length > 0) {
+          this.imageError = result.errors.join(', ');
+        } else {
+          this.imageSuccess = `${result.totalUploaded}개의 이미지가 성공적으로 업로드되었습니다.`;
+        }
+        
+        this.selectedFiles = null;
+        this.showImageUpload = false;
+        this.loadUserImages();
+        this.loadProfile(); // 프로필 이미지 업데이트를 위해 프로필 재로드
+      },
+      error: (error) => {
+        this.uploading = false;
+        this.uploadProgress = 0;
+        this.imageError = '이미지 업로드에 실패했습니다.';
+        console.error('Error uploading images:', error);
+      }
+    });
+  }
+
+  setProfileImage(imageId: number): void {
+    this.userImageService.setProfileImage(imageId).subscribe({
+      next: () => {
+        this.imageSuccess = '프로필 이미지가 변경되었습니다.';
+        this.loadUserImages();
+        this.loadProfile();
+      },
+      error: (error) => {
+        this.imageError = '프로필 이미지 변경에 실패했습니다.';
+        console.error('Error setting profile image:', error);
+      }
+    });
+  }
+
+  deleteImage(imageId: number): void {
+    if (confirm('정말로 이 이미지를 삭제하시겠습니까?')) {
+      this.userImageService.deleteImage(imageId).subscribe({
+        next: () => {
+          this.imageSuccess = '이미지가 삭제되었습니다.';
+          this.loadUserImages();
+          this.loadProfile();
+        },
+        error: (error) => {
+          this.imageError = '이미지 삭제에 실패했습니다.';
+          console.error('Error deleting image:', error);
+        }
+      });
+    }
+  }
+
+  getImageUrl(image: UserImage): string {
+    return this.userImageService.getImageUrl(image.id);
+  }
+
+  getThumbnailUrl(image: UserImage): string {
+    return this.userImageService.getThumbnailUrl(image.id, 150, 150);
+  }
+
+  getProfileImageUrl(): string | null {
+    if (this.profile?.profileImage) {
+      return this.userImageService.getThumbnailUrl(this.profile.profileImage.id, 120, 120);
+    }
+    return null;
+  }
+
+  hasProfileImage(): boolean {
+    return this.profile?.profileImage != null;
   }
 }

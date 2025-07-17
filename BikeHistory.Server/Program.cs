@@ -14,10 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        // ¼øÈ¯ ÂüÁ¶ ¹®Á¦ ÇØ°áÀ» À§ÇÑ ¼³Á¤
+        // ìˆœí™˜ ì°¸ì¡° ë¬¸ì œ í•´ê²°ì„ ìœ„í•œ ì„¤ì •
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        // ¼Ó¼º ÀÌ¸§ÀÇ ´ë¼Ò¹®ÀÚ À¯Áö
+        // ì†ì„± ì´ë¦„ì˜ ëŒ€ì†Œë¬¸ìž ìœ ì§€
         options.JsonSerializerOptions.PropertyNamingPolicy = null;
         options.JsonSerializerOptions.WriteIndented = true;
     });
@@ -106,8 +106,16 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+// Configure static files with better caching
 app.UseDefaultFiles();
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+    {
+        // Cache static files for 1 hour
+        ctx.Context.Response.Headers.Append("Cache-Control", "public, max-age=3600");
+    }
+});
 
 app.UseCors("AllowAngularApp");
 

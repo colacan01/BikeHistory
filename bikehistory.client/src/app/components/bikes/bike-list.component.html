@@ -80,17 +80,22 @@
   <!-- Bikes Grid -->
   <div class="bikes-grid" *ngIf="bikes.length > 0">
     <div class="bike-card" *ngFor="let bike of bikes; trackBy: trackByBike">
-      <div class="bike-card-header">
-        <div class="bike-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="18.5" cy="17.5" r="3.5" stroke="currentColor" stroke-width="2" />
-            <circle cx="5.5" cy="17.5" r="3.5" stroke="currentColor" stroke-width="2" />
-            <path d="M15 6a1 1 0 0 0-1-1H6.5a1 1 0 0 0-.8.4L3.9 8.7A1 1 0 0 0 4.7 10H19a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z" stroke="currentColor" stroke-width="2" />
-          </svg>
-        </div>
-        <div class="bike-title">
-          <h3>{{bike.brand?.name || '알 수 없는 브랜드'}}</h3>
-          <span class="bike-model" *ngIf="bike.model">{{bike.model}}</span>
+      <!-- 대표 이미지를 배경으로 가지는 카드 헤더 -->
+      <div class="bike-card-header" 
+           [ngClass]="{'has-background-image': hasPrimaryImage(bike)}"
+           [style.background-image]="hasPrimaryImage(bike) ? 'url(' + getPrimaryImageUrl(bike) + ')' : null">
+        <div class="header-overlay">
+          <div class="bike-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="18.5" cy="17.5" r="3.5" stroke="currentColor" stroke-width="2" />
+              <circle cx="5.5" cy="17.5" r="3.5" stroke="currentColor" stroke-width="2" />
+              <path d="M15 6a1 1 0 0 0-1-1H6.5a1 1 0 0 0-.8.4L3.9 8.7A1 1 0 0 0 4.7 10H19a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </div>
+          <div class="bike-title">
+            <h3>{{bike.brand?.name || '알 수 없는 브랜드'}}</h3>
+            <span class="bike-model" *ngIf="bike.model">{{bike.model}}</span>
+          </div>
         </div>
       </div>
 

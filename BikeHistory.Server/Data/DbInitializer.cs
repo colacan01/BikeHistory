@@ -24,18 +24,31 @@ namespace BikeHistory.Server.Data
 
             try
             {
-                await context.Database.MigrateAsync();
-
-                // Create roles
-                //string[] roleNames = { "Admin", "User" };
-                //foreach (var roleName in roleNames)
-                //{
-                //    if (!await roleManager.RoleExistsAsync(roleName))
-                //    {
-                //        await roleManager.CreateAsync(new IdentityRole(roleName));
-                //        logger.LogInformation($"Created role: {roleName}");
-                //    }
-                //}
+                // Check if database exists and apply migrations if needed
+                var canConnect = await context.Database.CanConnectAsync();
+                
+                if (!canConnect)
+                {
+                    logger.LogInformation("Database doesn't exist. Creating database...");
+                    await context.Database.EnsureCreatedAsync();
+                    logger.LogInformation("Database created successfully.");
+                }
+                else
+                {
+                    logger.LogInformation("Database exists. Applying pending migrations...");
+                    var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
+                    
+                    if (pendingMigrations.Any())
+                    {
+                        logger.LogInformation($"Found {pendingMigrations.Count()} pending migrations. Applying...");
+                        await context.Database.MigrateAsync();
+                        logger.LogInformation("Migrations applied successfully.");
+                    }
+                    else
+                    {
+                        logger.LogInformation("No pending migrations found. Database is up to date.");
+                    }
+                }
 
                 // Create roles
                 string[] roleNames = { "Admin", "Store", "Leader", "User" };
@@ -153,6 +166,8 @@ namespace BikeHistory.Server.Data
                     await context.SaveChangesAsync();
                     logger.LogInformation("Seeded brands");
                 }
+
+                logger.LogInformation("Database initialization completed successfully.");
             }
             catch (Exception ex)
             {

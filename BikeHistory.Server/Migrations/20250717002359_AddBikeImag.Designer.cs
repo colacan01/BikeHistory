@@ -4,6 +4,7 @@ using BikeHistory.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BikeHistory.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250717002359_AddBikeImag")]
+    partial class AddBikeImag
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -507,75 +510,6 @@ namespace BikeHistory.Server.Migrations
                     b.ToTable("UserActivityLogs");
                 });
 
-            modelBuilder.Entity("BikeHistory.Server.Models.UserImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("Relational:JsonPropertyName", "id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ContentType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "contentType");
-
-                    b.Property<DateTime?>("DeletedDate")
-                        .HasColumnType("datetime2")
-                        .HasAnnotation("Relational:JsonPropertyName", "deletedDate");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "description");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "fileName");
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "filePath");
-
-                    b.Property<long>("FileSize")
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Relational:JsonPropertyName", "fileSize");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit")
-                        .HasAnnotation("Relational:JsonPropertyName", "isDeleted");
-
-                    b.Property<bool>("IsProfileImage")
-                        .HasColumnType("bit")
-                        .HasAnnotation("Relational:JsonPropertyName", "isProfileImage");
-
-                    b.Property<string>("OriginalFileName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "originalFileName");
-
-                    b.Property<DateTime>("UploadedDate")
-                        .HasColumnType("datetime2")
-                        .HasAnnotation("Relational:JsonPropertyName", "uploadedDate");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
-                        .HasAnnotation("Relational:JsonPropertyName", "userId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("UserId", "IsProfileImage");
-
-                    b.ToTable("UserImages");
-
-                    b.HasAnnotation("Relational:JsonPropertyName", "images");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -837,17 +771,6 @@ namespace BikeHistory.Server.Migrations
                     b.Navigation("PreviousOwner");
                 });
 
-            modelBuilder.Entity("BikeHistory.Server.Models.UserImage", b =>
-                {
-                    b.HasOne("BikeHistory.Server.Models.ApplicationUser", "User")
-                        .WithMany("Images")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -901,8 +824,6 @@ namespace BikeHistory.Server.Migrations
 
             modelBuilder.Entity("BikeHistory.Server.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("Images");
-
                     b.Navigation("OwnedBikes");
 
                     b.Navigation("OwnershipHistory");

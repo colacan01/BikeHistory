@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from './models/auth.model';
+import { User, ProfileResponse } from './models/auth.model';
 import { AuthService } from './services/auth.service';
+import { UserImageService } from './services/user-image.service';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,7 @@ import { AuthService } from './services/auth.service';
 export class AppComponent implements OnInit {
   title = 'Bike History';
   currentUser: User | null = null;
+  userProfile: ProfileResponse | null = null;
   mobileMenuOpen = false;
   dropdowns = {
     admin: false,
@@ -20,12 +22,29 @@ export class AppComponent implements OnInit {
 
   constructor(
     private router: Router,
-    public authService: AuthService
+    public authService: AuthService,
+    private userImageService: UserImageService
   ) {}
 
   ngOnInit() {
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
+      if (user) {
+        this.loadUserProfile();
+      } else {
+        this.userProfile = null;
+      }
+    });
+  }
+
+  loadUserProfile(): void {
+    this.authService.getProfile().subscribe({
+      next: (profile) => {
+        this.userProfile = profile;
+      },
+      error: (error) => {
+        console.error('Error loading user profile:', error);
+      }
     });
   }
 
@@ -44,6 +63,17 @@ export class AppComponent implements OnInit {
     const firstInitial = this.currentUser.firstName?.charAt(0) || '';
     const lastInitial = this.currentUser.lastName?.charAt(0) || '';
     return (firstInitial + lastInitial).toUpperCase();
+  }
+
+  hasProfileImage(): boolean {
+    return this.userProfile?.profileImage != null;
+  }
+
+  getProfileImageUrl(): string | null {
+    if (this.userProfile?.profileImage) {
+      return this.userImageService.getThumbnailUrl(this.userProfile.profileImage.id, 40, 40);
+    }
+    return null;
   }
 
   toggleMobileMenu(): void {

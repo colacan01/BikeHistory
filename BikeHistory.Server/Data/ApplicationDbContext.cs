@@ -24,6 +24,8 @@ namespace BikeHistory.Server.Data
         public DbSet<Maintenance> Maintenances { get; set; }
         public DbSet<MaintenanceDetail> MaintenanceDetails { get; set; }
         public DbSet<UserActivityLog> UserActivityLogs { get; set; }
+        public DbSet<BikeImage> BikeImages { get; set; }
+        public DbSet<UserImage> UserImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -54,38 +56,72 @@ namespace BikeHistory.Server.Data
                 .HasForeignKey(o => o.BikeFrameId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // Configure BikeImage relationships
+            builder.Entity<BikeImage>()
+                .HasOne(bi => bi.BikeFrame)
+                .WithMany(b => b.Images)
+                .HasForeignKey(bi => bi.BikeFrameId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<BikeImage>()
+                .HasOne(bi => bi.Uploader)
+                .WithMany()
+                .HasForeignKey(bi => bi.UploadedBy)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure UserImage relationships
+            builder.Entity<UserImage>()
+                .HasOne(ui => ui.User)
+                .WithMany(u => u.Images)
+                .HasForeignKey(ui => ui.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             // Configure indexes
             builder.Entity<BikeFrame>()
                 .HasIndex(b => b.FrameNumber)
                 .IsUnique();
 
+            // Configure BikeImage indexes
+            builder.Entity<BikeImage>()
+                .HasIndex(bi => bi.BikeFrameId);
+
+            builder.Entity<BikeImage>()
+                .HasIndex(bi => new { bi.BikeFrameId, bi.IsPrimary });
+
+            // Configure UserImage indexes
+            builder.Entity<UserImage>()
+                .HasIndex(ui => ui.UserId);
+
+            builder.Entity<UserImage>()
+                .HasIndex(ui => new { ui.UserId, ui.IsProfileImage });
+
             // Configure Complex Key for MaintenanceDetail
             builder.Entity<MaintenanceDetail>()
                 .HasKey(md => new { md.MaintenanceId, md.Seq });
 
-            // MaintenanceDetailÀÇ decimal ¼Ó¼º¿¡ Á¤¹Ğµµ¿Í ½ºÄÉÀÏ ÁöÁ¤
+            // MaintenanceDetail decimal ì†ì„±ì— ëŒ€í•œ ì •ë°€ë„ ì„¤ì •
             builder.Entity<MaintenanceDetail>()
                 .Property(md => md.LaborCost)
-                .HasPrecision(18, 2); // ÃÑ 18ÀÚ¸®, ¼Ò¼öÁ¡ ÀÌÇÏ 2ÀÚ¸®
+                .HasPrecision(18, 2); // ì´ 18ìë¦¬, ì†Œìˆ˜ì  ì´í•˜ 2ìë¦¬
 
             builder.Entity<MaintenanceDetail>()
                 .Property(md => md.PartPrice)
-                .HasPrecision(18, 2); // ÃÑ 18ÀÚ¸®, ¼Ò¼öÁ¡ ÀÌÇÏ 2ÀÚ¸®
+                .HasPrecision(18, 2); // ì´ 18ìë¦¬, ì†Œìˆ˜ì  ì´í•˜ 2ìë¦¬
 
-            // Maintenance ¿Ü·¡ Å° Á¦¾à Á¶°Ç ¼öÁ¤ - ¼øÈ¯ ÂüÁ¶ ¹æÁö
+            // Maintenance ì™¸ë˜ í‚¤ ì„¤ì • - ìˆœí™˜ ì°¸ì¡° ë°©ì§€
             builder.Entity<Maintenance>()
                 .HasOne(m => m.Store)
                 .WithMany()
                 .HasForeignKey(m => m.StoreId)
-                .OnDelete(DeleteBehavior.Restrict); // CASCADE ´ë½Å RESTRICT »ç¿ë
+                .OnDelete(DeleteBehavior.Restrict); // CASCADE ëŒ€ì‹  RESTRICT ì‚¬ìš©
 
             builder.Entity<Maintenance>()
                 .HasOne(m => m.Owner)
                 .WithMany()
                 .HasForeignKey(m => m.OwnerId)
-                .OnDelete(DeleteBehavior.Restrict); // CASCADE ´ë½Å RESTRICT »ç¿ë
+                .OnDelete(DeleteBehavior.Restrict); // CASCADE ëŒ€ì‹  RESTRICT ì‚¬ìš©
 
-            // BikeFrameÀº CASCADE À¯Áö °¡´É
+            // BikeFrameì€ CASCADE ì‚­ì œ í—ˆìš©
             builder.Entity<Maintenance>()
                 .HasOne(m => m.BikeFrame)
                 .WithMany()
@@ -98,7 +134,7 @@ namespace BikeHistory.Server.Data
                 .HasForeignKey(md => md.MaintenanceId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // UserActivityLog ¼³Á¤
+            // UserActivityLog ì„¤ì •
             builder.Entity<UserActivityLog>()
                 .HasKey(u => u.Id);
 

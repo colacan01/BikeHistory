@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace BikeHistory.Server.Models
@@ -58,5 +59,13 @@ namespace BikeHistory.Server.Models
         // Navigation property for ownership history
         [JsonPropertyName("ownershipHistory")]
         public virtual ICollection<OwnershipRecord> OwnershipHistory { get; set; } = new List<OwnershipRecord>();
+        
+        // Navigation property for bike images
+        [JsonPropertyName("images")]
+        public virtual ICollection<BikeImage> Images { get; set; } = new List<BikeImage>();
+        
+        // Computed property for primary image
+        [JsonPropertyName("primaryImage")]
+        public BikeImage? PrimaryImage => Images?.FirstOrDefault(i => i.IsPrimary && !i.IsDeleted);
     }
 }

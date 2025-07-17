@@ -27,6 +27,137 @@
 
   <!-- Main Content -->
   <div *ngIf="profile" class="profile-content">
+    <!-- Profile Image Management Card -->
+    <div class="dashboard-card">
+      <div class="card-header">
+        <h3 class="section-title">
+          <i class="fas fa-user-circle"></i>
+          프로필 이미지
+        </h3>
+      </div>
+      <div class="card-content">
+        <!-- Current Profile Image -->
+        <div class="profile-image-section">
+          <div class="current-profile-image">
+            <div class="profile-image-container" 
+                 [ngClass]="{'has-image': hasProfileImage()}">
+              <img *ngIf="hasProfileImage()" 
+                   [src]="getProfileImageUrl()" 
+                   [alt]="profile.firstName + ' ' + profile.lastName"
+                   class="profile-image" />
+              <div *ngIf="!hasProfileImage()" class="profile-placeholder">
+                <i class="fas fa-user"></i>
+              </div>
+            </div>
+            <div class="profile-info">
+              <h4>{{ profile.firstName }} {{ profile.lastName }}</h4>
+              <p class="profile-email">{{ profile.email }}</p>
+              <button class="btn-secondary btn-sm" (click)="toggleImageUpload()">
+                <i class="fas fa-camera"></i>
+                {{ userImages.length > 0 ? '이미지 관리' : '이미지 업로드' }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Image Upload Section -->
+        <div class="image-upload-section" *ngIf="showImageUpload">
+          <div class="upload-area" 
+               [class.dragover]="isDragOver" 
+               (dragover)="onDragOver($event)" 
+               (dragleave)="onDragLeave($event)" 
+               (drop)="onDrop($event)">
+            <input type="file" 
+                   #fileInput 
+                   (change)="onFileSelected($event)" 
+                   multiple 
+                   accept="image/*" 
+                   class="file-input" />
+            <div class="upload-content">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p>이미지를 선택하거나 드래그하여 업로드하세요</p>
+              <p class="upload-hint">최대 5MB, JPG, PNG, GIF 형식, 최대 10개</p>
+            </div>
+          </div>
+          
+          <div class="upload-actions" *ngIf="selectedFiles && selectedFiles.length > 0">
+            <span class="selected-files">{{selectedFiles.length}}개 파일 선택됨</span>
+            <button class="btn-primary btn-sm" (click)="uploadImages()" [disabled]="uploading">
+              <i *ngIf="uploading" class="fas fa-spinner fa-spin"></i>
+              <i *ngIf="!uploading" class="fas fa-upload"></i>
+              {{ uploading ? '업로드 중...' : '업로드' }}
+            </button>
+          </div>
+
+          <!-- Upload Progress -->
+          <div class="upload-progress" *ngIf="uploading">
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="uploadProgress"></div>
+            </div>
+            <span class="progress-text">{{uploadProgress}}% 완료</span>
+          </div>
+        </div>
+
+        <!-- Status Messages -->
+        <div class="status-message success" *ngIf="imageSuccess">
+          <i class="fas fa-check-circle"></i>
+          {{ imageSuccess }}
+        </div>
+
+        <div class="status-message error" *ngIf="imageError">
+          <i class="fas fa-exclamation-triangle"></i>
+          {{ imageError }}
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading-state" *ngIf="loadingImages">
+          <i class="fas fa-spinner fa-spin"></i>
+          <span>이미지를 불러오는 중...</span>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="!loadingImages && userImages.length === 0">
+          <i class="fas fa-images"></i>
+          <p>등록된 이미지가 없습니다</p>
+        </div>
+
+        <!-- Images Grid -->
+        <div class="images-grid" *ngIf="!loadingImages && userImages.length > 0">
+          <div class="image-item" *ngFor="let image of userImages">
+            <div class="image-container">
+              <img [src]="getThumbnailUrl(image)" 
+                   [alt]="image.originalFileName" 
+                   class="user-image" 
+                   loading="lazy" />
+              <div class="image-overlay">
+                <div class="image-info">
+                  <span class="image-name">{{image.originalFileName}}</span>
+                  <span class="image-size">{{(image.fileSize / 1024 / 1024).toFixed(2)}}MB</span>
+                </div>
+                <div class="image-actions">
+                  <button class="action-btn" 
+                          (click)="setProfileImage(image.id)" 
+                          [disabled]="image.isProfileImage" 
+                          title="프로필 이미지로 설정">
+                    <i class="fas fa-star" [class.active]="image.isProfileImage"></i>
+                  </button>
+                  <button class="action-btn danger" 
+                          (click)="deleteImage(image.id)" 
+                          title="이미지 삭제">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="profile-badge" *ngIf="image.isProfileImage">
+                <i class="fas fa-star"></i>
+                프로필
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Basic Information Card -->
     <div class="dashboard-card">
       <div class="card-header">
@@ -225,6 +356,7 @@
             </div>
           </form>
         </div>
+      </div>
     </div>
   </div>
 </div>

@@ -47,9 +47,22 @@ export class BikeListComponent implements OnInit {
         }
       });
   }
-  // bike-list.component.ts에 추가할 메서드
 
+  // bike-list.component.ts에 추가할 메서드
   trackByBike(index: number, bike: BikeFrame): any {
     return bike.id || index;
+  }
+
+  // 대표 이미지 URL을 가져오는 메소드
+  getPrimaryImageUrl(bike: BikeFrame): string | null {
+    if (bike.primaryImage) {
+      return this.bikeService.getImageUrl(bike.primaryImage.id);
+    }
+    return null;
+  }
+
+  // 대표 이미지가 있는지 확인하는 메소드
+  hasPrimaryImage(bike: BikeFrame): boolean {
+    return bike.primaryImage != null;
   }
 }

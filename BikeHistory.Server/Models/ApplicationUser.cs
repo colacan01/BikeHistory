@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace BikeHistory.Server.Models
@@ -19,5 +20,13 @@ namespace BikeHistory.Server.Models
         // Navigation property for ownership history
         [JsonPropertyName("ownershipHistory")]
         public virtual ICollection<OwnershipRecord> OwnershipHistory { get; set; } = new List<OwnershipRecord>();
+        
+        // Navigation property for user images
+        [JsonPropertyName("images")]
+        public virtual ICollection<UserImage> Images { get; set; } = new List<UserImage>();
+        
+        // Computed property for profile image
+        [JsonPropertyName("profileImage")]
+        public UserImage? ProfileImage => Images?.FirstOrDefault(i => i.IsProfileImage && !i.IsDeleted);
     }
 }

@@ -80,8 +80,12 @@
         <ng-container *ngIf="currentUser; else loggedOut">
           <div class="user-dropdown dropdown">
             <button class="user-button" (click)="toggleDropdown('user')">
-              <div class="user-avatar">
-                <span>{{ getUserInitials() }}</span>
+              <div class="user-avatar" [ngClass]="{'has-image': hasProfileImage()}">
+                <img *ngIf="hasProfileImage()" 
+                     [src]="getProfileImageUrl()" 
+                     [alt]="fullName"
+                     class="avatar-image" />
+                <span *ngIf="!hasProfileImage()">{{ getUserInitials() }}</span>
               </div>
               <span class="user-name">{{ fullName }}</span>
               <svg class="dropdown-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

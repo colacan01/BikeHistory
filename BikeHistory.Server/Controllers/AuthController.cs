@@ -82,40 +82,45 @@ namespace BikeHistory.Server.Controllers
             });
         }
 
-        // »ç¿ëÀÚ ÇÁ·ÎÆÄÀÏ Á¶È¸
+        // ì‚¬ìš©ì í”„ë¡œí•„ ì •ë³´ ì¡°íšŒ
         [HttpGet("profile")]
         [Authorize]
         public async Task<IActionResult> GetProfile()
         {
-            // ÇöÀç ÀÎÁõµÈ »ç¿ëÀÚÀÇ ID °¡Á®¿À±â
+            // í˜„ì¬ ë¡œê·¸ì¸í•œ ì‚¬ìš©ìì˜ ID ê°€ì ¸ì˜¤ê¸°
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized(new { message = "User not authenticated" });
             }
 
-            // »ç¿ëÀÚ Á¤º¸ Á¶È¸
-            var user = await _userManager.FindByIdAsync(userId);
+            // ì‚¬ìš©ì ì •ë³´ ì¡°íšŒ (ì´ë¯¸ì§€ í¬í•¨)
+            var user = await _userManager.Users
+                .Include(u => u.Images.Where(i => !i.IsDeleted))
+                .FirstOrDefaultAsync(u => u.Id == userId);
+            
             if (user == null)
             {
                 return NotFound(new { message = "User not found" });
             }
 
-            // »ç¿ëÀÚÀÇ ¿ªÇÒ Á¶È¸
+            // ì‚¬ìš©ìì˜ ì—­í•  ì¡°íšŒ
             var roles = await _userManager.GetRolesAsync(user);
 
-            // ÇÁ·ÎÆÄÀÏ Á¤º¸ ¹İÈ¯
+            // í”„ë¡œí•„ ì •ë³´ ë° ì´ë¯¸ì§€ ì •ë³´ ë°˜í™˜
             return Ok(new ProfileDto
             {
                 UserId = user.Id,
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Roles = roles.ToList()
+                Roles = roles.ToList(),
+                Images = user.Images.ToList(),
+                ProfileImage = user.ProfileImage
             });
         }
 
-        // »ç¿ëÀÚ ÇÁ·ÎÆÄÀÏ ¼öÁ¤
+        // ì‚¬ìš©ì í”„ë¡œíŒŒì¼ ìˆ˜ì •
         [HttpPut("profile")]
         [Authorize]
         public async Task<IActionResult> UpdateProfile(UpdateProfileDto model)
@@ -123,41 +128,41 @@ namespace BikeHistory.Server.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // ÇöÀç ÀÎÁõµÈ »ç¿ëÀÚÀÇ ID °¡Á®¿À±â
+            // í˜„ì¬ ì¸ì¦ëœ ì‚¬ìš©ìì˜ ID ê°€ì ¸ì˜¤ê¸°
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized(new { message = "User not authenticated" });
             }
 
-            // »ç¿ëÀÚ Á¤º¸ Á¶È¸
+            // ì‚¬ìš©ì ì •ë³´ ì¡°íšŒ
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return NotFound(new { message = "User not found" });
             }
 
-            // »ç¿ëÀÚ Á¤º¸ ¾÷µ¥ÀÌÆ®
+            // ì‚¬ìš©ì ì •ë³´ ì—…ë°ì´íŠ¸
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             
-            // º¯°æµÈ Á¤º¸ ÀúÀå
+            // ë³€ê²½ëœ ì •ë³´ ì €ì¥
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {
                 return BadRequest(result.Errors);
             }
 
-            // ºñ¹Ğ¹øÈ£ º¯°æÀÌ ¿äÃ»µÈ °æ¿ì
+            // ë¹„ë°€ë²ˆí˜¸ ë³€ê²½ì´ ìš”ì²­ëœ ê²½ìš°
             if (!string.IsNullOrEmpty(model.NewPassword))
             {
-                // ÇöÀç ºñ¹Ğ¹øÈ£ È®ÀÎ
+                // í˜„ì¬ ë¹„ë°€ë²ˆí˜¸ í™•ì¸
                 if (string.IsNullOrEmpty(model.CurrentPassword))
                 {
                     return BadRequest(new { message = "Current password is required" });
                 }
 
-                // ºñ¹Ğ¹øÈ£ º¯°æ
+                // ë¹„ë°€ë²ˆí˜¸ ë³€ê²½
                 var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
                 if (!changePasswordResult.Succeeded)
                 {
@@ -165,10 +170,10 @@ namespace BikeHistory.Server.Controllers
                 }
             }
 
-            // ¾÷µ¥ÀÌÆ®µÈ »ç¿ëÀÚÀÇ »õ ÅäÅ« »ı¼º
+            // ì—…ë°ì´íŠ¸ëœ ì‚¬ìš©ìì˜ ìƒˆ í† í° ìƒì„±
             var token = await _jwtService.GenerateJwtToken(user);
 
-            // ¾÷µ¥ÀÌÆ®µÈ ÇÁ·ÎÆÄÀÏ Á¤º¸ ¹İÈ¯
+            // ì—…ë°ì´íŠ¸ëœ í”„ë¡œíŒŒì¼ ì •ë³´ ë°˜í™˜
             return Ok(new
             {
                 token,
@@ -180,12 +185,12 @@ namespace BikeHistory.Server.Controllers
             });
         }
 
-        // »ç¿ëÀÚ ¸ñ·Ï Á¶È¸ (°ü¸®ÀÚ Àü¿ë)
+        // ì‚¬ìš©ì ëª©ë¡ ì¡°íšŒ (ê´€ë¦¬ì ì „ìš©)
         [HttpGet("users")]
         [Authorize(Roles = "Admin,Store")]
         public async Task<IActionResult> GetUsers()
         {
-            // ¸ğµç »ç¿ëÀÚ Á¶È¸
+            // ëª¨ë“  ì‚¬ìš©ì ì¡°íšŒ
             var users = _userManager.Users
                                 .Include( a => a.OwnedBikes)
                                 .ToList();
@@ -193,7 +198,7 @@ namespace BikeHistory.Server.Controllers
 
             foreach (var user in users)
             {
-                // °¢ »ç¿ëÀÚÀÇ ¿ªÇÒ Á¶È¸
+                // ê° ì‚¬ìš©ìì˜ ì—­í•  ì¡°íšŒ
                 var roles = await _userManager.GetRolesAsync(user);
 
                 userDtos.Add(new UserDto
@@ -210,22 +215,22 @@ namespace BikeHistory.Server.Controllers
             return Ok(userDtos);
         }
 
-        // Æ¯Á¤ »ç¿ëÀÚ Á¶È¸ (°ü¸®ÀÚ Àü¿ë)
+        // íŠ¹ì • ì‚¬ìš©ì ì¡°íšŒ (ê´€ë¦¬ì ì „ìš©)
         [HttpGet("users/{id}")]
         [Authorize(Roles = "Admin,Store")]
         public async Task<IActionResult> GetUser(string id)
         {
-            // »ç¿ëÀÚ Á¤º¸ Á¶È¸
+            // ì‚¬ìš©ì ì •ë³´ ì¡°íšŒ
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
                 return NotFound(new { message = "User not found" });
             }
 
-            // »ç¿ëÀÚÀÇ ¿ªÇÒ Á¶È¸
+            // ì‚¬ìš©ìì˜ ì—­í•  ì¡°íšŒ
             var roles = await _userManager.GetRolesAsync(user);
 
-            // »ç¿ëÀÚ Á¤º¸ ¹İÈ¯
+            // ì‚¬ìš©ì ì •ë³´ ë°˜í™˜
             return Ok(new UserDetailDto
             {
                 UserId = user.Id,
@@ -241,7 +246,7 @@ namespace BikeHistory.Server.Controllers
             });
         }
 
-        // Æ¯Á¤ »ç¿ëÀÚ Á¤º¸ ¼öÁ¤ (°ü¸®ÀÚ Àü¿ë)
+        // íŠ¹ì • ì‚¬ìš©ì ì •ë³´ ìˆ˜ì • (ê´€ë¦¬ì ì „ìš©)
         [HttpPut("users/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateUser(string id, UpdateUserDto model)
@@ -249,20 +254,20 @@ namespace BikeHistory.Server.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // »ç¿ëÀÚ Á¤º¸ Á¶È¸
+            // ì‚¬ìš©ì ì •ë³´ ì¡°íšŒ
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
                 return NotFound(new { message = "User not found" });
             }
 
-            // »ç¿ëÀÚ Á¤º¸ ¾÷µ¥ÀÌÆ®
+            // ì‚¬ìš©ì ì •ë³´ ì—…ë°ì´íŠ¸
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Email = model.Email;
-            user.UserName = model.Email; // ÀÏ¹İÀûÀ¸·Î ÀÌ¸ŞÀÏÀ» »ç¿ëÀÚ ÀÌ¸§À¸·Î »ç¿ë
+            user.UserName = model.Email; // ì¼ë°˜ì ìœ¼ë¡œ ì´ë©”ì¼ì„ ì‚¬ìš©ì ì´ë¦„ìœ¼ë¡œ ì‚¬ìš©
             
-            // Àá±İ »óÅÂ ¾÷µ¥ÀÌÆ®
+            // ì ê¸ˆ ìƒíƒœ ì—…ë°ì´íŠ¸
             if (model.LockoutEnabled.HasValue)
             {
                 user.LockoutEnabled = model.LockoutEnabled.Value;
@@ -273,14 +278,14 @@ namespace BikeHistory.Server.Controllers
                 user.LockoutEnd = model.LockoutEnd.Value;
             }
 
-            // º¯°æµÈ Á¤º¸ ÀúÀå
+            // ë³€ê²½ëœ ì •ë³´ ì €ì¥
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {
                 return BadRequest(result.Errors);
             }
 
-            // ¿ªÇÒ ¾÷µ¥ÀÌÆ® (ÇöÀç ¿ªÇÒ ¸ğµÎ Á¦°Å ÈÄ »õ·Î¿î ¿ªÇÒ ÇÒ´ç)
+            // ì—­í•  ì—…ë°ì´íŠ¸ (í˜„ì¬ ì—­í•  ëª¨ë‘ ì œê±° í›„ ìƒˆë¡œìš´ ì—­í•  í• ë‹¹)
             if (model.Roles != null && model.Roles.Any())
             {
                 var currentRoles = await _userManager.GetRolesAsync(user);
@@ -288,12 +293,12 @@ namespace BikeHistory.Server.Controllers
                 await _userManager.AddToRolesAsync(user, model.Roles);
             }
 
-            // ºñ¹Ğ¹øÈ£ º¯°æÀÌ ¿äÃ»µÈ °æ¿ì
+            // ë¹„ë°€ë²ˆí˜¸ ë³€ê²½ì´ ìš”ì²­ëœ ê²½ìš°
             if (!string.IsNullOrEmpty(model.NewPassword))
             {
-                // ºñ¹Ğ¹øÈ£ ¸®¼Â ÅäÅ« »ı¼º
+                // ë¹„ë°€ë²ˆí˜¸ ë¦¬ì…‹ í† í° ìƒì„±
                 var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-                // ºñ¹Ğ¹øÈ£ º¯°æ
+                // ë¹„ë°€ë²ˆí˜¸ ë³€ê²½
                 var changePasswordResult = await _userManager.ResetPasswordAsync(user, resetToken, model.NewPassword);
                 if (!changePasswordResult.Succeeded)
                 {
@@ -304,26 +309,26 @@ namespace BikeHistory.Server.Controllers
             return Ok(new { message = "User updated successfully" });
         }
 
-        // Æ¯Á¤ »ç¿ëÀÚ »èÁ¦ (°ü¸®ÀÚ Àü¿ë)
+        // íŠ¹ì • ì‚¬ìš©ì ì‚­ì œ (ê´€ë¦¬ì ì „ìš©)
         [HttpDelete("users/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            // »ç¿ëÀÚ Á¤º¸ Á¶È¸
+            // ì‚¬ìš©ì ì •ë³´ ì¡°íšŒ
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
                 return NotFound(new { message = "User not found" });
             }
 
-            // ÇöÀç ·Î±×ÀÎÇÑ °ü¸®ÀÚ º»ÀÎÀ» »èÁ¦ÇÏ·Á´Â °æ¿ì ¹æÁö
+            // í˜„ì¬ ë¡œê·¸ì¸í•œ ê´€ë¦¬ì ë³¸ì¸ì„ ì‚­ì œí•˜ë ¤ëŠ” ê²½ìš° ë°©ì§€
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (id == currentUserId)
             {
                 return BadRequest(new { message = "You cannot delete your own account" });
             }
 
-            // »ç¿ëÀÚ »èÁ¦
+            // ì‚¬ìš©ì ì‚­ì œ
             var result = await _userManager.DeleteAsync(user);
             if (!result.Succeeded)
             {
@@ -381,6 +386,12 @@ namespace BikeHistory.Server.Controllers
         
         [JsonPropertyName("roles")]
         public List<string> Roles { get; set; } = new List<string>();
+
+        [JsonPropertyName("images")]
+        public List<Models.UserImage> Images { get; set; } = new List<Models.UserImage>();
+
+        [JsonPropertyName("profileImage")]
+        public Models.UserImage? ProfileImage { get; set; }
     }
 
     public class UpdateProfileDto
@@ -393,7 +404,7 @@ namespace BikeHistory.Server.Controllers
         [JsonPropertyName("lastName")]
         public string LastName { get; set; } = string.Empty;
 
-        // ºñ¹Ğ¹øÈ£ º¯°æÀ» À§ÇÑ ÇÊµåµé(¼±ÅÃÀû)
+        // ë¹„ë°€ë²ˆí˜¸ ë³€ê²½ì„ ìœ„í•œ í•„ë“œë“¤(ì„ íƒì )
         [JsonPropertyName("currentPassword")]
         public string? CurrentPassword { get; set; }
 
@@ -406,7 +417,7 @@ namespace BikeHistory.Server.Controllers
         public string? ConfirmNewPassword { get; set; }
     }
 
-    // »ç¿ëÀÚ ¸ñ·Ï Á¶È¸¿ë DTO
+    // ì‚¬ìš©ì ëª©ë¡ ì¡°íšŒìš© DTO
     public class UserDto
     {
         [JsonPropertyName("userId")]
@@ -428,7 +439,7 @@ namespace BikeHistory.Server.Controllers
         public int BikeCount { get; set; }
     }
 
-    // »ç¿ëÀÚ »ó¼¼ Á¤º¸ Á¶È¸¿ë DTO
+    // ì‚¬ìš©ì ìƒì„¸ ì •ë³´ ì¡°íšŒìš© DTO
     public class UserDetailDto : UserDto
     {
         [JsonPropertyName("userName")]
@@ -444,7 +455,7 @@ namespace BikeHistory.Server.Controllers
         public DateTimeOffset? LockoutEnd { get; set; }
     }
 
-    // »ç¿ëÀÚ Á¤º¸ ¾÷µ¥ÀÌÆ®¿ë DTO
+    // ì‚¬ìš©ì ì •ë³´ ì—…ë°ì´íŠ¸ìš© DTO
     public class UpdateUserDto
     {
         [Required]
@@ -472,5 +483,12 @@ namespace BikeHistory.Server.Controllers
         [MinLength(6)]
         [JsonPropertyName("newPassword")]
         public string? NewPassword { get; set; }
+    }
+
+    public class UserImage
+    {
+        public string Id { get; set; } = string.Empty;
+        public string Url { get; set; } = string.Empty;
+        public bool IsDeleted { get; set; }
     }
 }
