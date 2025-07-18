@@ -361,3 +361,11 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/bikehistory-logrotate
+/bikehistory.service
+/db-init-monitor.sh
+/deploy.sh
+/init-database.sql
+/monitor.sh
+/nginx-bikehistory.conf
+/setup-postgres-migration.sh
